@@ -1,0 +1,320 @@
+import React, { useState } from "react"
+import { useLocation,Link } from 'react-router-dom';
+
+
+
+export default function AdminSidebar() {
+  const [isSideNavOpen, setIsSideNavOpen] = useState(false)
+  const path = useLocation()
+  console.log(path.pathname);
+  const location = useLocation();
+  const currentPath = location.pathname;
+  
+
+  return (
+    <>
+      {/*  <!-- Component: Basic side navigation menu --> */}
+      {/*  <!-- Mobile trigger --> */}
+      <button
+        title="Side navigation"
+        type="button"
+        className={`visible fixed left-6 top-6 z-40 order-10 block h-10 w-10 self-center rounded bg-white opacity-100 lg:hidden ${
+          isSideNavOpen
+            ? "visible opacity-100 [&_span:nth-child(1)]:w-6 [&_span:nth-child(1)]:translate-y-0 [&_span:nth-child(1)]:rotate-45 [&_span:nth-child(3)]:w-0 [&_span:nth-child(2)]:-rotate-45 "
+            : ""
+        }`}
+        aria-haspopup="menu"
+        aria-label="Side navigation"
+        aria-expanded={isSideNavOpen ? " true" : "false"}
+        aria-controls="nav-menu-1"
+        onClick={() => setIsSideNavOpen(!isSideNavOpen)}
+      >
+        <div className="absolute top-1/2 left-1/2 w-6 -translate-x-1/2 -translate-y-1/2 transform">
+          <span
+            aria-hidden="true"
+            className="absolute block h-0.5 w-9/12 -translate-y-2 transform rounded-full bg-slate-700 transition-all duration-300"
+          ></span>
+          <span
+            aria-hidden="true"
+            className="absolute block h-0.5 w-6 transform rounded-full bg-slate-900 transition duration-300"
+          ></span>
+          <span
+            aria-hidden="true"
+            className="absolute block h-0.5 w-1/2 origin-top-left translate-y-2 transform rounded-full bg-slate-900 transition-all duration-300"
+          ></span>
+        </div>
+      </button>
+
+      {/*  <!-- Side Navigation --> */}
+      <aside
+        id="nav-menu-1"
+        aria-label="Side navigation"
+        className={`fixed top-0 bottom-0 left-0 z-40 flex w-72 flex-col border-r border-r-slate-200 bg-white transition-transform lg:translate-x-0 ${
+          isSideNavOpen ? "translate-x-0" : " -translate-x-full"
+        }`}
+      >
+        <a
+          aria-label="WindUI logo"
+          className="flex items-center gap-2 whitespace-nowrap p-6 text-xl font-medium focus:outline-none"
+          href="javascript:void(0)"
+        >
+          <svg
+            width="300"
+            height="300"
+            viewBox="0 0 300 300"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-8 w-8 bg-emerald-500"
+          >
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M88.1121 88.1134L150.026 150.027L150.027 150.027L150.027 150.027L150.028 150.027L150.027 150.026L88.1133 88.1122L88.1121 88.1134ZM273.878 273.877C272.038 274.974 196.128 319.957 165.52 289.349L88.1124 211.942L26.1434 273.911C26.1434 273.911 -20.3337 196.504 10.651 165.519L88.1121 88.1134L26.1417 26.1433C26.1417 26.1433 69.6778 0.00338007 104.519 0H0V300H300V0H104.533C116.144 0.00112664 126.789 2.90631 134.534 10.651L211.941 88.1123L273.877 26.177C274.974 28.0159 319.957 103.926 289.349 134.535L211.942 211.942L273.878 273.877ZM273.878 273.877L273.912 273.857V273.911L273.878 273.877ZM273.877 26.177L273.911 26.1429H273.857C273.857 26.1429 273.863 26.1544 273.877 26.177Z"
+              fill="white"
+            />
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M0 0H300V300H0V0ZM150.026 150.025C121.715 99.731 88.1131 88.1122 88.1131 88.1122L10.6508 165.519C10.6508 165.519 26.143 150.027 150.026 150.027H150.027C150.026 150.027 150.026 150.027 150.026 150.027L150.026 150.027C99.731 178.339 88.1124 211.941 88.1124 211.941L165.52 289.348C165.52 289.348 150.032 273.86 150.027 150.027H150.029C178.341 200.323 211.944 211.942 211.944 211.942L289.352 134.535C289.352 134.535 273.864 150.023 150.027 150.027V150.027L150.027 150.027C200.322 121.715 211.941 88.1125 211.941 88.1125L134.534 10.651C134.534 10.651 150.026 26.1431 150.026 150.025ZM150.027 150.027L150.026 150.027C150.026 150.026 150.026 150.026 150.026 150.025C150.026 150.025 150.027 150.026 150.027 150.027ZM150.027 150.027L150.027 150.026L150.027 150.027C150.027 150.027 150.027 150.027 150.027 150.027L150.027 150.027ZM150.027 150.027C150.027 150.027 150.027 150.027 150.027 150.027H150.027L150.027 150.027Z"
+              fill="rgba(255,255,255,.2)"
+            />
+          </svg>
+          WorkWise
+        </a>
+        <nav
+          aria-label="side navigation"
+          className="flex-1 divide-y divide-slate-100 overflow-auto"
+        >
+          
+          <div>
+            <ul className="flex flex-1 flex-col gap-1 py-3">
+
+            <Link to={'/admin/dashboard'}>
+            <li className="px-3">
+              
+            <a
+             
+              
+             className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
+              currentPath === '/admin/dashboard' ? 'bg-blue-200 text-emerald-500' : ''
+            }`}
+            >
+              
+              <div className="flex items-center self-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 576 512"
+                  className="h-6 w-6"
+                  aria-label="Dashboard icon"
+                  role="graphics-symbol"
+                >
+                  <path d="M280.4 148.3L96 300.1V464a16 16 0 0 0 16 16l112.1-.3a16 16 0 0 0 15.9-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.6a16 16 0 0 0 16 16.1L464 480a16 16 0 0 0 16-16V300L295.7 148.3a12.2 12.2 0 0 0 -15.3 0zM571.6 251.5L488 182.6V44.1a12 12 0 0 0 -12-12h-56a12 12 0 0 0 -12 12v72.6L318.5 43a48 48 0 0 0 -61 0L4.3 251.5a12 12 0 0 0 -1.6 16.9l25.5 31A12 12 0 0 0 45.2 301l235.2-193.7a12.2 12.2 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0 -1.7-16.9z"/>
+                </svg>
+              </div>
+              <div className="flex w-full flex-1 flex-col items-start justify-center gap-0 overflow-hidden truncate text-sm">
+                Dashboard
+              </div>
+            </a>
+          </li>
+          </Link>
+
+          <Link to={'/admin/Usermanagment'}>
+              <li className="px-3">
+                <a
+                  
+                  className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
+                    currentPath === '/admin/Usermanagment' ? 'bg-blue-200 text-emerald-500' : ''
+                  }`}
+                >
+                  <div className="flex items-center self-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 640 512"
+                      className="h-6 w-6"
+                      aria-label="User Management icon"
+                      role="graphics-symbol"
+                    >
+                      <path d="M96 224c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm448 0c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm32 32h-64c-17.6 0-33.5 7.1-45.1 18.6 40.3 22.1 68.9 62 75.1 109.4h66c17.7 0 32-14.3 32-32v-32c0-35.3-28.7-64-64-64zm-256 0c61.9 0 112-50.1 112-112S381.9 32 320 32 208 82.1 208 144s50.1 112 112 112zm76.8 32h-8.3c-20.8 10-43.9 16-68.5 16s-47.6-6-68.5-16h-8.3C179.6 288 128 339.6 128 403.2V432c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48v-28.8c0-63.6-51.6-115.2-115.2-115.2zm-223.7-13.4C161.5 263.1 145.6 256 128 256H64c-35.3 0-64 28.7-64 64v32c0 17.7 14.3 32 32 32h65.9c6.3-47.4 34.9-87.3 75.2-109.4z"/>
+                    </svg>
+                  </div>
+                  <div className="flex w-full flex-1 flex-col items-start justify-center gap-0 overflow-hidden truncate text-sm">
+                    User Management
+                  </div>
+                </a>
+              </li>
+              </Link>
+
+              <Link to={'/admin/Leavemanagment'}>
+              <li className="px-3">
+              <a
+             
+             className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
+              currentPath === '/admin/Leavemanagment' ? 'bg-blue-200 text-emerald-500' : ''
+            }`}
+            >
+                <div className="flex items-center self-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 640 512"
+                    className="h-6 w-6"
+                    aria-label="Leave Management icon"
+                    role="graphics-symbol"
+                  >
+                    <path d="M608 320h-64v64h22.4c5.3 0 9.6 3.6 9.6 8v16c0 4.4-4.3 8-9.6 8H73.6c-5.3 0-9.6-3.6-9.6-8v-16c0-4.4 4.3-8 9.6-8H96v-64H32c-17.7 0-32 14.3-32 32v96c0 17.7 14.3 32 32 32h576c17.7 0 32-14.3 32-32v-96c0-17.7-14.3-32-32-32zm-96 64V64.3c0-17.9-14.5-32.3-32.3-32.3H160.4C142.5 32 128 46.5 128 64.3V384h384zM211.2 202l25.5-25.3c4.2-4.2 11-4.2 15.2 .1l41.3 41.6 95.2-94.4c4.2-4.2 11-4.2 15.2 .1l25.3 25.5c4.2 4.2 4.2 11-.1 15.2L300.5 292c-4.2 4.2-11 4.2-15.2-.1l-74.1-74.7c-4.3-4.2-4.2-11 0-15.2z"/>
+                  </svg>
+                </div>
+                <div className="flex w-full flex-1 flex-col items-start justify-center gap-0 overflow-hidden truncate text-sm">
+                  Leave Management
+                </div>
+              </a>
+              </li>
+              </Link>
+
+              <Link to={'/admin/Departmentmanagment'}>
+              <li className="px-3">
+              <a
+            
+            className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
+              currentPath === '/admin/Departmentmanagment' ? 'bg-blue-200 text-emerald-500' : ''
+            }`}
+            >
+                <div className="flex items-center self-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-label="Department Management icon"
+                    role="graphics-symbol"
+                    viewBox="0 0 448 512"
+                    className="h-6 w-6"
+                  >
+                    <path d="M436 480h-20V24c0-13.3-10.7-24-24-24H56C42.7 0 32 10.7 32 24v456H12c-6.6 0-12 5.4-12 12v20h448v-20c0-6.6-5.4-12-12-12zM128 76c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12V76zm0 96c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40zm52 148h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12zm76 160h-64v-84c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v84zm64-172c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40zm0-96c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40zm0-96c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40z"/>
+                  </svg>
+                </div>
+                <div className="flex w-full flex-1 flex-col items-start justify-center gap-0 overflow-hidden truncate text-sm">
+                  Department Management
+                </div>
+              </a>
+            </li>
+            </Link>
+
+            <Link to={'/admin/Payrollmanagment'}>
+            <li className="px-3">
+            <a
+             
+             className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
+              currentPath === '/admin/Payrollmanagment' ? 'bg-blue-200 text-emerald-500' : ''
+            }`}
+            >
+              <div className="flex items-center self-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 384 512"
+                  className="h-6 w-6"
+                >
+                  <path d="M377 105L279.1 7c-4.5-4.5-10.6-7-17-7H256v128h128v-6.1c0-6.3-2.5-12.4-7-16.9zm-153 31V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zM64 72c0-4.4 3.6-8 8-8h80c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H72c-4.4 0-8-3.6-8-8V72zm0 80v-16c0-4.4 3.6-8 8-8h80c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H72c-4.4 0-8-3.6-8-8zm144 263.9V440c0 4.4-3.6 8-8 8h-16c-4.4 0-8-3.6-8-8v-24.3c-11.3-.6-22.3-4.5-31.4-11.4-3.9-2.9-4.1-8.8-.6-12.1l11.8-11.2c2.8-2.6 6.9-2.8 10.1-.7 3.9 2.4 8.3 3.7 12.8 3.7h28.1c6.5 0 11.8-5.9 11.8-13.2 0-6-3.6-11.2-8.8-12.7l-45-13.5c-18.6-5.6-31.6-23.4-31.6-43.4 0-24.5 19.1-44.4 42.7-45.1V232c0-4.4 3.6-8 8-8h16c4.4 0 8 3.6 8 8v24.3c11.3 .6 22.3 4.5 31.4 11.4 3.9 2.9 4.1 8.8 .6 12.1l-11.8 11.2c-2.8 2.6-6.9 2.8-10.1 .7-3.9-2.4-8.3-3.7-12.8-3.7h-28.1c-6.5 0-11.8 5.9-11.8 13.2 0 6 3.6 11.2 8.8 12.7l45 13.5c18.6 5.6 31.6 23.4 31.6 43.4 0 24.5-19.1 44.4-42.7 45.1z"/>
+                </svg>
+              </div>
+              <div className="flex w-full flex-1 flex-col items-start justify-center gap-0 overflow-hidden truncate text-sm">
+                Payroll Management
+              </div>
+            </a>
+          </li>
+          </Link>
+
+          <Link to={'/admin/Projectmanagment'}>
+
+              <li className="px-3">
+              <a
+              
+              className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
+                currentPath === '/admin/Projectmanagment' ? 'bg-blue-200 text-emerald-500' : ''
+              }`}
+            >
+                  <div className="flex items-center self-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 640 512"
+                      className="h-6 w-6"
+                    >
+                      <path d="M384 320H256c-17.7 0-32 14.3-32 32v128c0 17.7 14.3 32 32 32h128c17.7 0 32-14.3 32-32V352c0-17.7-14.3-32-32-32zM192 32c0-17.7-14.3-32-32-32H32C14.3 0 0 14.3 0 32v128c0 17.7 14.3 32 32 32h95.7l73.2 128C212 301 232.4 288 256 288h.3L192 175.5V128h224V64H192V32zM608 0H480c-17.7 0-32 14.3-32 32v128c0 17.7 14.3 32 32 32h128c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32z"/>
+                    </svg>
+                  </div>
+                  <div className="flex w-full flex-1 flex-col items-start justify-center gap-0 overflow-hidden truncate text-sm">
+                    Projects and OverView
+                  </div>
+                </a>
+              </li>
+              </Link>
+
+              <Link to={'/admin/Profile'}>
+
+              <li className="px-3">
+              <a
+             
+             className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
+              currentPath === '/admin/Profile' ? 'bg-blue-200 text-emerald-500' : ''
+            }`}
+            >
+                <div className="flex items-center self-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 496 512"
+                    className="h-6 w-6"
+                    aria-label="Profile icon"
+                    role="graphics-symbol"
+                  >
+                    <path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 96c48.6 0 88 39.4 88 88s-39.4 88-88 88-88-39.4-88-88 39.4-88 88-88zm0 344c-58.7 0-111.3-26.6-146.5-68.2 18.8-35.4 55.6-59.8 98.5-59.8 2.4 0 4.8 .4 7.1 1.1 13 4.2 26.6 6.9 40.9 6.9 14.3 0 28-2.7 40.9-6.9 2.3-.7 4.7-1.1 7.1-1.1 42.9 0 79.7 24.4 98.5 59.8C359.3 421.4 306.7 448 248 448z"/>
+                  </svg>
+                </div>
+                <div className="flex w-full flex-1 flex-col items-start justify-center gap-0 overflow-hidden truncate text-sm">
+                  Profile
+                </div>
+                <span className="inline-flex items-center justify-center rounded-full bg-emerald-100 px-2 text-xs text-emerald-500">
+                  <span className="sr-only">new notifications</span>
+                </span>
+              </a>
+            </li>
+            </Link>
+
+            <Link to={'/admin/Chat'}>
+
+            <li className="px-3">
+            <a
+              
+              className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
+                currentPath === '/admin/Chat' ? 'bg-blue-200 text-emerald-500' : ''
+              }`}
+            >
+              <div className="flex items-center self-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 512 512"
+                  className="h-6 w-6"
+                  aria-label="Chat icon"
+                  role="graphics-symbol"
+                >
+                  <path d="M256 32C114.6 32 0 125.1 0 240c0 49.6 21.4 95 57 130.7C44.5 421.1 2.7 466 2.2 466.5c-2.2 2.3-2.8 5.7-1.5 8.7S4.8 480 8 480c66.3 0 116-31.8 140.6-51.4 32.7 12.3 69 19.4 107.4 19.4 141.4 0 256-93.1 256-208S397.4 32 256 32zM128 272c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 0c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 0c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/>
+                </svg>
+              </div>
+              <div className="flex w-full flex-1 flex-col items-start justify-center gap-0 overflow-hidden truncate text-sm">
+                Chat
+              </div>
+            </a>
+          </li>
+          </Link>
+
+            </ul>
+          </div>
+        </nav>
+      </aside>
+
+      {/*  <!-- Backdrop --> */}
+      <div
+        className={`fixed top-0 bottom-0 left-0 right-0 z-30 bg-slate-900/20 transition-colors sm:hidden ${
+          isSideNavOpen ? "block" : "hidden"
+        }`}
+        onClick={() => setIsSideNavOpen(false)}
+      ></div>
+      {/*  <!-- End Basic side navigation menu --> */}
+    </>
+  )
+}
