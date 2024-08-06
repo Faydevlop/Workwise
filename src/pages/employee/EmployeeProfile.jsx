@@ -1,27 +1,44 @@
-import React, { useState } from 'react'
-import AdminSidebar from '../../components/Sidebar/AdminSidebar'
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import EmployeeSidebar from '../../components/Sidebar/EmployeeSidebar';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
-
-const Profile = () => {
+const EmployeeProfile = () => {
+  const [user,setUser] = useState('')
+  const [loading,setLoading] = useState(true)
   const [showPasswordSection, setShowPasswordSection] = useState(false);
 
   const togglePasswordSection = () => {
     setShowPasswordSection(!showPasswordSection);
   };
 
-  const { admin } = useSelector((state) => state.auth.admin);
-  console.log(admin);
-  
+  const { employee } = useSelector((state) => state.employeeAuth);
+  console.log(employee.user);
+  const userId = employee.user._id
+
+  useEffect(() => {
+    const fetchUser = async () => {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getuser/${userId}`);
+            setUser(response.data);
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    fetchUser();
+}, [userId]);
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
       <div className="hidden lg:block" style={{ width: '250px' }}>
-        <AdminSidebar />
+        <EmployeeSidebar />
       </div>
       <div className="lg:hidden">
-        <AdminSidebar />
+        <EmployeeSidebar />
       </div>
 
       <div style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
@@ -84,14 +101,39 @@ const Profile = () => {
           </div>
           <div className="mt-20 md:flex md:justify-between">
             <div>
-              <h2 className="text-3xl font-bold mb-2">{admin?.username} </h2>
-              <p className="text-gray-600 font-bold text-1xl mb-4">Admin</p>
+              <h2 className="text-3xl font-bold mb-2">{user.firstName} {user.lastName}</h2>
+              <p className="text-gray-600 font-bold text-1xl mb-4">{user.position}</p>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center mb-4">
-                  <span>Email: {admin?.email}</span>
+                  <span>Email: {user.email}</span>
                 </div>
-                
-               
+                <div className="flex items-center mb-4">
+                  <span>Phone: {user.phone}</span>
+                </div>
+                <div className="flex items-center mb-4">
+                  <span>DOB: {new Date(user.dob).toLocaleDateString()}</span>
+                </div>
+                <div className="flex items-center mb-4">
+                  <span>Gender: {user.gender}</span>
+                </div>
+                <div className="flex items-center mb-4">
+                  <span>Address: {user.address}</span>
+                </div>
+                <div className="flex items-center mb-4">
+                  <span>Department: {user.department}</span>
+                </div>
+                <div className="flex items-center mb-4">
+                  <span>Position: {user.position}</span>
+                </div>
+                <div className="flex items-center mb-4">
+                  <span>Date of Joining: {new Date(user.dateOfJoining).toLocaleDateString()}</span>
+                </div>
+                <div className="flex items-center mb-4">
+                  <span>Salary: ${user.salary}</span>
+                </div>
+                <div className="flex items-center mb-4">
+                  <span>Status: {user.employeeStatus}</span>
+                </div>
               </div>
             </div>
             <div className="mt-8 md:mt-0">
@@ -101,12 +143,13 @@ const Profile = () => {
               >
                 {showPasswordSection ? 'Hide Password Section' : 'Change Password'}
               </button>
-
-              
-              
-
+              <Link to={`/employee/editprofile/${employee.user._id}`} >
+              <button className="bg-blue-500 ml-4  rounded-lg hover:bg-blue-600 text-white font-bold py-2 px-4 mb-4">
+                Edit Profile
+              </button>
+              </Link>
             </div>
-          </div>  
+          </div>
           {showPasswordSection && (
             <div>
               <h3 className="text-xl font-bold mb-4">Change Password</h3>
@@ -150,8 +193,7 @@ const Profile = () => {
         </div>
       </div>
     </div>
-   
-  )
-}
+  );
+};
 
-export default Profile
+export default EmployeeProfile;

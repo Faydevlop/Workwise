@@ -1,6 +1,6 @@
 import React from 'react'
 import AdminSidebar from '../../components/Sidebar/AdminSidebar'
-import AddUserForm from '../../components/AddUserForm';
+import AddUserForm from '../../components/forms/AddUserForm';
 
 const AddUser = () => {
   return (

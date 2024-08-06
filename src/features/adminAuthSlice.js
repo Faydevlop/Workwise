@@ -26,7 +26,7 @@ export const LoginAuth = createAsyncThunk(
   async (userDate ,{rejectWithValue})=>{
     try {
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/admin/login`,userDate)
-      return response,data
+      return response.data
       
     } catch (error) {
       if(error.response && error.response.data){
