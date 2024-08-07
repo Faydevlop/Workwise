@@ -45,7 +45,7 @@ const EmployeeProfile = () => {
         <div className="bg-white ml-7 rounded-lg shadow-md p-6 md:p-8">
           <div className="relative">
             <img
-              src="https://via.placeholder.com/1920x400"
+              src="https://images.pexels.com/photos/936722/pexels-photo-936722.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
               alt="Cover"
               className="rounded-t-lg w-full h-48 object-cover"
             />
@@ -69,33 +69,11 @@ const EmployeeProfile = () => {
             <div className="absolute top-32 left-1/2 transform -translate-x-1/2">
               <div className="relative">
                 <img
-                  src="https://via.placeholder.com/150"
+                  src={ user.profileImageUrl? ` http://localhost:4000/${user.profileImageUrl}` : `https://cdn.pixabay.com/photo/2019/08/11/18/59/icon-4399701_1280.png`}
                   alt="Profile"
                   className="rounded-full w-32 h-32 mb-4 md:mb-0 md:mr-6 border-4 border-white"
                 />
-                <label htmlFor="photo-upload" className="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2 cursor-pointer">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                  <input type="file" id="photo-upload" className="hidden" />
-                </label>
+                
               </div>
             </div>
           </div>

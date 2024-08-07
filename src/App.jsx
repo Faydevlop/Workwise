@@ -75,7 +75,7 @@ function App() {
 
 
         {/* Redirect */}
-        <Route path="/" element={<Navigate to="admin/login" />} />
+        <Route path="/" element={<Navigate to="employee/login" />} />
       </Routes>
     </BrowserRouter>
   );

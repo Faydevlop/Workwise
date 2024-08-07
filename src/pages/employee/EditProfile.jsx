@@ -19,7 +19,11 @@ const EditProfile = () => {
     const [phone, setPhone] = useState('');
     const [gender, setGender] = useState('');
     const [address, setAddress] = useState('');
-   
+    const [profilePhoto, setProfilePhoto] = useState(null);
+    const [profilePhotoPreview, setProfilePhotoPreview] = useState('');
+
+    console.log(profilePhotoPreview,profilePhoto);
+    
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -33,7 +37,7 @@ const EditProfile = () => {
                 setPhone(user.phone);
                 setGender(user.gender);
                 setAddress(user.address);
-                
+                setProfilePhotoPreview(user.profileImageUrl || ''); // Assuming URL is returned for current photo
             } catch (error) {
                 console.error('Error fetching user data:', error);
             } finally {
@@ -44,21 +48,37 @@ const EditProfile = () => {
         fetchUser();
     }, [userId]);
 
+    const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        setProfilePhoto(file);
+        setProfilePhotoPreview(URL.createObjectURL(file));
+    }
+};
+
+    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        const formData = new FormData();
+        formData.append('firstName', firstName);
+        formData.append('lastName', lastName);
+        formData.append('email', email);
+        formData.append('dob', dob);
+        formData.append('phone', phone);
+        formData.append('gender', gender);
+        formData.append('address', address);
+        if (profilePhoto) {
+            formData.append('profilePhoto', profilePhoto);
+        }
+
         try {
-            const updatedUser = {
-                firstName,
-                lastName,
-                email,
-                dob,
-                phone,
-                gender,
-                address,
-                
-            };
-            await axios.put(`${import.meta.env.VITE_BASE_URL}/employee/editprofile/${userId}`, updatedUser);
+            await axios.put(`${import.meta.env.VITE_BASE_URL}/employee/editprofile/${userId}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
             toast.success('User updated successfully');
         } catch (error) {
             console.error('Error updating user:', error);
@@ -83,6 +103,27 @@ const EditProfile = () => {
                     <h2 className="text-2xl font-bold mb-6">Edit Profile</h2>
                     <hr />
                     <form onSubmit={handleSubmit}>
+                        {/* Profile Photo Section */}
+                        <div className="mb-8 flex items-center">
+                            <div className="w-24 h-24 flex-shrink-0 rounded-full overflow-hidden border border-gray-300">
+                            <img
+                                src={profilePhotoPreview || `http://localhost:4000/${profilePhotoPreview || 'default-photo.png'}`}
+                                alt="Profile"
+                                className="w-full h-full object-cover"
+                                />
+
+
+                            </div>
+                            <div className="ml-6">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handlePhotoChange}
+                                    className="mt-1 block w-full"
+                                />
+                            </div>
+                        </div>
+
                         {/* Personal Details Section */}
                         <div className="mb-8">
                             <h3 className="text-xl font-semibold mb-4">Personal Details</h3>
@@ -107,7 +148,7 @@ const EditProfile = () => {
                                         placeholder="Doe"
                                     />
                                 </div>
-                                {/* <div>
+                                <div>
                                     <label className="block text-sm font-medium text-gray-700">Email</label>
                                     <input
                                         type="email"
@@ -116,7 +157,7 @@ const EditProfile = () => {
                                         onChange={(e) => setEmail(e.target.value)}
                                         placeholder="john.doe@example.com"
                                     />
-                                </div> */}
+                                </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
                                     <input
@@ -161,8 +202,6 @@ const EditProfile = () => {
                                 </div>
                             </div>
                         </div>
-
-                        
 
                         {/* Submit Button */}
                         <div className="mt-8 flex justify-end">
