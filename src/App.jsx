@@ -30,6 +30,11 @@ import EmployeeChat from './pages/employee/EmployeeChat';
 
 import EmployeeProfile from './pages/employee/EmployeeProfile';
 import EditProfile from './pages/employee/EditProfile';
+import ResetPassword from './pages/employee/ResetPass';
+import Resetpage from './pages/employee/Resetpage';
+import AddProjectPage from './pages/admin/projectmanagment/AddProjectPage';
+import ProjectDetailspage from './pages/admin/projectmanagment/ProjectDetailspage';
+import EditProjectpage from './pages/admin/projectmanagment/EditProjectpage';
 
 
 function App() {
@@ -39,27 +44,38 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Admin Routes */}
+      {/* Admin Routes */}
         <Route path="admin/login" element={<AdminLogin />} />
         <Route path="admin/signin" element={<AdminSignin />} />
         
         {/* Private Routes */}
+
         <Route path="admin/dashboard" element={isAuthenticated ? <AdminDashBoard /> : <Navigate to="/admin/login" />} />
-        <Route path="admin/Usermanagment" element={isAuthenticated ? <Usermanagment /> : <Navigate to="/admin/login" />} />
-        <Route path="admin/Usermanagment/adduser" element={isAuthenticated ? <AddUser /> : <Navigate to="/admin/login" />} />
+
         <Route path="admin/Leavemanagment" element={isAuthenticated ? <Leavemanagment /> : <Navigate to="/admin/login" />} />
         <Route path="admin/Departmentmanagment" element={isAuthenticated ? <Departmentmanagment /> : <Navigate to="/admin/login" />} />
+
+        {/* Project managment pages */}
         <Route path="admin/Projectmanagment" element={isAuthenticated ? <Projectmanagment /> : <Navigate to="/admin/login" />} />
+        <Route path="admin/projectmanagment/addproject" element={isAuthenticated ? <AddProjectPage /> : <Navigate to="/admin/login" />} />
+        <Route path="admin/projectmanagment/:projectId" element={isAuthenticated ? <ProjectDetailspage /> : <Navigate to="/admin/login" />} />
+        <Route path="admin/projectmanagment/editproject/:projectId" element={isAuthenticated ? <EditProjectpage /> : <Navigate to="/admin/login" />} />
+
+
         <Route path="admin/Profile" element={isAuthenticated ? <Profile /> : <Navigate to="/admin/login" />} />
         <Route path="admin/editprofile/:userId" element={isAuthenticated ? <Projectmanagment /> : <Navigate to="/admin/login" />} />
+
         <Route path="admin/Chat" element={isAuthenticated ? <AdminChat /> : <Navigate to="/admin/login" />} />
         <Route path="admin/Payrollmanagment" element={isAuthenticated ? <Payrollmanagment /> : <Navigate to="/admin/login" />} />
+
+        {/* User management pages */}
+        <Route path="admin/Usermanagment" element={isAuthenticated ? <Usermanagment /> : <Navigate to="/admin/login" />} />
+        <Route path="admin/Usermanagment/adduser" element={isAuthenticated ? <AddUser /> : <Navigate to="/admin/login" />} />
         <Route path="/admin/showuser/:userId" element={isAuthenticated ? <Showuser /> : <Navigate to="/admin/login" />} />
         <Route path="/admin/edituser/:userId" element={isAuthenticated ? <EditUser /> : <Navigate to="/admin/login" />} />
 
       {/* employee routes */}
       <Route path="employee/login" element={< EmployeeLogin/>} />
-
       <Route path="employee/dashboard" element={isEmployeeAuth ? <EmployeeDashboard /> : <Navigate to="/employee/login" />} />
 
       <Route path="employee/tasks" element={isEmployeeAuth ? <EmployeeTaskmanagment /> : <Navigate to="/employee/login" />} />
@@ -69,13 +85,15 @@ function App() {
       <Route path="employee/profile" element={isEmployeeAuth ? <EmployeeProfile /> : <Navigate to="/employee/login" />} />
       <Route path="employee/chat" element={isEmployeeAuth ? <EmployeeChat /> : <Navigate to="/employee/login" />} />
       <Route path="employee/editprofile/:userId" element={isEmployeeAuth ? <EditProfile /> : <Navigate to="/employee/login" />} />
+      <Route path="employee/request-reset-password" element={isEmployeeAuth ? <ResetPassword /> : <Navigate to="/employee/login" />} />
+      <Route path="employee/reset-password" element={ <Resetpage /> } />
 
 
 
 
 
         {/* Redirect */}
-        <Route path="/" element={<Navigate to="employee/login" />} />
+        <Route path="/" element={<Navigate to="employee/login" />} />j
       </Routes>
     </BrowserRouter>
   );

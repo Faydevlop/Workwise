@@ -115,12 +115,16 @@ const EmployeeProfile = () => {
               </div>
             </div>
             <div className="mt-8 md:mt-0">
+              <Link to={'/employee/request-reset-password'}>
               <button
-                onClick={togglePasswordSection}
+               
                 className="bg-blue-500 rounded-lg hover:bg-blue-600 text-white font-bold py-2 px-4 mb-4"
               >
-                {showPasswordSection ? 'Hide Password Section' : 'Change Password'}
+               Change Password
               </button>
+              
+              </Link>
+              
               <Link to={`/employee/editprofile/${employee.user._id}`} >
               <button className="bg-blue-500 ml-4  rounded-lg hover:bg-blue-600 text-white font-bold py-2 px-4 mb-4">
                 Edit Profile
@@ -128,46 +132,7 @@ const EmployeeProfile = () => {
               </Link>
             </div>
           </div>
-          {showPasswordSection && (
-            <div>
-              <h3 className="text-xl font-bold mb-4">Change Password</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="current-password" className="block mb-2">
-                    Current Password
-                  </label>
-                  <input
-                    type="password"
-                    id="current-password"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="new-password" className="block mb-2">
-                    New Password
-                  </label>
-                  <input
-                    type="password"
-                    id="new-password"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="confirm-password" className="block mb-2">
-                    Confirm Password
-                  </label>
-                  <input
-                    type="password"
-                    id="confirm-password"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-              </div>
-              <button className="flex mt-5 items-center justify-center text-white bg-blue-500 hover:bg-gray-400 focus:ring-4 focus:ring-primary-300 font-medium rounded-xl text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
-                Change Password
-              </button>
-            </div>
-          )}
+         
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -25,6 +26,8 @@ const AddUserForm = () => {
   const [dateOfJoining, setDateOfJoining] = useState('');
   const [salary, setSalary] = useState('');
   const [employeeStatus, setEmployeeStatus] = useState('');
+
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -67,12 +70,13 @@ const AddUserForm = () => {
       })
       toast.success("User added successfully!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
+        onClose:()=>navigate('/admin/Usermanagment')
        
       });
       
