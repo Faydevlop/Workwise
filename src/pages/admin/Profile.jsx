@@ -24,7 +24,7 @@ const Profile = () => {
         <AdminSidebar />
       </div>
 
-      <div style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
+      <div className='bg-blue-50' style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
         <div className="bg-white ml-7 rounded-lg shadow-md p-6 md:p-8">
           <div className="relative">
             <img

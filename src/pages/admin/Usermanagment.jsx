@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import AdminSidebar from '../../components/Sidebar/AdminSidebar'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 import Backdrop from '@mui/material/Backdrop';
@@ -14,6 +14,7 @@ const Usermanagment = () => {
     const [loading,setLoading] = useState(true)
     const [openDropdownId, setOpenDropdownId] = useState(null);
     const dropdownRef = useRef(null);
+    const navigate = useNavigate()
   
     const toggleDropdown = (userId) => {
       setOpenDropdownId(openDropdownId === userId ? null : userId);
@@ -36,7 +37,11 @@ const Usermanagment = () => {
     
 const handleDelete = async (userId) =>{
     try {
-        await axios.delete(`${import.meta.env.VITE_BASE_URL}/admin/deleteuser/${userId}`)
+        await axios.delete(`${import.meta.env.VITE_BASE_URL}/admin/deleteuser/${userId}`,{
+          headers:{
+            Authorization:`Bearer ${localStorage.getItem('token')}`,
+          }
+        })
         toast.success('User deleted successfully', {
             position: 'top-right',
             autoClose: 3000, // 3 seconds
@@ -45,7 +50,9 @@ const handleDelete = async (userId) =>{
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
+         
         });
+
 
     } catch (error) {
         toast.error('Failed to delete user', {
@@ -65,7 +72,11 @@ const handleDelete = async (userId) =>{
     useEffect(()=>{
         const fetchUser = async () =>{
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getusers`);
+                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getusers`,{
+                  headers:{
+                    Authorization:`Bearer ${localStorage.getItem('token')}`,
+                  }
+                });
                 setUsers(response.data.allUsers)
 
             } catch (error) {
@@ -93,7 +104,7 @@ const handleDelete = async (userId) =>{
    </div>
    <ToastContainer/>
 
-     <div style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
+     <div className='bg-blue-50' style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
               
        {/* section 2 */}
        
@@ -188,9 +199,9 @@ const handleDelete = async (userId) =>{
                 <div
                   ref={dropdownRef}
                   id={`dropdown-${user._id}`}
-                  className="absolute right-0 mt-2 z-20 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
+                  className="absolute right-0 mt-2 z-20 w-44 bg-white rounded divide-y divide-gray-100 shadow "
                 >
-                  <ul className="py-1 text-sm text-black dark:text-black" aria-labelledby={`dropdown-button-${user._id}`}>
+                  <ul className="py-1 text-sm text-dark dark:text-dark" aria-labelledby={`dropdown-button-${user._id}`}>
                   <Link to={`/admin/showuser/${user._id}`}>
                     <li>
                       <a  className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
@@ -203,7 +214,7 @@ const handleDelete = async (userId) =>{
                     </Link>
                   </ul>
                   <div className="py-1">
-                    <a onClick={()=>handleDelete(user._id)}  className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
+                    <a onClick={()=>handleDelete(user._id)}  className="block py-2 px-4 text-sm text-red-700 hover:bg-gray-100 ">Delete</a>
                   </div>
                   
                 </div>

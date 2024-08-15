@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AdminSidebar from '../../components/Sidebar/AdminSidebar';
-import { useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 import Backdrop from '@mui/material/Backdrop';
@@ -22,13 +22,18 @@ const EditUser = () => {
     const [department, setDepartment] = useState('');
     const [position, setPosition] = useState('');
     const [dateOfJoining, setDateOfJoining] = useState('');
-    const [salary, setSalary] = useState('');
+    // const [salary, setSalary] = useState('');
     const [employeeStatus, setEmployeeStatus] = useState('');
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getuser/${userId}`);
+                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getuser/${userId}`,{
+                    headers:{
+                        Authorization:`Bearer ${localStorage.getItem('token')}`,
+                      }
+                });
                 const user = response.data;
                 setFirstName(user.firstName);
                 setLastName(user.lastName);
@@ -40,7 +45,7 @@ const EditUser = () => {
                 setDepartment(user.department);
                 setPosition(user.position);
                 setDateOfJoining(user.dateOfJoining);
-                setSalary(user.salary);
+                // setSalary(user.salary);
                 setEmployeeStatus(user.employeeStatus);
             } catch (error) {
                 console.error('Error fetching user data:', error);
@@ -67,11 +72,25 @@ const EditUser = () => {
                 department,
                 position,
                 dateOfJoining,
-                salary,
+                // salary,
                 employeeStatus,
             };
-            await axios.put(`${import.meta.env.VITE_BASE_URL}/admin/updateuser/${userId}`, updatedUser);
-            toast.success('User updated successfully');
+            await axios.put(`${import.meta.env.VITE_BASE_URL}/admin/updateuser/${userId}`, updatedUser,{
+                headers:{
+                    Authorization:`Bearer ${localStorage.getItem('token')}`,
+                  }
+            });
+            toast.success('User updated successfully',{
+                position: "top-right",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                onClose:()=>navigate('/admin/Usermanagment')
+            });
+            
         } catch (error) {
             console.error('Error updating user:', error);
             toast.error('Error updating user');
@@ -210,7 +229,7 @@ const EditUser = () => {
                                         onChange={(e) => setDateOfJoining(e.target.value)}
                                     />
                                 </div>
-                                <div>
+                                {/* <div>
                                     <label className="block text-sm font-medium text-gray-700">Salary</label>
                                     <input
                                         type="number"
@@ -219,7 +238,7 @@ const EditUser = () => {
                                         onChange={(e) => setSalary(e.target.value)}
                                         placeholder="$5000"
                                     />
-                                </div>
+                                </div> */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Employee Status</label>
                                     <select
@@ -228,9 +247,9 @@ const EditUser = () => {
                                         onChange={(e) => setEmployeeStatus(e.target.value)}
                                     >
                                         <option value="">Select Status</option>
-                                        <option value="permanent">Permanent</option>
-                                        <option value="temporary">Temporary</option>
-                                        <option value="contract">Contract</option>
+                                        <option value="Active">Active</option>
+                                        <option value="inactive">inactive</option>
+                                       
                                     </select>
                                 </div>
                             </div>

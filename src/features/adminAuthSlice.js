@@ -26,7 +26,10 @@ export const LoginAuth = createAsyncThunk(
   async (userDate ,{rejectWithValue})=>{
     try {
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/admin/login`,userDate)
+      const {token} = response.data;
+      localStorage.setItem('token',token)
       return response.data
+
       
     } catch (error) {
       if(error.response && error.response.data){
@@ -34,7 +37,7 @@ export const LoginAuth = createAsyncThunk(
       }else{
         return rejectWithValue({message:'An error occured'})
       }
-      
+    
     }
     
   }

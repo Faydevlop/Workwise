@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import EmployeeSidebar from '../../components/Sidebar/EmployeeSidebar';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 import Backdrop from '@mui/material/Backdrop';
@@ -11,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const EditProfile = () => {
     const [loading, setLoading] = useState(true);
     const { userId } = useParams();
+    const navigate = useNavigate()
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -28,7 +29,11 @@ const EditProfile = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getuser/${userId}`);
+                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getuser/${userId}`,{
+                    headers:{
+                        Authorization:`Bearer ${localStorage.getItem('token')}`,
+                      }
+                });
                 const user = response.data;
                 setFirstName(user.firstName);
                 setLastName(user.lastName);
@@ -75,11 +80,20 @@ const EditProfile = () => {
 
         try {
             await axios.put(`${import.meta.env.VITE_BASE_URL}/employee/editprofile/${userId}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+                headers:{
+                    Authorization:`Bearer ${localStorage.getItem('token')}`,
+                  }
             });
-            toast.success('User updated successfully');
+            toast.success('User updated successfully',{
+                position: "top-right",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                onClose:()=>navigate('/employee/profile')
+            });
         } catch (error) {
             console.error('Error updating user:', error);
             toast.error('Error updating user');
@@ -87,6 +101,10 @@ const EditProfile = () => {
             setLoading(false);
         }
     };
+
+    console.log(profilePhotoPreview);
+   
+    
 
     return (
         <div style={{ display: 'flex', height: '100vh' }}>
@@ -107,10 +125,11 @@ const EditProfile = () => {
                         <div className="mb-8 flex items-center">
                             <div className="w-24 h-24 flex-shrink-0 rounded-full overflow-hidden border border-gray-300">
                             <img
-                                src={profilePhotoPreview || `http://localhost:4000/${profilePhotoPreview || 'default-photo.png'}`}
-                                alt="Profile"
-                                className="w-full h-full object-cover"
-                                />
+    src={profilePhotoPreview || 'https://cdn.pixabay.com/photo/2019/08/11/18/59/icon-4399701_1280.png'}
+    alt="Profile"
+    className="w-full h-full object-cover"
+/>
+
 
 
                             </div>

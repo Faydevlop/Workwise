@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { LoginAuth } from '../../features/employeeAuth';
+import { loginAuth } from '../../features/managerAuth';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.png'
 
 
-const EmployeeLogin = () => {
+const ManagerLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { error, loading } = useSelector((state) => state.employeeAuth);
+  const { error, loading } = useSelector((state) => state.managerAuth);
   const [errors, setErrors] = useState({});
   const [errorVisible, setErrorVisible] = useState(false);
 
@@ -38,10 +37,10 @@ const EmployeeLogin = () => {
     e.preventDefault();
     const errors = validate();
     if (Object.keys(errors).length === 0) {
-      dispatch(LoginAuth({ email, password }))
+      dispatch(loginAuth({ email, password }))
         .unwrap()
         .then(() => {
-          navigate('/employee/dashboard');
+          navigate('/manager/dashboard');
         });
     } else {
       setErrors(errors); // Show errors
@@ -107,4 +106,4 @@ const EmployeeLogin = () => {
   );
 };
 
-export default EmployeeLogin;
+export default ManagerLogin;

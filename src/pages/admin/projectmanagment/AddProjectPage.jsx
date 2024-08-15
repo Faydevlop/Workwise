@@ -11,6 +11,8 @@ const AddProjectPage = () => {
     const [managerError, setManagerError] = useState('');
     const [employeeError, setEmployeeError] = useState('');
 
+    
+
     const [name, setName] = useState('');
     const [status, setStatus] = useState('pending');
     const [startDate, setStartDate] = useState('');
@@ -78,7 +80,11 @@ const validateForm = () => {
         const fetchManager = async () => {
             
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getmanagers`);
+                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getmanagers`,{
+                    headers:{
+                        Authorization:`Bearer ${localStorage.getItem('token')}`,
+                      }
+                });
                 const data = response.data;
                 if (data.length === 0) {
                     setManagerError('No managers are available.');
@@ -94,13 +100,17 @@ const validateForm = () => {
 
         const fetchEmployees = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getUnassignedemployees`);
+                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getUnassignedemployees`,{
+                    headers:{
+                        Authorization:`Bearer ${localStorage.getItem('token')}`,
+                      }
+                });
                 const data = response.data;
                 if (data.length === 0) {
                     setEmployeeError('No unassigned employees are available.');
                 } else {
                     setUnassignedEmployees(data);
-                    setEmployeeError(''); // Clear error if data is found
+                    setEmployeeError(''); 
                 }
             } catch (error) {
                 console.error('Error fetching unassigned employees:', error);
@@ -133,7 +143,11 @@ const validateForm = () => {
             return;
         }
         try {
-            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/admin/addNewProject`,userData)
+            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/admin/addNewProject`,userData,{
+                headers:{
+                    Authorization:`Bearer ${localStorage.getItem('token')}`,
+                  }
+            })
             toast.success("Project added successfully!", {
                 position: "top-right",
                 autoClose: 2000,

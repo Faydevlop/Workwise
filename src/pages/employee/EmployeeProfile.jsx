@@ -20,7 +20,11 @@ const EmployeeProfile = () => {
   useEffect(() => {
     const fetchUser = async () => {
         try {
-            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getuser/${userId}`);
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getuser/${userId}`,{
+              headers:{
+                Authorization:`Bearer ${localStorage.getItem('token')}`,
+              }
+            });
             setUser(response.data);
         } catch (error) {
             console.error("Error fetching user data:", error);
@@ -31,6 +35,8 @@ const EmployeeProfile = () => {
 
     fetchUser();
 }, [userId]);
+console.log(user.profileImageUrl);
+
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
@@ -106,9 +112,7 @@ const EmployeeProfile = () => {
                 <div className="flex items-center mb-4">
                   <span>Date of Joining: {new Date(user.dateOfJoining).toLocaleDateString()}</span>
                 </div>
-                <div className="flex items-center mb-4">
-                  <span>Salary: ${user.salary}</span>
-                </div>
+               
                 <div className="flex items-center mb-4">
                   <span>Status: {user.employeeStatus}</span>
                 </div>

@@ -15,7 +15,11 @@ const Showuser = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getuser/${userId}`);
+                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getuser/${userId}`,{
+                  headers:{
+                    Authorization:`Bearer ${localStorage.getItem('token')}`,
+                  }
+                });
                 setUser(response.data);
             } catch (error) {
                 console.error("Error fetching user data:", error);
@@ -29,7 +33,11 @@ const Showuser = () => {
 
     const handleDelete = async () =>{
       try {
-          await axios.delete(`${import.meta.env.VITE_BASE_URL}/admin/deleteuser/${userId}`)
+          await axios.delete(`${import.meta.env.VITE_BASE_URL}/admin/deleteuser/${userId}`,{
+            headers:{
+              Authorization:`Bearer ${localStorage.getItem('token')}`,
+            }
+          })
           toast.success('User deleted successfully', {
               position: 'top-right',
               autoClose: 2000, // 3 seconds
@@ -81,43 +89,80 @@ const Showuser = () => {
             <ToastContainer/>
 
             <div style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
-                <div className="max-w-lg ml-5 my-10 bg-white rounded-lg shadow-md p-5">
-                    <img className="w-32 h-32 rounded-full mx-auto" src={user.profilePicture || 'https://picsum.photos/200'} alt="Profile picture" />
-                    <h2 className="text-center text-2xl font-semibold mt-3">{user.firstName} {user.lastName}</h2>
-                    <p className="text-center text-gray-600 mb-5 mt-1">{user.position}</p>
-                    <hr />
-                    <div className="mt-5">
-                        <h4 className="text-xl font-semibold">Personal Details</h4>
-                        <div className="text-gray-600 mt-2">
-                            <p><strong>First Name:</strong> {user.firstName}</p>
-                            <p><strong>Last Name:</strong> {user.lastName}</p>
-                            <p><strong>Email:</strong> {user.email}</p>
-                            <p><strong>Date of Birth:</strong> {user.dob}</p>
-                            <p><strong>Phone:</strong> {user.phone}</p>
-                            <p><strong>Gender:</strong> {user.gender}</p>
-                            <p><strong>Address:</strong> {user.address}</p>
-                            </div>
-                            <h4 className="text-xl font-semibold">Professional Details</h4>
-                            <div className="text-gray-600 mt-2">
-                            <p><strong>Department:</strong> {user.department}</p>
-                            <p><strong>Position:</strong> {user.position}</p>
-                            <p><strong>Date of Joining:</strong> {user.dateOfJoining}</p>
-                            <p><strong>Salary:</strong> {user.salary}</p>
-                            <p><strong>Employee Status:</strong> {user.employeeStatus}</p>
-                        </div>
-                        <div className="flex space-x-4 mt-4">
-                          <Link to={`/admin/edituser/${userId}`}>
-                          <button type="button" className="flex items-center justify-center text-white bg-blue-500 hover:bg-gray-400 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
-                                Edit
-                            </button>
-                          </Link>
-                           
-                            <button onClick={handleDelete}  type="button" className="flex items-center justify-center text-white bg-red-500 hover:bg-gray-400 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
-                                Delete
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                
+                <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 md:p-10">
+    <div className="bg-white shadow rounded-lg overflow-hidden w-full max-w-4xl flex flex-col md:flex-row">
+      {/* Left section - Profile Info */}
+      <div className="w-full md:w-2/3 p-6 md:p-8">
+        <div className="flex flex-col md:flex-row items-center md:space-x-6 space-y-4 md:space-y-0">
+          {/* Profile picture */}
+          <div className="w-24 h-24 rounded-full border-4 border-white">
+            <img
+              src="https://via.placeholder.com/150"
+              alt="Profile"
+              className="w-full h-full object-cover rounded-full"
+            />
+          </div>
+          {/* User Information */}
+          <div className="text-center md:text-left">
+            <h2 className="text-2xl font-bold text-gray-800">John Doe</h2>
+            <p className="text-gray-600">User ID: 101</p>
+          </div>
+        </div>
+        
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold text-gray-800">Personal Information</h3>
+          <div className="mt-2 space-y-1">
+            <p className="text-gray-600"><span className="font-medium">Full Name:</span>{user.firstName}{user.lastName}</p>
+            <p className="text-gray-600"><span className="font-medium">Email:</span> {user.email}</p>
+            <p className="text-gray-600"><span className="font-medium">Phone Number:</span>  {user.phone}</p>
+            <p className="text-gray-600"><span className="font-medium">Date of Birth:</span>  {user.dob}</p>
+            <p className="text-gray-600"><span className="font-medium">Gender:</span>  {user.gender}</p>
+            <p className="text-gray-600"><span className="font-medium">Address:</span>{user.address}</p>
+          </div>
+        </div>
+        
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold text-gray-800">Professional Information</h3>
+          <div className="mt-2 space-y-1">
+            <p className="text-gray-600"><span className="font-medium">Role:</span> {user.position}</p>
+            <p className="text-gray-600"><span className="font-medium">Department:</span>  {user.department}</p>
+            <p className="text-gray-600"><span className="font-medium">Date Joined:</span> {user.dateOfJoining}</p>
+            {/* <p className="text-gray-600"><span className="font-medium">Salary:</span> {user.salary}</p> */}
+            <p className="text-gray-600"><span className="font-medium">Employment Status:</span> {user.employeeStatus}</p>
+          </div>
+        </div>
+
+        
+        <div className="mt-6  flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+          {/* <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Assign Project</button> */}
+          <button onClick={handleDelete} className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete</button>
+          <Link to={`/admin/edituser/${userId}`}>
+          <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-purple-700">Edit</button>
+          </Link>
+        </div>
+      </div>
+      
+      {/* Right section - Activity */}
+      <div className="w-full md:w-1/3 bg-gray-100 p-6 md:p-8">
+        <h3 className="text-lg font-semibold text-gray-800">Activity</h3>
+        <div className="mt-4 space-y-2">
+          <div className="flex justify-between text-gray-600">
+            <span>Tasks Assigned</span>
+            <span>15</span>
+          </div>
+          <div className="flex justify-between text-gray-600">
+            <span>Tasks Completed</span>
+            <span>12</span>
+          </div>
+          <div className="flex justify-between text-gray-600">
+            <span>Attendance</span>
+            <span>98%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
             </div>
         </div>
     );

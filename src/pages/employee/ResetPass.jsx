@@ -48,7 +48,9 @@ const ResetPass = () => {
     setLoading(true);  
   
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/employee/reqest-reset-password/${userId}`, { email });
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/employee/reqest-reset-password/${userId}`, { email },{
+        
+      });
       setIsModalOpen(true); // Show the modal on success
     } catch (error) {
       const errorMessage = error.response?.data?.message || "An error occurred while sending the reset link.";

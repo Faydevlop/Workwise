@@ -4,7 +4,7 @@ import logo from '../../assets/Screenshot 2024-08-04 184513.png'
 
 
 
-export default function EmployeeSidebar() {
+export default function HrDashboard() {
   const [isSideNavOpen, setIsSideNavOpen] = useState(false)
   const path = useLocation()
   console.log(path.pathname);
@@ -74,14 +74,14 @@ export default function EmployeeSidebar() {
           <div>
             <ul className="flex flex-1 flex-col gap-1 py-3">
 
-            <Link to={'/employee/dashboard'}>
+            <Link to={'/manager/dashboard'}>
             <li className="px-3">
               
             <a
              
               
              className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
-              currentPath === '/employee/dashboard' ? 'bg-blue-200 text-emerald-500' : ''
+              currentPath === '/manager/dashboard' ? 'bg-blue-200 text-emerald-500' : ''
             }`}
             >
               
@@ -102,13 +102,13 @@ export default function EmployeeSidebar() {
             </a>
           </li>
           </Link>
-          <Link to={'/employee/tasks'}>
+          <Link to={'/manager/usermanagement'}>
 
               <li className="px-3">
               <a
               
               className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
-                currentPath === '/employee/tasks' ? 'bg-blue-200 text-emerald-500' : ''
+                currentPath === '/manager/usermanagement' ? 'bg-blue-200 text-emerald-500' : ''
               }`}
             >
                   <div className="flex items-center self-center">
@@ -121,17 +121,17 @@ export default function EmployeeSidebar() {
                     </svg>
                   </div>
                   <div className="flex w-full flex-1 flex-col items-start justify-center gap-0 overflow-hidden truncate text-sm">
-                    Tasks and OverView
+                  Recruitment Management
                   </div>
                 </a>
               </li>
               </Link>
-              <Link to={'/employee/meetings'}>
+              <Link to={'/manager/leavemanagement'}>
               <li className="px-3">
               <a
             
             className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
-              currentPath === '/employee/meetings' ? 'bg-blue-200 text-emerald-500' : ''
+              currentPath === '/manager/leavemanagement' ? 'bg-blue-200 text-emerald-500' : ''
             }`}
             >
                 <div className="flex items-center self-center">
@@ -146,17 +146,17 @@ export default function EmployeeSidebar() {
                   </svg>
                 </div>
                 <div className="flex w-full flex-1 flex-col items-start justify-center gap-0 overflow-hidden truncate text-sm">
-                  Meeting Schedules
+                Payroll Management
                 </div>
               </a>
             </li>
             </Link>
-            <Link to={'/employee/payroll'}>
+            <Link to={'/manager/tasks'}>
             <li className="px-3">
             <a
              
              className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
-              currentPath === '/employee/payroll' ? 'bg-blue-200 text-emerald-500' : ''
+              currentPath === '/manager/tasks' ? 'bg-blue-200 text-emerald-500' : ''
             }`}
             >
               <div className="flex items-center self-center">
@@ -169,17 +169,17 @@ export default function EmployeeSidebar() {
                 </svg>
               </div>
               <div className="flex w-full flex-1 flex-col items-start justify-center gap-0 overflow-hidden truncate text-sm">
-                Payroll Management
+              Employee Records
               </div>
             </a>
           </li>
           </Link>
-          <Link to={'/employee/leave'}>
+          <Link to={'/manager/meeting'}>
               <li className="px-3">
               <a
              
              className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
-              currentPath === '/employee/leave' ? 'bg-blue-200 text-emerald-500' : ''
+              currentPath === '/manager/meeting' ? 'bg-blue-200 text-emerald-500' : ''
             }`}
             >
                 <div className="flex items-center self-center">
@@ -194,8 +194,8 @@ export default function EmployeeSidebar() {
                   </svg>
                 </div>
                 <div className="flex w-full flex-1 flex-col items-start justify-center gap-0 overflow-hidden truncate text-sm">
-                  Leave Management
-                </div>
+                Meeting Schedules
+                                </div>
               </a>
               </li>
               </Link>
@@ -210,13 +210,13 @@ export default function EmployeeSidebar() {
 
             
           
-              <Link to={'/employee/profile'}>
+              <Link to={'/manager/profile'}>
 
               <li className="px-3">
               <a
              
              className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
-              currentPath === '/employee/profile' ? 'bg-blue-200 text-emerald-500' : ''
+              currentPath === '/manager/profile' ? 'bg-blue-200 text-emerald-500' : ''
             }`}
             >
                 <div className="flex items-center self-center">
@@ -240,13 +240,13 @@ export default function EmployeeSidebar() {
             </li>
             </Link>
 
-            <Link to={'/employee/chat'}>
+            <Link to={'/manager/chat'}>
 
             <li className="px-3">
             <a
               
               className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
-                currentPath === '/employee/chat' ? 'bg-blue-200 text-emerald-500' : ''
+                currentPath === '/manager/chat' ? 'bg-blue-200 text-emerald-500' : ''
               }`}
             >
               <div className="flex items-center self-center">

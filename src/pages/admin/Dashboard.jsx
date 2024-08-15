@@ -9,72 +9,168 @@ const AdminDashBoard = () => {
         </div>
          <div className="lg:hidden">
         {/* You can create a mobile version of the sidebar or a toggle button to show/hide it */}
-        <AdminSidebar />
+        <AdminSidebar />\
       </div>
 
-        <div style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
+        <div className='bg-blue-50' style={{ flex: 3, padding: '20px', overflow: 'auto', marginLeft: '' }}>
                  
           {/* section 1 */}
-          <div className="flex flex-wrap gap-x-4 gap-y-12 bg-white-100 px-4 py-20 lg:px-20">
-  <div className="flex w-72">
-    <div className="flex w-full max-w-full flex-col break-words rounded-lg border border-gray-100 bg-white text-gray-600 shadow-lg">
-      <div className="p-3">
-        <div className="absolute -mt-10 h-16 w-16 rounded-xl bg-gradient-to-tr from-gray-700 to-gray-400 text-center text-white shadow-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" className="mt-4 h-7 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
+          <div className="min-h-screen ml-1  p-8">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+        
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6 mb-6">
+        <div className="bg-white p-6 rounded-lg shadow">
+          <div className="flex items-center space-x-4">
+            <div className="bg-blue-500 text-white p-3 rounded-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800">New Tasks</h2>
+              <p className="text-3xl font-bold text-gray-900">154</p>
+            </div>
+          </div>
         </div>
-        <div className="pt-1 text-right">
-          <p className="text-sm font-light capitalize">Pageviews</p>
-          <h4 className="text-2xl font-semibold tracking-tighter xl:text-2xl">14,000</h4>
+        <div className="bg-white p-6 rounded-lg shadow">
+          <div className="flex items-center space-x-4">
+            <div className="bg-purple-500 text-white p-3 rounded-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800">
+                Total Projects
+              </h2>
+              <p className="text-3xl font-bold text-gray-900">2935</p>
+            </div>
+          </div>
         </div>
       </div>
-      <hr className="opacity-50"  />
-      <div className="p-4">
-        <p className="font-light"><span className="text-sm font-bold text-green-600">+22% </span>vs last month</p>
+
+      {/* Main Content */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Line Chart */}
+        <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">This month</h2>
+          <div className="flex justify-between items-center mb-6">
+            <p className="text-4xl font-bold text-gray-900">$37.5K</p>
+            <p className="text-green-500 text-xl">+2.45% On track</p>
+          </div>
+          <div className="relative">
+            {/* Placeholder for Line Chart */}
+            <svg className="w-full h-40 text-blue-500" viewBox="0 0 500 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 90L110 70L210 90L310 50L410 70L510 50" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+            </svg>
+          </div>
+        </div>
+
+        {/* Calendar */}
+        <div className="bg-white p-6 rounded-lg shadow">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-gray-800">April 2021</h2>
+            <div className="flex space-x-2">
+              <button className="p-1 rounded-lg bg-gray-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-gray-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M6 10a1 1 0 011-1h7a1 1 0 110 2H7a1 1 0 01-1-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+              <button className="p-1 rounded-lg bg-gray-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-gray-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M7 10a1 1 0 000 2h7a1 1 0 100-2H7z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div className="grid grid-cols-7 gap-2 text-center">
+            <div className="text-gray-400">Mo</div>
+            <div className="text-gray-400">Tu</div>
+            <div className="text-gray-400">We</div>
+            <div className="text-gray-400">Th</div>
+            <div className="text-gray-400">Fr</div>
+            <div className="text-gray-400">Sa</div>
+            <div className="text-gray-400">Su</div>
+            {/* Add more dates as needed */}
+            <div className="text-gray-800">22</div>
+            <div className="text-gray-800 bg-blue-100 rounded-full">23</div>
+            <div className="text-gray-800">24</div>
+            {/* Remaining dates... */}
+          </div>
+        </div>
+      </div>
+
+      {/* Project Table */}
+      <div className="bg-white p-6 rounded-lg shadow mt-6">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">Project Table</h2>
+        <table className="w-full">
+          <thead>
+            <tr className="text-gray-500">
+              <th className="text-left">Name</th>
+              <th className="text-left">Status</th>
+              <th className="text-left">Date</th>
+              <th className="text-left">Progress</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-t">
+              <td className="py-4">Horizon UI PRO</td>
+              <td className="text-green-500">Finish</td>
+              <td>18 Apr 2021</td>
+              <td>
+                <div className="h-2 bg-green-200 rounded-full w-24"></div>
+              </td>
+            </tr>
+            {/* Add more rows as needed */}
+          </tbody>
+        </table>
       </div>
     </div>
-  </div>
-  <div className="flex w-72">
-  <div className="flex w-full max-w-full flex-col break-words rounded-lg border border-gray-100 bg-white text-gray-600 shadow-lg">
-      <div className="p-3">
-        <div className="absolute -mt-10 h-16 w-16 rounded-xl bg-gradient-to-tr from-blue-700 to-blue-500 text-center text-white shadow-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" className="mt-4 h-7 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-        </div>
-        <div className="pt-1 text-right">
-          <p className="text-sm font-light capitalize">Users</p>
-          <h4 className="text-2xl font-semibold tracking-tighter xl:text-2xl">2,300</h4>
-        </div>
-      </div>
-      <hr className="opacity-50"  />
-      <div className="p-4">
-        <p className="font-light"><span className="text-sm font-bold text-green-600">+3% </span>vs last month</p>
-      </div>
-    </div>
-  </div>
-  <div className="flex w-72">
-    <div className="flex w-full max-w-full flex-col break-words rounded-lg border border-gray-100 bg-white text-gray-600 shadow-lg">
-      <div className="p-3">
-        <div className="absolute -mt-10 h-16 w-16 rounded-xl bg-gradient-to-tr from-emerald-700 to-emerald-500 text-center text-white shadow-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" className="mt-4 h-7 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <div className="pt-1 text-right">
-          <p className="text-sm font-light capitalize">Sales</p>
-          <h4 className="text-2xl font-semibold tracking-tighter xl:text-2xl">$5,360</h4>
-        </div>
-      </div>
-      <hr className="opacity-50"  />
-      <div className="p-4">
-        <p className="font-light"><span className="text-sm font-bold text-red-600">-3% </span>vs last month</p>
-      </div>
-    </div>
-  </div>
-</div>
 
         </div>
         

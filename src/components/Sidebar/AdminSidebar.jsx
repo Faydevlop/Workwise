@@ -50,7 +50,7 @@ export default function AdminSidebar() {
       <aside
         id="nav-menu-1"
         aria-label="Side navigation"
-        className={`fixed top-0 bottom-0 left-0 z-40 flex w-72 flex-col border-r border-r-slate-200 bg-white transition-transform lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-40 flex w-65 flex-col border-r border-r-slate-200 bg-white transition-transform lg:translate-x-0 ${
           isSideNavOpen ? "translate-x-0" : " -translate-x-full"
         }`}
       >

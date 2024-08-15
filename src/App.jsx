@@ -35,11 +35,19 @@ import Resetpage from './pages/employee/Resetpage';
 import AddProjectPage from './pages/admin/projectmanagment/AddProjectPage';
 import ProjectDetailspage from './pages/admin/projectmanagment/ProjectDetailspage';
 import EditProjectpage from './pages/admin/projectmanagment/EditProjectpage';
+import LoginPage from './pages/Test';
+import ManagerDashboard from './pages/manager/ManagerDashboard';
+import HrDashboard from './pages/Hr/HrDashboard';
+import ManagerLogin from './pages/manager/ManagerLogin';
+import Hrlogin from './pages/Hr/Hrlogin';
 
 
 function App() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const isEmployeeAuth = useSelector((state)=>state.employeeAuth.isAuthenticated)
+  const isManagerAuth = useSelector((state)=>state.managerAuth.isAuthenticated)
+  const isHrAuth =  useSelector((state)=>state.hrAuth.isAuthenticated)
+
 
   return (
     <BrowserRouter>
@@ -88,12 +96,26 @@ function App() {
       <Route path="employee/request-reset-password" element={isEmployeeAuth ? <ResetPassword /> : <Navigate to="/employee/login" />} />
       <Route path="employee/reset-password" element={ <Resetpage /> } />
 
+      {/* manager routes */}
+      <Route path="manager/login" element={ <ManagerLogin /> } />
+      <Route path="manager/dashboard" element={isManagerAuth ? <ManagerDashboard /> :  <Navigate to="/manager/login" /> } />
+
+
+      {/* HR side */}
+      <Route path="hr/login" element={ <Hrlogin /> } />
+      
+      <Route path="hr/dashboard" element={ isHrAuth ? <HrDashboard /> :  <Navigate to="/hr/login" />  } />
+
+      
+
 
 
 
 
         {/* Redirect */}
-        <Route path="/" element={<Navigate to="employee/login" />} />j
+        <Route path="/" element={<Navigate to="employee/login" />} />
+        <Route path="/test" element={<LoginPage/>} />
+
       </Routes>
     </BrowserRouter>
   );
