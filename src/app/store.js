@@ -11,6 +11,7 @@ const store = configureStore({
         managerAuth,
         hrAuth
     }
+    
 })
 
 export default store

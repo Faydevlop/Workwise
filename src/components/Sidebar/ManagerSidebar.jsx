@@ -151,12 +151,12 @@ export default function ManagerSidebar() {
               </a>
             </li>
             </Link>
-            <Link to={'/manager/tasks'}>
+            <Link to={'/manager/tasksmanagement'}>
             <li className="px-3">
             <a
              
              className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
-              currentPath === '/manager/tasks' ? 'bg-blue-200 text-emerald-500' : ''
+              currentPath === '/manager/tasksmanagement' ? 'bg-blue-200 text-emerald-500' : ''
             }`}
             >
               <div className="flex items-center self-center">
@@ -174,12 +174,12 @@ export default function ManagerSidebar() {
             </a>
           </li>
           </Link>
-          <Link to={'/manager/meeting'}>
+          <Link to={'/manager/meetings'}>
               <li className="px-3">
               <a
              
              className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
-              currentPath === '/manager/meeting' ? 'bg-blue-200 text-emerald-500' : ''
+              currentPath === '/manager/meetings' ? 'bg-blue-200 text-emerald-500' : ''
             }`}
             >
                 <div className="flex items-center self-center">

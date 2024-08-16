@@ -45,7 +45,7 @@ const managerAuthSlice = createSlice({
         })
         .addCase(loginAuth.rejected,(state,action)=>{
             state.loading = false;
-            state.error = action.payload.message || 'An error occurred'
+            state.error = action.payload.message || 'An error occurred'     
         })
     }
 })

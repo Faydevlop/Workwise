@@ -104,11 +104,28 @@ const handleDelete = async (userId) =>{
    </div>
    <ToastContainer/>
 
-     <div className='bg-blue-50' style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
+     <div className='bg-blue-50'      style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
               
        {/* section 2 */}
+       <header className="flex border shadow-lg rounded-lg  mb-5 border-gray-200 pl-4 flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-3">
+  <nav className="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between">
+    <a className="flex-none font-semibold text-xl  text-black focus:outline-none focus:opacity-80" href="/" aria-label="Brand">
+      Employee List
+    </a>
+    <div className="flex flex-row items-center gap-5 mt-5 sm:justify-start sm:mt-0 sm:ps-5">
+      <Link to={'/admin/Usermanagment/adduser'} >
+      <button className="px-4 py-2 bg-blue-700 rounded-xl text-white font-medium rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
+        Add Employee
+      </button>
+      </Link>
+     
+    </div>
+  </nav>
+</header>
        
-    <div className="mx-auto max-w-screen-xl px-4 lg:px-12">
+    <div className="mx-auto max-w-screen-xl px- ">
+      
+      
         
         <div className="bg-white dark:bg-white relative shadow-lg sm:rounded-lg overflow-hidden">
             <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
@@ -126,12 +143,12 @@ const handleDelete = async (userId) =>{
                     </form>
                 </div>
                 <div className="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                  <Link to='/admin/Usermanagment/adduser'>
+                  {/* <Link to=''>
                     <button type="button" className="flex items-center justify-center text-white bg-blue-500 hover:bg-gray-400 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
                             
-                            Add Employee
+                            Search
                         </button>
-                  </Link>
+                  </Link> */}
                    
                     <div className="flex items-center space-x-3 w-full md:w-auto">
                         

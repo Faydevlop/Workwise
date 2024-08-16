@@ -20,6 +20,7 @@ export const registerAuth = createAsyncThunk(
     }
   }
 );
+
 // Admin Login
 export const LoginAuth = createAsyncThunk(
   'admin/login',
@@ -40,6 +41,14 @@ export const LoginAuth = createAsyncThunk(
     
     }
     
+  }
+)
+
+export const dummylogin = createAsyncThunk(
+  'dummyreq',
+  async(userdata)=>{
+    const response = await axios.post('loocalhot:5000/login',userdata)
+  return response.data
   }
 )
 
