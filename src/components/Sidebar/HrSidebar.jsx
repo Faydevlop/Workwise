@@ -4,7 +4,7 @@ import logo from '../../assets/Screenshot 2024-08-04 184513.png'
 
 
 
-export default function ManagerSidebar() {
+export default function HrSidebar() {
   const [isSideNavOpen, setIsSideNavOpen] = useState(false)
   const path = useLocation()
   console.log(path.pathname);
@@ -57,7 +57,7 @@ export default function ManagerSidebar() {
         <a
   aria-label="WorkWise logo"
   className="flex items-center gap-2 whitespace-nowrap p-6 text-xl font-medium focus:outline-none"
-  manageref="javascript:void(0)"
+  href="javascript:void(0)"
 >
   <img
     src={logo}
@@ -74,14 +74,14 @@ export default function ManagerSidebar() {
           <div>
             <ul className="flex flex-1 flex-col gap-1 py-3">
 
-            <Link to={'/manager/dashboard'}>
+            <Link to={'/hr/dashboard'}>
             <li className="px-3">
               
             <a
              
               
              className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
-              currentPath === '/manager/dashboard' ? 'bg-blue-200 text-emerald-500' : ''
+              currentPath === '/hr/dashboard' ? 'bg-blue-200 text-emerald-500' : ''
             }`}
             >
               
@@ -102,13 +102,13 @@ export default function ManagerSidebar() {
             </a>
           </li>
           </Link>
-          <Link to={'/manager/usermanagement'}>
+          <Link to={'/hr/recruitment'}>
 
               <li className="px-3">
               <a
               
               className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
-                currentPath === '/manager/usermanagement' ? 'bg-blue-200 text-emerald-500' : ''
+                currentPath === '/hr/recruitment' ? 'bg-blue-200 text-emerald-500' : ''
               }`}
             >
                   <div className="flex items-center self-center">
@@ -121,17 +121,17 @@ export default function ManagerSidebar() {
                     </svg>
                   </div>
                   <div className="flex w-full flex-1 flex-col items-start justify-center gap-0 overflow-hidden truncate text-sm">
-                    User management
+                  Recruitment Management
                   </div>
                 </a>
               </li>
               </Link>
-              <Link to={'/manager/leavemanagement'}>
+              <Link to={'/hr/payrollmanagement'}>
               <li className="px-3">
               <a
             
             className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
-              currentPath === '/manager/leavemanagement' ? 'bg-blue-200 text-emerald-500' : ''
+              currentPath === '/hr/payrollmanagement' ? 'bg-blue-200 text-emerald-500' : ''
             }`}
             >
                 <div className="flex items-center self-center">
@@ -146,17 +146,43 @@ export default function ManagerSidebar() {
                   </svg>    
                 </div>
                 <div className="flex w-full flex-1 flex-col items-start justify-center gap-0 overflow-hidden truncate text-sm">
-                 Leave Management
+                Payroll Management
                 </div>
               </a>
             </li>
             </Link>
-            <Link to={'/manager/tasksmanagement'}>
+            <Link to={'/hr/leaves'}>
+              <li className="px-3">
+              <a
+             
+             className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
+              currentPath === '/hr/leaves' ? 'bg-blue-200 text-emerald-500' : ''
+            }`}
+            >
+                <div className="flex items-center self-center">
+                 
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-label="Department Management icon"
+                    role="graphics-symbol"
+                    viewBox="0 0 448 512"
+                    className="h-6 w-6"
+                  >
+                    <path d="M436 480h-20V24c0-13.3-10.7-24-24-24H56C42.7 0 32 10.7 32 24v456H12c-6.6 0-12 5.4-12 12v20h448v-20c0-6.6-5.4-12-12-12zM128 76c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12V76zm0 96c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40zm52 148h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12zm76 160h-64v-84c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v84zm64-172c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40zm0-96c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40zm0-96c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40z"/>
+                  </svg>
+                </div>
+                <div className="flex w-full flex-1 flex-col items-start justify-center gap-0 overflow-hidden truncate text-sm">
+                Leaves Management
+                                </div>
+              </a>
+              </li>
+              </Link>
+            <Link to={'/hr/Employeerecords'}>
             <li className="px-3">
             <a
              
              className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
-              currentPath === '/manager/tasksmanagement' ? 'bg-blue-200 text-emerald-500' : ''
+              currentPath === '/hr/Employeerecords' ? 'bg-blue-200 text-emerald-500' : ''
             }`}
             >
               <div className="flex items-center self-center">
@@ -169,17 +195,17 @@ export default function ManagerSidebar() {
                     </svg>
               </div>
               <div className="flex w-full flex-1 flex-col items-start justify-center gap-0 overflow-hidden truncate text-sm">
-                task Management
+              Employee Records
               </div>
             </a>
           </li>
           </Link>
-          <Link to={'/manager/meetings'}>
+          <Link to={'/hr/meetings'}>
               <li className="px-3">
               <a
              
              className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
-              currentPath === '/manager/meetings' ? 'bg-blue-200 text-emerald-500' : ''
+              currentPath === '/hr/meetings' ? 'bg-blue-200 text-emerald-500' : ''
             }`}
             >
                 <div className="flex items-center self-center">
@@ -200,6 +226,7 @@ export default function ManagerSidebar() {
               </a>
               </li>
               </Link>
+             
 
 
 
@@ -211,13 +238,13 @@ export default function ManagerSidebar() {
 
             
           
-              <Link to={'/manager/profile'}>
+              <Link to={'/hr/profile'}>
 
               <li className="px-3">
               <a
              
              className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
-              currentPath === '/manager/profile' ? 'bg-blue-200 text-emerald-500' : ''
+              currentPath === '/hr/profile' ? 'bg-blue-200 text-emerald-500' : ''
             }`}
             >
                 <div className="flex items-center self-center">
@@ -241,13 +268,13 @@ export default function ManagerSidebar() {
             </li>
             </Link>
 
-            <Link to={'/manager/chat'}>
+            <Link to={'/hr/chat'}>
 
             <li className="px-3">
             <a
               
               className={`flex items-center gap-3 rounded p-3 text-slate-700 transition-colors hover:bg-blue-200  focus:bg-emerald-50 ${
-                currentPath === '/manager/chat' ? 'bg-blue-200 text-emerald-500' : ''
+                currentPath === '/hr/chat' ? 'bg-blue-200 text-emerald-500' : ''
               }`}
             >
               <div className="flex items-center self-center">

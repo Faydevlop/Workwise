@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import EmployeeSidebar from '../../components/Sidebar/EmployeeSidebar'
+import HrSidebar from '../../components/Sidebar/HrSidebar'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 
-const EmployeeLeavemanagment = () => {
-  const [leaves,setLeaves] = useState([])
-  const {employee} = useSelector((state)=>state.employeeAuth)
-  const userId = employee.user._id
+const Leaves = () => {
+    const [leaves,setLeaves] = useState([])
+  const {hr} = useSelector((state)=>state.hrAuth)
+  const userId = hr.manager._id
 
   useEffect(()=>{
    
@@ -33,23 +33,23 @@ const EmployeeLeavemanagment = () => {
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
        <div className="hidden lg:block" style={{ width: '250px' }}>
-        <EmployeeSidebar/>
+        <HrSidebar/>
         </div>
          <div className="lg:hidden">
         {/* You can create a mobile version of the sidebar or a toggle button to show/hide it */}
-        <EmployeeSidebar />
+        <HrSidebar />
       </div>
 
-        <div className='bg-blue-50' style={{ flex: 1, padding: '10px', overflow: 'auto', marginLeft: '0' }}>
-                 
-          {/* content section starts here */}
+        <div style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
+            
+                 {/* content section starts here */}
           <header className="flex border  mb-5 border-gray-200 pl-4 flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-3">
   <nav className="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between">
     <a className="flex-none font-semibold text-xl  text-black focus:outline-none focus:opacity-80" href="/" aria-label="Brand">
       Leaves and Overview
     </a>
     <div className="flex flex-row items-center gap-5 mt-5 sm:justify-start sm:mt-0 sm:ps-5">
-      <Link to={'/employee/leave/applyleave'} >
+      <Link to={'/hr/leaves/applyleave'} >
       <button className="px-4 py-2 bg-blue-700 rounded-xl text-white font-medium rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
         Apply Leave
       </button>
@@ -129,10 +129,7 @@ const EmployeeLeavemanagment = () => {
     </div>
   </div>
   <br />
-
-  
-
-         
+        
 
         </div>
         
@@ -142,4 +139,4 @@ const EmployeeLeavemanagment = () => {
   )
 }
 
-export default EmployeeLeavemanagment
+export default Leaves

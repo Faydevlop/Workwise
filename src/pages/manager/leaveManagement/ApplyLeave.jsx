@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import EmployeeSidebar from '../../../components/Sidebar/EmployeeSidebar';
+import EmployeeSidebar from '../../../components/Sidebar/ManagerSidebar';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
@@ -34,8 +34,8 @@ const ApplyLeave = () => {
 });
 
 
-  const { employee } = useSelector((state) => state.employeeAuth);
-  const userId = employee.user._id
+  const { manager } = useSelector((state) => state.managerAuth);
+  const userId = manager.manager._id
 
   const validateForm = () => {
     let formErrors = {};
@@ -106,7 +106,7 @@ const ApplyLeave = () => {
         Toast.fire({
           icon: "success",
           title: "Leave applied successfully!",
-          didClose: () => navigate('/employee/leave'),  // Use didClose instead of onClose
+          didClose: () => navigate('/manager/leavemanagement'),  // Use didClose instead of onClose
         });
         
       } catch (error) {
@@ -138,7 +138,7 @@ const ApplyLeave = () => {
               Apply Leave
             </a>
             <div className="flex flex-row items-center gap-5 mt-5 sm:justify-start sm:mt-0 sm:ps-5">
-              <Link to={'/employee/leave'}>
+              <Link to={'/manager/leavemanagement'}>
                 <button className="px-4 py-2 bg-blue-700 rounded-xl text-white font-medium rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
                   Back
                 </button>
@@ -146,6 +146,7 @@ const ApplyLeave = () => {
             </div>
           </nav>
         </header>
+        <ToastContainer/>
 
         <div className="bg-white rounded-lg p-6 shadow-md w-full lg:w-3/3">
           <h2 className="text-xl font-semibold text-gray-800">Edit details</h2>

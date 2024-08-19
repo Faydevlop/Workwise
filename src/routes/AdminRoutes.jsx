@@ -17,6 +17,7 @@ import EditUser from '../pages/admin/EditUser';
 import AddProjectPage from '../pages/admin/projectmanagment/AddProjectPage';
 import ProjectDetailspage from '../pages/admin/projectmanagment/ProjectDetailspage';
 import EditProjectpage from '../pages/admin/projectmanagment/EditProjectpage';
+import LeaveDetailpage from '../pages/admin/leaveManagement/LeaveDetailpage';
 
 function AdminRoutes() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -41,6 +42,7 @@ function AdminRoutes() {
       <Route path="Usermanagment/adduser" element={isAuthenticated ? <AddUser /> : <Navigate to="/admin/login" />} />
       <Route path="showuser/:userId" element={isAuthenticated ? <Showuser /> : <Navigate to="/admin/login" />} />
       <Route path="edituser/:userId" element={isAuthenticated ? <EditUser /> : <Navigate to="/admin/login" />} />
+      <Route path="leavedetails/:leaveId" element={isAuthenticated ? <LeaveDetailpage /> : <Navigate to="/admin/login" />} />
     </Routes>
   );
 }
