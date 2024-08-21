@@ -18,6 +18,9 @@ import AddProjectPage from '../pages/admin/projectmanagment/AddProjectPage';
 import ProjectDetailspage from '../pages/admin/projectmanagment/ProjectDetailspage';
 import EditProjectpage from '../pages/admin/projectmanagment/EditProjectpage';
 import LeaveDetailpage from '../pages/admin/leaveManagement/LeaveDetailpage';
+import Departdetails from '../pages/admin/departmentManagement/Departdetails';
+import AddDeparment from '../pages/admin/departmentManagement/AddDeparment';
+import EditDepartment from '../pages/admin/departmentManagement/EditDepartment';
 
 function AdminRoutes() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -43,6 +46,10 @@ function AdminRoutes() {
       <Route path="showuser/:userId" element={isAuthenticated ? <Showuser /> : <Navigate to="/admin/login" />} />
       <Route path="edituser/:userId" element={isAuthenticated ? <EditUser /> : <Navigate to="/admin/login" />} />
       <Route path="leavedetails/:leaveId" element={isAuthenticated ? <LeaveDetailpage /> : <Navigate to="/admin/login" />} />
+      <Route path="department/:departmentId" element={isAuthenticated ? <Departdetails /> : <Navigate to="/admin/login" />} />
+      <Route path="addDepartment" element={isAuthenticated ? <AddDeparment /> : <Navigate to="/admin/login" />} />
+      <Route path="editdepartment/:departmentId" element={isAuthenticated ? <EditDepartment /> : <Navigate to="/admin/login" />} />
+      
     </Routes>
   );
 }

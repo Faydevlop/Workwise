@@ -116,16 +116,9 @@ const ProjectDetailspage = () => {
               </div>
             </div>
             <div className="text-left md:text-right mt-4 md:mt-0">
-              <h3 className="text-lg font-semibold">Team Lead</h3>
-              <p>{project.teamLead ? `${project.teamLead.firstName} ${project.teamLead.lastName}` : "N/A"}</p>
-              <div className="mt-2">
-                <h3 className="text-lg font-semibold">Team Mates</h3>
-                <p>
-                  {project.teamMates && project.teamMates.length > 0
-                    ? project.teamMates.map(mate => `${mate.firstName} ${mate.lastName}`).join(', ')
-                    : "No team mates assigned"}
-                </p>
-              </div>
+              <h3 className="text-lg font-semibold">Department : {project.department ? `${project.department.departmentName}` : 'Not available'}</h3>
+              {/* <p>{project.teamLead ? `${project.teamLead.firstName} ${project.teamLead.lastName}` : "N/A"}</p> */}
+              
             </div>
           </div>
 

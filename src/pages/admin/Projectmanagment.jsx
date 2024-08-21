@@ -15,6 +15,8 @@ const Projectmanagment = () => {
         }
       })
       setProjects(response.data)
+      console.log(response.data);
+      
      } catch (error) {
       
      }
@@ -90,14 +92,7 @@ const Projectmanagment = () => {
           </svg>
           Team Lead:{project.teamLead ? `${project.teamLead.firstName} ${project.teamLead.lastName}` : "N/A"}
         </div>
-        <div className="flex items-center">
-          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-          </svg>
-          Team Members: {project.teamMates && project.teamMates.length > 0
-                    ? project.teamMates.map(mate => `${mate.firstName} ${mate.lastName}`).join(', ')
-                    : "No team mates assigned"}
-        </div>
+       
       </div>
     </div>
   </div>

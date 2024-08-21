@@ -1,66 +1,153 @@
-import React from "react";
+import React, { useState } from "react";
 
 function TestPage() {
-  return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
-      <div className="flex w-full max-w-5xl bg-white rounded-lg shadow-lg overflow-hidden">
-        {/* Profile Section */}
-        <div className="w-1/2 p-6">
-          <div className="relative mb-6">
-            <div className="h-24 bg-gradient-to-r from-blue-700 to-purple-600 rounded-t-lg"></div>
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
-              <img src="profile-picture.jpg" alt="John Doe" className="w-20 h-20 rounded-full border-4 border-white" />
-            </div>
-          </div>
-          <div className="text-center mb-6">
-            <h2 className="text-xl font-semibold">John Doe</h2>
-            <p className="text-sm text-gray-500">User ID: 101</p>
-          </div>
-          <div className="space-y-4">
-            <div>
-              <h3 className="text-lg font-semibold mb-2">Personal Information</h3>
-              <div className="space-y-2">
-                <p><span className="font-medium">Full Name:</span> John Doe</p>
-                <p><span className="font-medium">Email:</span> john@example.com</p>
-                <p><span className="font-medium">Phone Number:</span> +1234567890</p>
-                <p><span className="font-medium">Address:</span> 123 Main St, Anytown, USA</p>
-              </div>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-2">Professional Information</h3>
-              <div className="space-y-2">
-                <p><span className="font-medium">Role:</span> Manager</p>
-                <p><span className="font-medium">Department:</span> IT</p>
-                <p><span className="font-medium">Date Joined:</span> 2023-01-01</p>
-                <p><span className="font-medium">Employment Status:</span> Active</p>
-              </div>
-            </div>
-          </div>
-        </div>
+  const [departmentName, setDepartmentName] = useState('');
+  const [headOfDepartment, setHeadOfDepartment] = useState('');
+  const [description, setDescription] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [teamMembers, setTeamMembers] = useState([]);
 
-        {/* Detail Section */}
-        <div className="w-1/2 p-6 bg-gray-50">
-          <h2 className="text-2xl font-semibold mb-6">Detail page</h2>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-xl font-semibold mb-4">Leave Request Details</h3>
-            <div className="space-y-2">
-              <p><span className="font-medium">Request ID:</span> 1001</p>
-              <p><span className="font-medium">Leave Type:</span> Vacation</p>
-              <p><span className="font-medium">Start Date:</span> 2024-08-01</p>
-              <p><span className="font-medium">End Date:</span> 2024-08-10</p>
-              <p><span className="font-medium">Duration:</span> 10 days</p>
-              <p><span className="font-medium">Request Date:</span> 2024-07-15</p>
-              <p><span className="font-medium">Leave Status:</span> <span className="px-2 py-1 bg-yellow-200 text-yellow-800 rounded-full text-sm">Pending</span></p>
-              <p><span className="font-medium">Reason:</span> Family Trip</p>
-            </div>
-            <div className="mt-6 flex space-x-4">
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg">Approve</button>
-              <button className="px-4 py-2 bg-black text-white rounded-lg">Reject</button>
-            </div>
-          </div>
+  // Example options for Head of Department and Team Members
+  const headOptions = [
+    'John Doe',
+    'Jane Smith',
+    'Alice Johnson'
+  ];
+
+  const teamOptions = [
+    { id: 1, name: 'Christian Mad', position: 'Product Designer' },
+    { id: 2, name: 'Jason Statham', position: 'Junior Graphic Designer' },
+    { id: 3, name: 'Michael Bay', position: 'Senior Developer' }
+  ];
+
+  const handleTeamMemberToggle = (member) => {
+    setTeamMembers((prev) =>
+      prev.includes(member)
+        ? prev.filter((m) => m !== member)
+        : [...prev, member]
+    );
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log({
+      departmentName,
+      headOfDepartment,
+      description,
+      email,
+      phone,
+      teamMembers
+    });
+  };
+  return (
+    <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-md max-w-xl mx-auto">
+    <h2 className="text-xl font-bold mb-6">Add details</h2>
+    
+    <div className="mb-6">
+      <h3 className="font-semibold mb-4">Project Information</h3>
+      <div className="flex gap-4 mb-4">
+        <div className="flex-grow">
+          <label className="block text-sm font-medium mb-1">Department Name</label>
+          <input 
+            type="text" 
+            value={departmentName} 
+            onChange={(e) => setDepartmentName(e.target.value)} 
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
+        <div className="flex-grow">
+          <label className="block text-sm font-medium mb-1">Head of Department</label>
+          <select 
+            value={headOfDepartment} 
+            onChange={(e) => setHeadOfDepartment(e.target.value)} 
+            className="w-full p-2 border border-gray-300 rounded"
+          >
+            <option value="" disabled>Select Head</option>
+            {headOptions.map((head) => (
+              <option key={head} value={head}>{head}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <div>
+        <label className="block text-sm font-medium mb-1">Description</label>
+        <textarea 
+          value={description} 
+          onChange={(e) => setDescription(e.target.value)} 
+          className="w-full p-2 border border-gray-300 rounded"
+          rows="4"
+        ></textarea>
+      </div>
+    </div>
+
+    <div className="mb-6">
+      <h3 className="font-semibold mb-4">Contact Information</h3>
+      <div className="flex gap-4">
+        <div className="flex-grow">
+          <label className="block text-sm font-medium mb-1">Email</label>
+          <input 
+            type="email" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
+        <div className="flex-grow">
+          <label className="block text-sm font-medium mb-1">Phone</label>
+          <input 
+            type="tel" 
+            value={phone} 
+            onChange={(e) => setPhone(e.target.value)} 
+            className="w-full p-2 border border-gray-300 rounded"
+          />
         </div>
       </div>
     </div>
+
+    <div className="mb-6">
+      <h3 className="font-semibold mb-4">Team Members</h3>
+      <div className="bg-gray-100 p-4 rounded-lg">
+        {teamOptions.map((member) => (
+          <div 
+            key={member.id} 
+            className={`flex items-center justify-between p-2 mb-2 rounded cursor-pointer 
+              ${teamMembers.includes(member) ? 'bg-blue-100' : 'bg-white'}`}
+            onClick={() => handleTeamMemberToggle(member)}
+          >
+            <div className="flex items-center">
+              <img 
+                src={`https://i.pravatar.cc/150?u=${member.id}`} 
+                alt={member.name} 
+                className="w-10 h-10 rounded-full mr-3"
+              />
+              <div>
+                <div className="font-medium">{member.name}</div>
+                <div className="text-sm text-gray-500">{member.position}</div>
+              </div>
+            </div>
+            <input 
+              type="checkbox" 
+              checked={teamMembers.includes(member)} 
+              onChange={() => handleTeamMemberToggle(member)}
+              className="form-checkbox"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div className="flex justify-between">
+      <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        Save Changes
+      </button>
+      <button type="button" className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+        Cancel
+      </button>
+    </div>
+  </form>
+  
+
   
   );
 }

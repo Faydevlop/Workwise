@@ -21,7 +21,7 @@ const AddUserForm = () => {
   const [phone, setPhone] = useState('');
   const [gender, setGender] = useState('');
   const [address, setAddress] = useState('');
-  const [department, setDepartment] = useState('');
+  // const [department, setDepartment] = useState('');
   const [position, setPosition] = useState('');
   const [dateOfJoining, setDateOfJoining] = useState('');
   const [salary, setSalary] = useState('');
@@ -40,7 +40,7 @@ const AddUserForm = () => {
     if (!phone) newErrors.phone = 'Phone number is required';
     if (!gender) newErrors.gender = 'Gender is required';
     if (!address) newErrors.address = 'Address is required';
-    if (!department) newErrors.department = 'Department is required';
+    // if (!department) newErrors.department = 'Department is required';
     if (!position) newErrors.position = 'Position is required';
     if (!dateOfJoining) newErrors.dateOfJoining = 'Date of Joining is required';
     if (!employeeStatus) newErrors.employeeStatus = 'Employee Status is required';
@@ -65,7 +65,7 @@ const AddUserForm = () => {
       phone:phone,
       gender:gender,
       address:address,
-      department:department,
+      // department:department,
       position:position,
       dateOfJoining:dateOfJoining,
       salary:salary,
@@ -170,11 +170,11 @@ const AddUserForm = () => {
         <div>
           <h3 className="text-xl font-semibold mb-4">Professional Details</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700">Department</label>
               <input type="text" className="mt-2 block w-full border border-gray-300 rounded-lg shadow-sm p-2 focus:border-blue-500 focus:ring focus:ring-blue-200" value={department} onChange={(e) => setDepartment(e.target.value)} placeholder="Sales"  />
                 {errors.department && <p className="text-red-500 text-xs mt-1">{errors.department}</p>}
-            </div>
+            </div> */}
             <div>
             <label className="block text-sm font-medium text-gray-700">Employee Status</label>
             <select className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-2 focus:border-blue-500 focus:ring focus:ring-blue-200" value={position} onChange={(e) => setPosition(e.target.value)}>

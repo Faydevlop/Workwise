@@ -12,8 +12,9 @@ const EditProjectpage = () => {
     const [endDate, setEndDate] = useState('');
     const [priority, setPriority] = useState('low');
     const [description, setDescription] = useState('');
-    const [teamLead, setTeamLead] = useState('');   
+    const [sdepartment, setSDepartment] = useState('');   
     const [teamMates, setTeamMates] = useState([]);
+    const [department,setDepartment] = useState([])
     
     // New states
     const [managers, setManagers] = useState([]);
@@ -40,59 +41,27 @@ const EditProjectpage = () => {
                 setEndDate(project.endDate);
                 setPriority(project.priority);
                 setDescription(project.description);
-                setTeamLead(project.teamLead);
+                setSDepartment(project.department);
                 setTeamMates(project.teamMates);
 
             } catch (error) {
                 console.error('Error fetching project data:', error);
             }
         };
-
-        const fetchManager = async () => {
+        const fetchDepartments = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getmanagers`,{
-                    headers:{
-                        Authorization:`Bearer ${localStorage.getItem('token')}`,
-                      }
-                });
-                const data = response.data;
-                console.log('Team mates',data)
-                if (data.length === 0) {
-                    setManagerError('No managers are available.');
-                } else {
-                    setManagers(data);
-                    setManagerError(''); // Clear error if data is found
-                }
+                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/department/list`);
+                setDepartment(response.data);
+                console.log('department details', response.data);
             } catch (error) {
-                console.error('Error fetching managers:', error);
-                setManagerError('Error fetching managers.');
+                setManagerError('Error loading departments');
             }
         };
+        fetchDepartments();
 
-        const fetchEmployees = async () => {
-            try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getUnassignedemployees`,{
-                    headers:{
-                        Authorization:`Bearer ${localStorage.getItem('token')}`,
-                      }
-                });
-                const data = response.data;
-                console.log('manage',data)
-                if (data.length === 0) {
-                    setEmployeeError('No unassigned employees are available.');
-                } else {
-                    setUnassignedEmployees(data);
-                    setEmployeeError(''); // Clear error if data is found
-                }
-            } catch (error) {
-                console.error('Error fetching unassigned employees:', error);
-                setEmployeeError('Error fetching unassigned employees.');
-            }
-        };
-
+        
         fetchProjectData();
-        fetchManager();
-        fetchEmployees();
+        
     }, [projectId]);
 
     
@@ -106,7 +75,7 @@ const EditProjectpage = () => {
             endDate,
             priority,
             description,
-            teamLead,
+            sdepartment,
             teamMates,
         };
         
@@ -244,13 +213,13 @@ const EditProjectpage = () => {
                                     <label className="block text-gray-700 font-medium">Select Team Lead</label>
                                     <select 
                                         className="w-full mt-2 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        value={teamLead}
-                                        onChange={(e) => setTeamLead(e.target.value)}
+                                        value={sdepartment}
+                                        onChange={(e) => setSDepartment(e.target.value)}
                                     >
-                                       {managers.length > 0 ? (
-                                managers.map(manager => (
+                                       {department.length > 0 ? (
+                                department.map(manager => (
                                     <option key={manager._id} value={manager._id}>
-                                        {manager.firstName} {manager.lastName}
+                                        {manager.departmentName} 
                                     </option>
                                 ))
                             ) : (
@@ -259,26 +228,7 @@ const EditProjectpage = () => {
                                     </select>
                                     {managerError && <p className="text-red-500 mt-2">{managerError}</p>}
                                 </div>
-                                <div>
-                                    <label className="block text-gray-700 font-medium">Select Teammates</label>
-                                    <select 
-                                        className="w-full mt-2 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        multiple
-                                        value={teamMates}
-                                        onChange={(e) => setTeamMates([...e.target.selectedOptions].map(o => o.value))}
-                                    >
-                                        {unassignedEmployees.length > 0 ? (
-                                unassignedEmployees.map(employee => (
-                                    <option key={employee._id} value={employee._id}>
-                                        {employee.firstName} {employee.lastName}
-                                    </option>
-                                ))
-                            ) : (
-                                <option disabled>{employeeError || 'Loading...'}</option>
-                            )}
-                                    </select>
-                                    {employeeError && <p className="text-red-500 mt-2">{employeeError}</p>}
-                                </div>
+                               
                             </div>
 
                             <div className="flex flex-col lg:flex-row">

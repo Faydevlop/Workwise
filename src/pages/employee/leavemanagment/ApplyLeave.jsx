@@ -80,6 +80,7 @@ const ApplyLeave = () => {
         endDate,
         reason,
       };
+
       setLoading(false)
 
       try {
@@ -93,16 +94,7 @@ const ApplyLeave = () => {
           }
         );
 
-        // toast.success('Leave applied successfully!', {
-        //   position: 'top-right',
-        //   autoClose: 1500,
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: true,
-        //   progress: undefined,
-        //   onClose: () => navigate('/employee/leave'),
-        // });
+        
         Toast.fire({
           icon: "success",
           title: "Leave applied successfully!",
