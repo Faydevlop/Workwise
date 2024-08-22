@@ -11,6 +11,7 @@ import Meetings from '../pages/manager/Meetings';
 import ManagerProfile from '../pages/manager/ManagerProfile';
 import Managerchat from '../pages/manager/ManagerChat';
 import ApplyLeave from '../pages/manager/leaveManagement/ApplyLeave';
+import TaskForm from '../pages/manager/Taskmanagment/TaskForm';
 
 const ManagerRoutes = () => {
   const isManagerAuth = useSelector((state) => state.managerAuth.isAuthenticated);
@@ -26,6 +27,7 @@ const ManagerRoutes = () => {
       <Route path="profile" element={isManagerAuth ? <ManagerProfile /> : <Navigate to="/manager/login" />} />
       <Route path="chat" element={isManagerAuth ? <Managerchat /> : <Navigate to="/manager/login" />} />
       <Route path="leave/applyLeave" element={isManagerAuth ? <ApplyLeave /> : <Navigate to="/employee/login" />} />
+      <Route path="tasksmanagement/addtask/:projectId" element={isManagerAuth ? <TaskForm /> : <Navigate to="/employee/login" />} />
 
     </Routes>
   );

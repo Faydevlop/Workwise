@@ -4,15 +4,20 @@ import AdminSidebar from '../../components/Sidebar/AdminSidebar'
 const AdminDashBoard = () => {
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
+      
        <div className="hidden lg:block" style={{ width: '250px' }}>
+        
         <AdminSidebar/>
         </div>
          <div className="lg:hidden">
         {/* You can create a mobile version of the sidebar or a toggle button to show/hide it */}
         <AdminSidebar />\
       </div>
+      
 
         <div className='bg-blue-50' style={{ flex: 3, padding: '20px', overflow: 'auto', marginLeft: '' }}>
+          
+          
                  
           {/* section 1 */}
           <div className="min-h-screen ml-1  p-8">

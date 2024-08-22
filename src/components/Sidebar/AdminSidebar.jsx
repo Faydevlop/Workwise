@@ -16,6 +16,8 @@ export default function AdminSidebar() {
     <>
       {/*  <!-- Component: Basic side navigation menu --> */}
       {/*  <!-- Mobile trigger --> */}
+      
+      
       <button
         title="Side navigation"
         type="button"

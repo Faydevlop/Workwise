@@ -8,6 +8,7 @@ const Departdetails = () => {
   const [department,setDepartment] = useState({
     TeamMembers: [],
   });
+  const [projects,setProjects] = useState([])
   const {departmentId} = useParams()
   
 
@@ -16,6 +17,7 @@ const Departdetails = () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/department/details/${departmentId}`);
         setDepartment(response.data.department);
+        setProjects(response.data.projects)
         console.log(response.department.department);
         
 
@@ -138,47 +140,41 @@ const Departdetails = () => {
     <div className="bg-white rounded-lg shadow-lg p-4 md:p-6 w-full lg:w-1/3">
       <h2 className="text-lg md:text-xl font-semibold text-indigo-900 mb-4">Current Projects</h2>
       <p className="text-gray-600 mb-4">
-        Here you can find more details about your projects. Keep your user engaged by providing meaningful information.
+        Here you can find more details about the projects that Assigned to the Department.
       </p>
       <div className="space-y-4">
-        <div className="bg-gray-100 p-4 rounded-lg flex items-center justify-between">
-          <div className="flex items-center">
-            <img
-              src="path/to/system-upgrade.jpg"
-              alt="System Upgrade"
-              className="h-10 md:h-12 w-10 md:w-12 rounded-lg mr-4"
-            />
-            <div>
-              <p className="text-gray-800 font-medium">System Upgrade</p>
-              <p className="text-sm text-gray-600">In Progress</p>
-              <a href="#" className="text-sm text-blue-600">See project details</a>
-            </div>
-          </div>
-          <button className="text-indigo-600 hover:text-indigo-800 focus:outline-none">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M8 4a1 1 0 00-2 0v12a1 1 0 002 0V4zM14 4a1 1 0 10-2 0v12a1 1 0 102 0V4z" />
-            </svg>
-          </button>
-        </div>
-        <div className="bg-gray-100 p-4 rounded-lg flex items-center justify-between">
-          <div className="flex items-center">
-            <img
-              src="path/to/network-security.jpg"
-              alt="Network Security Audit"
-              className="h-10 md:h-12 w-10 md:w-12 rounded-lg mr-4"
-            />
-            <div>
-              <p className="text-gray-800 font-medium">Network Security Audit</p>
-              <p className="text-sm text-gray-600">Completed</p>
-              <a href="#" className="text-sm text-blue-600">See project details</a>
-            </div>
-          </div>
-          <button className="text-indigo-600 hover:text-indigo-800 focus:outline-none">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M8 4a1 1 0 00-2 0v12a1 1 0 002 0V4zM14 4a1 1 0 10-2 0v12a1 1 0 102 0V4z" />
-            </svg>
-          </button>
-        </div>
+      {
+            projects.map((project)=>(<div className="bg-gray-100 p-4 rounded-lg flex items-center justify-between">
+              <div className="flex items-center">
+                <img
+                  src="data:image/png;base64,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"
+                  alt="System Upgrade"
+                  className="h-10 md:h-12 w-10 md:w-12 rounded-full mr-4"
+                />
+                <div>
+                  <p className="text-gray-800 font-medium">{project.name}</p>
+                  <p className="text-sm text-gray-600">{project.status}</p>
+                  <p className="text-sm text-gray-600">End Date{new Date(project.endDate).toLocaleDateString()}</p>
+                  <Link to={`/admin/Projectmanagment/${project._id}`}>
+                  <a href="#" className="text-sm text-blue-600">See project details</a>
+                  </Link>
+                </div>
+              </div>
+              <Link to={`/admin/Projectmanagment/${project._id}`}>
+              <button className="text-indigo-600 hover:text-indigo-800 focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M8 4a1 1 0 00-2 0v12a1 1 0 002 0V4zM14 4a1 1 0 10-2 0v12a1 1 0 102 0V4z" />
+                </svg>
+              </button>
+              </Link>
+            </div>))
+
+          }
+          {
+            projects.length === 0 ? 'Projects Not assigned' : ''
+          }
+        
+       
       </div>
     </div>
   </div>

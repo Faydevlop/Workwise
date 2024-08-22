@@ -169,7 +169,7 @@ export default function ManagerSidebar() {
                     </svg>
               </div>
               <div className="flex w-full flex-1 flex-col items-start justify-center gap-0 overflow-hidden truncate text-sm">
-                task Management
+                Project & task Management
               </div>
             </a>
           </li>

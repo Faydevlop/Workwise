@@ -30,6 +30,7 @@ const ProjectDetailspage = () => {
   }
 
   const Deleteproject =async()=>{
+    console.log(projectId)
     try {
         const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/admin/deleteproject/${projectId}`,{
           headers:{
@@ -88,7 +89,7 @@ const ProjectDetailspage = () => {
         </button>
       </Link>
       <button 
-        onClick={() => Deleteproject()} 
+        onClick={Deleteproject} 
         className="px-4 py-2 bg-red-700 rounded-xl text-white font-medium hover:bg-red-600 focus:outline-none focus:bg-red-600">
         Delete Project
       </button>
