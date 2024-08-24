@@ -1,23 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ManagerSidebar from '../../../components/Sidebar/ManagerSidebar';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const TaskForm = () => {
   const [taskTitle, setTaskTitle] = useState('');
   const [status, setStatus] = useState('');
-  const [assignedTo, setAssignedTo] = useState('');
+  const [assignedTo, setAssignedTo] = useState([]);
   const [priority, setPriority] = useState('');
   const [startDate, setStartDate] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [description, setDescription] = useState('');
-
+  const [employees, setEmployees] = useState([]);
   const [errors, setErrors] = useState({});
+  const { projectId } = useParams();
+  const navigate = useNavigate();
 
   const validateForm = () => {
     const newErrors = {};
 
     if (!taskTitle.trim()) newErrors.taskTitle = 'Task title is required';
     if (!status) newErrors.status = 'Status is required';
-    if (!assignedTo) newErrors.assignedTo = 'Assigned To is required';
+    if (assignedTo.length === 0) newErrors.assignedTo = 'Assigned To is required';
     if (!priority) newErrors.priority = 'Priority is required';
     if (!startDate) newErrors.startDate = 'Start date is required';
     if (!dueDate) newErrors.dueDate = 'Due date is required';
@@ -28,15 +34,28 @@ const TaskForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/task/listUsers/${projectId}`);
+        setEmployees(response.data.users);
+        console.log(response.data.users);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, [projectId]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) {
       return;
     }
 
-    // Handle form submission logic here
-    console.log({
+    const taskData = {
+      projectId,
       taskTitle,
       status,
       assignedTo,
@@ -44,17 +63,49 @@ const TaskForm = () => {
       startDate,
       dueDate,
       description,
-    });
+    };
+
+    try {
+      // Replace userId with appropriate value or remove from the URL if not needed
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/task/createtask/${projectId}`, taskData);
+      toast.success('Task added successfully!', {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        onClose: () => navigate('/manager/tasksmanagement'),
+      });
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'An error occurred while adding the Task.';
+      toast.error(errorMessage, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
+
+  const handleAssignedToChange = (e) => {
+    const selectedOptions = Array.from(e.target.selectedOptions, (option) => option.value);
+    setAssignedTo(selectedOptions);
   };
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
       <div className="hidden lg:block" style={{ width: '250px' }}>
-        <ManagerSidebar/>
+        <ManagerSidebar />
       </div>
       <div className="lg:hidden">
         <ManagerSidebar />
       </div>
+      <ToastContainer />
       <div className='bg-blue-50' style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
         <div className=" mx-auto p-8 bg-white shadow-md rounded-lg">
           <h2 className="text-2xl font-semibold text-center mb-6">Add a New Task</h2>
@@ -79,7 +130,7 @@ const TaskForm = () => {
               >
                 <option value="">Select Status</option>
                 <option value="Pending">Pending</option>
-                <option value="InProgress">InProgress</option>
+                <option value="InProgress">In Progress</option>
                 <option value="Completed">Completed</option>
               </select>
               {errors.status && <p className="text-red-500 text-sm mt-1">{errors.status}</p>}
@@ -89,13 +140,16 @@ const TaskForm = () => {
               <label className="text-sm font-medium mb-2">Assigned To</label>
               <select
                 value={assignedTo}
-                onChange={(e) => setAssignedTo(e.target.value)}
+                multiple
+                onChange={handleAssignedToChange}
                 className={`border rounded-lg px-4 py-2 ${errors.assignedTo ? 'border-red-500' : ''}`}
               >
                 <option value="">Select a team member</option>
-                <option value="employee1">Employee 1</option>
-                <option value="employee2">Employee 2</option>
-                <option value="employee3">Employee 3</option>
+                {employees.map((employee) => (
+                  <option key={employee._id} value={employee._id}>
+                    {employee.firstName}
+                  </option>
+                ))}
               </select>
               {errors.assignedTo && <p className="text-red-500 text-sm mt-1">{errors.assignedTo}</p>}
             </div>
@@ -143,16 +197,14 @@ const TaskForm = () => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className={`border rounded-lg px-4 py-2 ${errors.description ? 'border-red-500' : ''}`}
-              ></textarea>
+                rows="4"
+              />
               {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
             </div>
 
-            <div className="md:col-span-2 flex justify-between">
-              <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded-lg">
+            <div className="flex justify-end md:col-span-2">
+              <button type="submit" className="bg-blue-500 text-white px-6 py-2 rounded-lg">
                 Add Task
-              </button>
-              <button type="button" className="bg-gray-800 text-white py-2 px-4 rounded-lg">
-                Cancel
               </button>
             </div>
           </form>
