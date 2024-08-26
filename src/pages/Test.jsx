@@ -1,17 +1,62 @@
 import React, { useState } from "react";
 
 function TestPage() {
-  const [openDropdown, setOpenDropdown] = useState(null);
-
-  const toggleDropdown = (index) => {
-    setOpenDropdown(openDropdown === index ? null : index);
-  };
   return (
-    <><div className="flex flex-col w-full min-h-screen bg-background">
-      <header className="sticky bg-white top-0 z-30 flex h-16 items-center justify-between border-b bg-background px-4 md:px-6">
-        <h1 className="text-xl font-bold">Manager's Overview</h1>
-        <div className="flex items-center gap-4">
-          <button className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3">
+    <>
+      
+      <div className="flex min-h-screen flex-col bg-background">
+  <main className="flex-1 p-4 sm:p-6 md:p-8 bg-white rounded-lg shadow-md">
+    <div className="mx-auto grid max-w-4xl gap-6">
+      <div className="grid gap-2">
+        <label
+          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          htmlFor="employee"
+        >
+          Employee
+        </label>
+        <select
+          id="employee"
+          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <option value="" disabled selected>Select Employee</option>
+          <option value="employee1">Employee 1</option>
+          <option value="employee2">Employee 2</option>
+          
+        </select>
+      </div>
+      <div className="grid grid-cols-2 gap-6">
+        <div className="grid gap-2">
+          <label
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            htmlFor="pay-period"
+          >
+            Pay Period
+          </label>
+          <input
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            id="pay-period"
+            type="text"
+            placeholder="MM/YYYY"
+          />
+        </div>
+        <div className="grid gap-2">
+          <label
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            htmlFor="payment-status"
+          >
+            Payment Status
+          </label>
+          <button
+            type="button"
+            role="combobox"
+            aria-controls="radix-:rb:"
+            aria-expanded="false"
+            aria-autocomplete="none"
+            dir="ltr"
+            data-state="closed"
+            className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <span style={{ pointerEvents: "none" }}>Pending</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -22,173 +67,90 @@ function TestPage() {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="h-4 w-4 mr-2"
+              className="lucide lucide-chevron-down h-4 w-4 opacity-50"
+              aria-hidden="true"
             >
-              <path d="M5 12h14"></path>
-              <path d="M12 5v14"></path>
+              <path d="m6 9 6 6 6-6"></path>
             </svg>
-            New Task
           </button>
         </div>
-      </header>
-      <main className="flex-1 p-4 md:p-6">
-        <section>
-          <h2 className="mb-4 text-lg font-semibold">Projects</h2>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {['A', 'B', 'C', 'D'].map((project, index) => (
-              <div key={index} className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-                <div className="flex flex-col space-y-1.5 p-6">
-                  <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">Project {project}</h3>
-                  <p className="text-sm text-muted-foreground">Due: 2023-06-30</p>
-                </div>
-                <div className="p-6 flex justify-between items-center">
-                  <div
-                    className="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                    data-v0-t="badge"
-                  >
-                    In Progress
-                  </div>
-                  <button className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="h-4 w-4 mr-2"
-                    >
-                      <path d="M5 12h14"></path>
-                      <path d="M12 5v14"></path>
-                    </svg>
-                    Add Task
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-        <div data-orientation="horizontal" role="none" className="shrink-0 bg-border h-[1px] w-full my-6"></div>
-        <section>
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Tasks</h2>
-            <div className="flex items-center gap-2">
-              {['All Projects', 'All Statuses',].map((label, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  role="combobox"
-                  aria-controls={`radix-:r${index + 1}r:`}
-                  aria-expanded="false"
-                  aria-autocomplete="none"
-                  dir="ltr"
-                  data-state="closed"
-                  className="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-[150px]"
-                >
-                  <span style={{pointerEvents: "none"}}>{label}</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="lucide lucide-chevron-down h-4 w-4 opacity-50"
-                    aria-hidden="true"
-                  >
-                    <path d="m6 9 6 6 6-6"></path>
-                  </svg>
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="relative w-full overflow-x-auto">
-            <table className="w-full caption-bottom text-sm">
-              <thead className="[&_tr]:border-b">
-                <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
-                    Task
-                  </th>
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 hidden sm:table-cell">
-                    Project
-                  </th>
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                    Due Date
-                  </th>
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 hidden lg:table-cell">
-                    Priority
-                  </th>
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
-                    Status
-                  </th>
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="[&_tr:last-child]:border-0">
-                {[
-                  { task: "Implement new feature", project: "A", dueDate: "2023-06-25", priority: "High", status: "In Progress" },
-                  { task: "Fix bug in login flow", project: "B", dueDate: "2023-07-10", priority: "High", status: "In Progress" },
-                  { task: "Refactor codebase", project: "C", dueDate: "2023-07-31", priority: "Medium", status: "Completed" },
-                  { task: "Improve UI/UX", project: "D", dueDate: "2023-09-15", priority: "Medium", status: "In Progress" },
-                  { task: "Optimize database queries", project: "A", dueDate: "2023-06-30", priority: "Medium", status: "In Progress" }
-                ].map((row, index) => (
-                  <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
-                      <div className="font-medium">{row.task}</div>
-                      <div className="text-sm text-muted-foreground hidden sm:block">Description of the task</div>
-                    </td>
-                    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden sm:table-cell">Project {row.project}</td>
-                    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden md:table-cell">{row.dueDate}</td>
-                    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden lg:table-cell">
-                      <div className={`inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent ${row.priority === 'High' ? 'bg-primary text-primary-foreground hover:bg-primary/80' : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'}`} data-v0-t="badge">
-                        {row.priority}
-                      </div>
-                    </td>
-                    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
-                      <div className={`inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent ${row.status === 'Completed' ? '' : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'}`} data-v0-t="badge">
-                        {row.status}
-                      </div>
-                    </td>
-                    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
-                      <div className="relative">
-                        <button 
-                          onClick={() => toggleDropdown(index)}
-                          className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                            <circle cx="12" cy="12" r="1"></circle>
-                            <circle cx="12" cy="5" r="1"></circle>
-                            <circle cx="12" cy="19" r="1"></circle>
-                          </svg>
-                        </button>
-                        {openDropdown === index && (
-  <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-    <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-      <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">View</a>
-      <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Edit</a>
-      <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Delete</a>
+      </div>
+      <div className="grid grid-cols-2 gap-6">
+        <div className="grid gap-2">
+          <label
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            htmlFor="base-salary"
+          >
+            Base Salary
+          </label>
+          <input
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            id="base-salary"
+            type="number"
+            value="0"
+          />
+        </div>
+        <div className="grid gap-2">
+          <label
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            htmlFor="bonuses"
+          >
+            Bonuses
+          </label>
+          <input
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            id="bonuses"
+            type="number"
+            value="0"
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-6">
+        <div className="grid gap-2">
+          <label
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            htmlFor="deductions"
+          >
+            Deductions
+          </label>
+          <input
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            id="deductions"
+            type="number"
+            value="0"
+          />
+        </div>
+        <div className="grid gap-2">
+          <label
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            htmlFor="overtime-hours"
+          >
+            Overtime Hours
+          </label>
+          <input
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            id="overtime-hours"
+            type="number"
+            value="0"
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-3 gap-4">
+        <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 col-span-1 sm:col-span-1">
+          Reset Form
+        </button>
+        <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 col-span-1 sm:col-span-1">
+          Cancel
+        </button>
+        <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 col-span-1 sm:col-span-1">
+          Save Payroll
+        </button>
+      </div>
     </div>
-  </div>
-)}
+  </main>
+</div>
 
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </main>
-    </div></>
+    </>
   );
 }
 

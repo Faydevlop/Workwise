@@ -1,8 +1,29 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import ManagerSidebar from '../../../components/Sidebar/ManagerSidebar'
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 const TaskDetail = () => {
+  const {taskId} = useParams()
+  const [taskData,setTaskData] = useState([])
+
+  const fetchdata = async ()=>{
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/task/taskdetails/${taskId}`);
+      setTaskData(response.data.task)
+  console.log(response.data.task);
+
+    } catch (error) {
+      
+    }
+  }
+
+  useEffect(()=>{
+    fetchdata()
+  },[])
+  
+
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
        <div className="hidden lg:block" style={{ width: '250px' }}>
@@ -16,10 +37,7 @@ const TaskDetail = () => {
         <div className='bg-blue-50'  style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
                  
           {/* section 1 */}
-          {/*
-// v0 by Vercel.
-// https://v0.dev/t/m0FUGYVwwoC
-*/}
+          
 
 
 <div className="grid gap-8 px-4 py-6 mx-auto max-w-6xl sm:px-6 lg:px-8">
@@ -69,7 +87,7 @@ const TaskDetail = () => {
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               id="task-name"
               type="text"
-              value="Implement new feature"
+              value={taskData.name}
              />
           </div>
           <div className="grid gap-1">
@@ -83,8 +101,9 @@ const TaskDetail = () => {
               className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               id="task-description"
               rows="3"
+              value={taskData.description}
             >
-              Add a new feature to the app that allows users to...
+              
             </textarea>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -105,7 +124,7 @@ const TaskDetail = () => {
                 data-state="closed"
                 className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                <span style={{pointerEvents: "none"}}>In Progress</span>
+                <span style={{pointerEvents: "none"}}>{taskData.status}</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -133,8 +152,8 @@ const TaskDetail = () => {
               <input
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 id="task-due-date"
-                type="date"
-                value="2023-06-30"
+                type="text"
+                value={new Date(taskData.dueDate).toLocaleDateString()}
                />
             </div>
           </div>
@@ -156,7 +175,8 @@ const TaskDetail = () => {
                 data-state="closed"
                 className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                <span style={{pointerEvents: "none"}}>John Doe</span>
+                <span style={{pointerEvents: "none"}}>{taskData.assignedTo && taskData.assignedTo.length > 0 ? `${taskData.assignedTo[0].firstName}${taskData.assignedTo[0].lastName}` : 'Not available'}
+                </span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -186,7 +206,7 @@ const TaskDetail = () => {
                 id="task-created-at"
                 readonly=""
                 type="text"
-                value="2023-04-15"
+                value={new Date(taskData.createdAt).toLocaleDateString()}
                />
             </div>
           </div>

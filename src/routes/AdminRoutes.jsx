@@ -21,6 +21,8 @@ import LeaveDetailpage from '../pages/admin/leaveManagement/LeaveDetailpage';
 import Departdetails from '../pages/admin/departmentManagement/Departdetails';
 import AddDeparment from '../pages/admin/departmentManagement/AddDeparment';
 import EditDepartment from '../pages/admin/departmentManagement/EditDepartment';
+import PayrollDetails from '../pages/admin/payroll/PayrollDetails';
+import AddPayroll from '../pages/admin/payroll/AddPayroll';
 
 function AdminRoutes() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -41,6 +43,8 @@ function AdminRoutes() {
       <Route path="editprofile/:userId" element={isAuthenticated ? <Projectmanagment /> : <Navigate to="/admin/login" />} />
       <Route path="Chat" element={isAuthenticated ? <AdminChat /> : <Navigate to="/admin/login" />} />
       <Route path="Payrollmanagment" element={isAuthenticated ? <Payrollmanagment /> : <Navigate to="/admin/login" />} />
+      <Route path="Payrollmanagment/details/:payrollId" element={isAuthenticated ? <PayrollDetails /> : <Navigate to="/admin/login" />} />
+      <Route path="Payrollmanagment/addpayroll" element={isAuthenticated ? <AddPayroll /> : <Navigate to="/admin/login" />} />
       <Route path="Usermanagment" element={isAuthenticated ? <Usermanagment /> : <Navigate to="/admin/login" />} />
       <Route path="Usermanagment/adduser" element={isAuthenticated ? <AddUser /> : <Navigate to="/admin/login" />} />
       <Route path="showuser/:userId" element={isAuthenticated ? <Showuser /> : <Navigate to="/admin/login" />} />

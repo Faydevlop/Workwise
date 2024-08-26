@@ -97,7 +97,7 @@ const TasktManagement = () => {
           {projectData.map((project, index) => (
   <div key={index} className="rounded-lg border bg-card text-card-foreground shadow-sm flex flex-col h-full" data-v0-t="card">
     <div className="flex flex-col flex-grow p-6">
-      <Link to={'/manager/tasksmanagement/detailpage'}>
+      <Link to={'/manager/tasksmanagement/projectdetailpage'}>
       <h3 className="text-xl p-1 font-semibold leading-none tracking-tight">{`Project ${project.name}`}</h3>
       </Link>
       <p className="text-sm text-muted-foreground">Due: {(new Date(project.endDate).toLocaleDateString())}</p>
@@ -281,7 +281,9 @@ const TasktManagement = () => {
                         {openDropdown === index && (
   <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
     <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-      <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">View</a>
+      <Link to={`/manager/tasksmanagement/detailpage/${row._id}`}>
+      <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">View</a>
+      </Link>
       <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Edit</a>
       <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Delete</a>
     </div>

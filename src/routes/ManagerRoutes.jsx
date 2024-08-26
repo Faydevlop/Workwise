@@ -13,6 +13,8 @@ import Managerchat from '../pages/manager/ManagerChat';
 import ApplyLeave from '../pages/manager/leaveManagement/ApplyLeave';
 import TaskForm from '../pages/manager/Taskmanagment/TaskForm';
 import TaskDetail from '../pages/manager/Taskmanagment/TaskDetail';
+import Payrollmanagement from '../pages/manager/Payrollmanagement';
+import Editpage from '../pages/manager/payroll/Editpage';
 
 const ManagerRoutes = () => {
   const isManagerAuth = useSelector((state) => state.managerAuth.isAuthenticated);
@@ -27,9 +29,11 @@ const ManagerRoutes = () => {
       <Route path="meetings" element={isManagerAuth ? <Meetings /> : <Navigate to="/manager/login" />} />
       <Route path="profile" element={isManagerAuth ? <ManagerProfile /> : <Navigate to="/manager/login" />} />
       <Route path="chat" element={isManagerAuth ? <Managerchat /> : <Navigate to="/manager/login" />} />
+      <Route path="payrollmanagement" element={isManagerAuth ? <Payrollmanagement /> : <Navigate to="/manager/login" />} />
+      <Route path="payrollmanagement/edit/:userId" element={isManagerAuth ? <Editpage /> : <Navigate to="/manager/login" />} />
       <Route path="leave/applyLeave" element={isManagerAuth ? <ApplyLeave /> : <Navigate to="/manager/login" />} />
       <Route path="tasksmanagement/addtask/:projectId" element={isManagerAuth ? <TaskForm /> : <Navigate to="/manager/login" />} />
-      <Route path="tasksmanagement/detailpage" element={isManagerAuth ? <TaskDetail /> : <Navigate to="/manager/login" />} />
+      <Route path="tasksmanagement/detailpage/:taskId" element={isManagerAuth ? <TaskDetail /> : <Navigate to="/manager/login" />} />
 
     </Routes>
   );
