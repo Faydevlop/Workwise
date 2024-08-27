@@ -23,6 +23,7 @@ import AddDeparment from '../pages/admin/departmentManagement/AddDeparment';
 import EditDepartment from '../pages/admin/departmentManagement/EditDepartment';
 import PayrollDetails from '../pages/admin/payroll/PayrollDetails';
 import AddPayroll from '../pages/admin/payroll/AddPayroll';
+import EditPayroll from '../pages/admin/payroll/Editpayoll';
 
 function AdminRoutes() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -44,6 +45,7 @@ function AdminRoutes() {
       <Route path="Chat" element={isAuthenticated ? <AdminChat /> : <Navigate to="/admin/login" />} />
       <Route path="Payrollmanagment" element={isAuthenticated ? <Payrollmanagment /> : <Navigate to="/admin/login" />} />
       <Route path="Payrollmanagment/details/:payrollId" element={isAuthenticated ? <PayrollDetails /> : <Navigate to="/admin/login" />} />
+      <Route path="Payrollmanagment/edit/:payrollId" element={isAuthenticated ? <EditPayroll /> : <Navigate to="/admin/login" />} />
       <Route path="Payrollmanagment/addpayroll" element={isAuthenticated ? <AddPayroll /> : <Navigate to="/admin/login" />} />
       <Route path="Usermanagment" element={isAuthenticated ? <Usermanagment /> : <Navigate to="/admin/login" />} />
       <Route path="Usermanagment/adduser" element={isAuthenticated ? <AddUser /> : <Navigate to="/admin/login" />} />

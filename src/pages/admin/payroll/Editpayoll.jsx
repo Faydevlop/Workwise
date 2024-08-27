@@ -1,60 +1,72 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import AdminSidebar from '../../../components/Sidebar/AdminSidebar';
-
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const AddPayroll = () => {
-  const [users,setUsers] = useState([])
-  const navigate = useNavigate()
+const EditPayroll = () => {
+  const [users, setUsers] = useState([]);
+  const navigate = useNavigate();
+  const { payrollId } = useParams();  // Get payroll ID from URL parameters
   const [formData, setFormData] = useState({
     employeeId: '',
     payPeriodStart: '',
     payPeriodEnd: '',
     payPeriod: '',
     baseSalary: '',
-    // bonus: '',
-    // deductions: '',
     paymentStatus: 'Pending',
     paymentMethod: ''
   });
 
   const [errors, setErrors] = useState({});
 
+  const fetchPayrollDetails = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/payroll/listdetails/${payrollId}`);
+      const payrollData = response.data.employee;
+      
+      const formattedPayPeriodStart = payrollData.payPeriodStart.slice(0, 10);
+      const formattedPayPeriodEnd = payrollData.payPeriodEnd.slice(0, 10);
+
+      // Pre-fill form data with payroll details including the employee's ID
+      setFormData({
+        employeeId: payrollData.employee, // Assuming payrollData contains employeeId object with _id field
+        payPeriodStart: formattedPayPeriodStart,
+        payPeriodEnd: formattedPayPeriodEnd,
+        payPeriod: payrollData.payPeriod,
+        baseSalary: payrollData.baseSalary,
+        paymentStatus: payrollData.paymentStatus || 'Pending',
+        paymentMethod: payrollData.paymentMethod
+      });
+    } catch (error) {
+      console.error('Error fetching payroll details', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPayrollDetails();
+  }, []);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
   };
 
-  const fetchUsers = async()=>{
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/payroll/listEmpo`);
-      setUsers(response.data.users)
-      
-    } catch (error) {
-      
-    }
-  }
-
-  useEffect(()=>{
-    fetchUsers()
-  })
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    
+
     const validationErrors = validateForm(formData);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
 
+    console.log('here is the upcomig data',formData);
+    
+
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/payroll/addpayroll`, formData);
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/payroll/updatepayroll/${payrollId}`, formData);
 
       toast.success(response.data.message, {
         position: "top-right",
@@ -64,11 +76,9 @@ const AddPayroll = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        onClose:()=>navigate('/admin/Payrollmanagment')
-       
+        onClose: () => navigate('/admin/Payrollmanagment')
       });
     } catch (error) {
-    
       toast.error('Error submitting form', {
         position: "top-right",
         autoClose: 3000,
@@ -101,33 +111,24 @@ const AddPayroll = () => {
       <div className="lg:hidden">
         <AdminSidebar />
       </div>
-    <ToastContainer/>
+      <ToastContainer />
       <div style={{ flex: 1, padding: "20px", overflow: "auto", marginLeft: "0" }}>
         <div className="border bg-card conte text-card-foreground w-full max-w-1xl rounded-lg shadow-lg">
           <div className="flex flex-col space-y-1.5 bg-primary text-primary-foreground p-6">
-            <h3 className="whitespace-nowrap tracking-tight text-2xl font-bold">Payroll</h3>
-            <p className="text-sm text-muted-foreground">Add employee payroll details.</p>
+            <h3 className="whitespace-nowrap tracking-tight text-2xl font-bold">Edit Payroll</h3>
+            <p className="text-sm text-muted-foreground">Update employee payroll details.</p>
           </div>
-          <form  className="grid gap-6 p-6">
+          <form className="grid gap-6 p-6">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium" htmlFor="employeeId">Select Employee</label>
-                <select
+                <input
+                  type="text"
                   id="employeeId"
-                  value={formData.employeeId}
-                  onChange={handleChange}
+                  value={formData.employeeId ? `${formData.employeeId.firstName} ${formData.employeeId.lastName}` : 'Not Available'}
+                  disabled
                   className="flex h-10 w-full ring-offset-background border border-input bg-background px-3 py-2 text-sm rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                >
-                  <option value="" disabled>Select Employee</option>
-                  {
-                    users.map((user,index)=>(
-                      <option key={index} value={user._id}>{user.firstName}{user.lastName}</option>
-                    ))
-
-                  }
-                  
-                  
-                </select>
+                />
                 {errors.employeeId && <p className="text-red-500">{errors.employeeId}</p>}
               </div>
               <div className="space-y-2">
@@ -154,17 +155,13 @@ const AddPayroll = () => {
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium" htmlFor="payPeriod">Pay Period</label>
-                
                 <select
                   id="payPeriod"
                   value={formData.payPeriod}
                   onChange={handleChange}
                   className="flex h-10 w-full ring-offset-background border border-input bg-background px-3 py-2 text-sm rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 >
-                  <option value="" disabled>Select Payperiod</option>
-                  {/* <option value="Weekly">Weekly</option>
-                  <option value="Biweekly">Biweekly</option>
-                  <option value="Semi-monthly">Semi-monthly</option> */}
+                  <option value="" disabled>Select Pay Period</option>
                   <option value="Monthly">Monthly</option>
                 </select>
                 {errors.payPeriod && <p className="text-red-500">{errors.payPeriod}</p>}
@@ -183,78 +180,42 @@ const AddPayroll = () => {
                 />
                 {errors.baseSalary && <p className="text-red-500">{errors.baseSalary}</p>}
               </div>
-              {/* <div className="space-y-2">
-                <label className="text-sm font-medium" htmlFor="bonus">Bonus</label>
-                <input
-                  type="number"
-                  id="bonus"
-                  value={formData.bonus}
-                  onChange={handleChange}
-                  placeholder="5000"
-                  className="flex h-10 w-full ring-offset-background border border-input bg-background px-3 py-2 text-sm rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                />
-                {errors.bonus && <p className="text-red-500">{errors.bonus}</p>}
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium" htmlFor="deductions">Deductions</label>
-                <input
-                  type="number"
-                  id="deductions"
-                  value={formData.deductions}
-                  onChange={handleChange}
-                  placeholder="1000"
-                  className="flex h-10 w-full ring-offset-background border border-input bg-background px-3 py-2 text-sm rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                />
-                {errors.deductions && <p className="text-red-500">{errors.deductions}</p>}
-              </div> */}
-            </div>
-            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium" htmlFor="paymentStatus">Payment Status</label>
-                
                 <select
                   id="paymentStatus"
                   value={formData.paymentStatus}
                   onChange={handleChange}
                   className="flex h-10 w-full ring-offset-background border border-input bg-background px-3 py-2 text-sm rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 >
-                  <option value="Pending" >Pending</option>
-                  {/* <option value="Paid">Paid</option>
+                  <option value="" disabled>Select Payment Status</option>
                   <option value="Pending">Pending</option>
-                  <option value="Overdue">Overdue</option> */}
+                  <option value="Paid">Paid</option>
                 </select>
                 {errors.paymentStatus && <p className="text-red-500">{errors.paymentStatus}</p>}
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium" htmlFor="paymentMethod">Payment Method</label>
-                <select
+                <input
+                  type="text"
                   id="paymentMethod"
                   value={formData.paymentMethod}
                   onChange={handleChange}
+                  placeholder="e.g., Bank Transfer"
                   className="flex h-10 w-full ring-offset-background border border-input bg-background px-3 py-2 text-sm rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                >
-                  <option value="" disabled>Select Payment Method</option>
-                  <option value="bank-transfer">Direct Deposit</option>
-                  <option value="check">Check</option>
-
-                </select>
+                />
                 {errors.paymentMethod && <p className="text-red-500">{errors.paymentMethod}</p>}
               </div>
             </div>
-            <button
-              type="submit"
-              onClick={handleSubmit}
-              className="inline-flex items-center justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-sm font-medium text-black shadow-sm hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-            >
-              Add Payroll
-            </button>
-            <button
-              
-              className="inline-flex items-center justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-sm font-medium text-black shadow-sm hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-            >
-             cancel 
-            </button>
-           
+            <div className="space-y-4">
+              <button
+                type="submit"
+                onClick={handleSubmit}
+                className="px-4 py-2 text-black bg-primary rounded-md shadow hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+              >
+                Update Payroll
+              </button>
+            </div>
           </form>
         </div>
       </div>
@@ -262,4 +223,4 @@ const AddPayroll = () => {
   );
 };
 
-export default AddPayroll;
+export default EditPayroll;

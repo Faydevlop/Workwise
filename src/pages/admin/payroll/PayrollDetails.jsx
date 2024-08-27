@@ -10,7 +10,9 @@ const PayrollDetails = () => {
   const fetchdetails = async()=>{
     try {
       const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/payroll/listdetails/${payrollId}`)
-      setData(response.data.users)
+      setData(response.data.employee)
+      console.log(response.data);
+      
      
       
     } catch (error) {
@@ -213,6 +215,22 @@ const PayrollDetails = () => {
                           </td>
                           <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
                           ₹{data.bonuses}
+                          </td>
+                        </tr>
+                        <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                          <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                            total amount
+                          </td>
+                          <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                          ₹{data.totalAmount}
+                          </td>
+                        </tr>
+                        <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                          <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                            Permonth salary
+                          </td>
+                          <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                          ₹{data.permonthsalary}
                           </td>
                         </tr>
                       
