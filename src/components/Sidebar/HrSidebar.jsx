@@ -1,6 +1,9 @@
 import React, { useState } from "react"
 import { useLocation,Link } from 'react-router-dom';
 import logo from '../../assets/Screenshot 2024-08-04 184513.png'
+import { persistor } from "../../app/store";
+import { logout } from "../../features/hrAuthSlice";
+import { useDispatch } from "react-redux";
 
 
 
@@ -10,6 +13,13 @@ export default function HrSidebar() {
   console.log(path.pathname);
   const location = useLocation();
   const currentPath = location.pathname;
+  const dispatch = useDispatch();
+
+
+  const handleLogOut = () =>{
+    persistor.purge();
+    dispatch(logout())
+  }
   
 
   return (
@@ -298,6 +308,13 @@ export default function HrSidebar() {
             </ul>
           </div>
         </nav>
+        <button
+  className="mt-auto flex items-center gap-3 rounded-md px-3 py-2 text-red-600 hover:bg-red-100"
+  onClick={handleLogOut} // This function will handle the logout logic
+>
+  
+  Logout
+</button>
       </aside>
 
       {/*  <!-- Backdrop --> */}

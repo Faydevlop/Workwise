@@ -28,22 +28,22 @@ const Payrollmanagement = () => {
      },[])
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen">
-      <div className="lg:w-64 lg:flex-shrink-0">
-        <div className="hidden lg:block">
-          <ManagerSidebar/>
+
+
+    <div style={{ display: 'flex', height: '100vh' }}>
+       <div className="hidden lg:block" style={{ width: '250px' }}>
+        <ManagerSidebar/>
         </div>
-        <div className="lg:hidden">
-          {/* Mobile sidebar toggle button */}
-          <button className="p-4">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-          </button>
-        </div>
+         <div className="lg:hidden">
+        {/* You can create a mobile version of the sidebar or a toggle button to show/hide it */}
+        <ManagerSidebar />
       </div>
+
+        <div style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
+                 
+          {/* section 1 */}
+          <div className="flex flex-col lg:flex-row min-h-screen">
+      
 
       <div className="flex-grow overflow-x-hidden">
         <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-muted/40 px-4 sm:px-6">
@@ -170,6 +170,17 @@ const Payrollmanagement = () => {
         </main>
       </div>
     </div>
+
+
+        </div>
+        
+    
+    </div>
+
+
+
+
+    
   )
 }
 

@@ -190,7 +190,7 @@ const handleDelete = async (userId) =>{
             <td className="px-4 py-3">{user.firstName} {user.lastName}</td>
             <td className="px-4 py-3">{user.email}</td>
             <td className="px-4 py-3">{user.position}</td>
-            <td className="px-4 py-3">{user.department}</td>
+            <td className="px-4 py-3 ">{user.department? `${user.department.departmentName}` : 'Department Not Assigned'}</td>
             <td className="px-4 py-3">{user.employeeStatus}</td>
             <td className="px-4 py-3">
                 

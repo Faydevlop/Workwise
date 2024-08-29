@@ -32,7 +32,17 @@ const hrAuthSlice = createSlice({
         error:null,
         isAuthenticated:false
     },
-    reducers:{},
+    reducers:{
+        logout: (state) => {
+            // Clear the localStorage token
+            // localStorage.removeItem('token');
+            // Reset the state to initial values
+            state.hr = null;
+            state.isAuthenticated = false;
+            state.error = null;
+            state.loading = false;
+          }
+    },
     extraReducers:(builder)=>{
         builder
         .addCase(loginAuth.pending,(state)=>{
@@ -50,4 +60,5 @@ const hrAuthSlice = createSlice({
     }
 })
 
+export const { logout } = hrAuthSlice.actions;
 export const hrAuth = hrAuthSlice.reducer;

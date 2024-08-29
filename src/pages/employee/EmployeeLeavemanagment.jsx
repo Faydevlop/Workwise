@@ -79,6 +79,7 @@ const EmployeeLeavemanagment = () => {
                             </span>
                           </td>
                           <td className="p-4 align-middle text-center">
+                            <Link to={`/employee/leave/details/${leave._id}`}>
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               className="h-5 w-5 text-gray-600 cursor-pointer"
@@ -91,6 +92,8 @@ const EmployeeLeavemanagment = () => {
                                 clipRule="evenodd"
                               />
                             </svg>
+                            </Link>
+                            
                           </td>
                         </tr>
                       ))
@@ -115,9 +118,16 @@ const EmployeeLeavemanagment = () => {
             <div className="p-6">
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span>Annual leave</span>
-                  <span>3</span>
+                  <span>Monthly Leave Allowance</span>
+                  <span>4</span>
                 </div>
+                
+                <div className="flex justify-between">
+                  <span>Leave Taken This Month</span>
+                  <span>{leaves.length > 0 && leaves[0].monthlyLeaveCount ? `${leaves[0].monthlyLeaveCount}` : '0'}</span>
+                </div>
+             
+
               </div>
             </div>
           </div>

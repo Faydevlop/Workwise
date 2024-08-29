@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, Link } from 'react-router-dom';
 import logo from '../../assets/Screenshot 2024-08-04 184513.png';
+import { logout } from "../../features/employeeAuth";
+import { useDispatch } from "react-redux";
+import { persistor } from "../../app/store";
 
 export default function EmployeeSidebar() {
   const [isSideNavOpen, setIsSideNavOpen] = useState(false);
   const location = useLocation();
   const currentPath = location.pathname;
+  const dispatch = useDispatch();
 
   // Ref to the sidebar element
   const sidebarRef = useRef(null);
@@ -24,6 +28,12 @@ export default function EmployeeSidebar() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const handleLogOut = () =>{
+   
+    persistor.purge();
+    dispatch(logout())
+  }
 
   return (
     <>
@@ -237,27 +247,14 @@ export default function EmployeeSidebar() {
           </Link>
         </nav>
         <button
-          className="absolute top-6 right-6 block lg:hidden"
-          onClick={toggleSidebar}
-          aria-label="Close sidebar"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-6 w-6"
-          >
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
+  className="mt-auto flex items-center gap-3 rounded-md px-3 py-2 text-red-600 hover:bg-red-100"
+  onClick={handleLogOut} // This function will handle the logout logic
+>
+  
+  Logout
+</button>
       </aside>
+      
     </>
   );
 }

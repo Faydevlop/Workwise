@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, Link } from 'react-router-dom';
 import logo from '../../assets/Screenshot 2024-08-04 184513.png';
+import { useDispatch } from "react-redux";
+import { persistor } from "../../app/store";
+import { logout } from '../../features/adminAuthSlice';
 
 export default function AdminSidebar() {
   const [isSideNavOpen, setIsSideNavOpen] = useState(false);
   const location = useLocation();
   const currentPath = location.pathname;
+  const dispatch = useDispatch();
   
   // Ref to the sidebar element
   const sidebarRef = useRef(null);
@@ -24,6 +28,12 @@ export default function AdminSidebar() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const handleLogOut = () =>{
+   
+    persistor.purge();
+    dispatch(logout())
+  }
 
   return (
     <>
@@ -268,6 +278,15 @@ export default function AdminSidebar() {
             </a>
           </Link>
         </nav>
+        <button
+  className="mt-auto flex items-center gap-3 rounded-md px-3 py-2 text-red-600 hover:bg-red-100"
+  onClick={handleLogOut} // This function will handle the logout logic
+>
+  
+  Logout
+</button>
+
+
       </aside>
     </>
   );

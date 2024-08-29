@@ -14,6 +14,7 @@ import EditProfile from '../pages/employee/EditProfile';
 import ResetPassword from '../pages/employee/ResetPass';
 import Resetpage from '../pages/employee/Resetpage';
 import ApplyLeave from '../pages/employee/leavemanagment/ApplyLeave';
+import LeaveDetailpage from '../pages/employee/leavemanagment/LeaveDetailpage';
 
 function EmployeeRoutes() {
   const isEmployeeAuth = useSelector((state) => state.employeeAuth.isAuthenticated);
@@ -31,6 +32,7 @@ function EmployeeRoutes() {
       <Route path="editprofile/:userId" element={isEmployeeAuth ? <EditProfile /> : <Navigate to="/employee/login" />} />
       <Route path="request-reset-password" element={isEmployeeAuth ? <ResetPassword /> : <Navigate to="/employee/login" />} />
       <Route path="leave/applyLeave" element={isEmployeeAuth ? <ApplyLeave /> : <Navigate to="/employee/login" />} />
+      <Route path="leave/details/:leaveId" element={isEmployeeAuth ? <LeaveDetailpage /> : <Navigate to="/employee/login" />} />
       <Route path="reset-password" element={<Resetpage />} />
     </Routes>
   );

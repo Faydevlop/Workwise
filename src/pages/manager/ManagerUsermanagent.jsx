@@ -1,4 +1,5 @@
 import React from 'react'
+import {ScaleLoader  } from 'react-spinners'
 
 import ManagerSidebar from '../../components/Sidebar/ManagerSidebar'
 
@@ -16,7 +17,8 @@ const ManagerUsermanagent = () => {
         <div style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
                  
           {/* section 1 */}
-
+          
+          <ScaleLoader   />
 
         </div>
         

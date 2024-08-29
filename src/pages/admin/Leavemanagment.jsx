@@ -10,6 +10,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { toast , ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
+import { TextField } from '@mui/material';
 
 const Leavemanagment = () => {
   const [leaves,setLeaves] = useState([])
@@ -21,6 +22,9 @@ const Leavemanagment = () => {
   const [workingEmployees,setWorkingEmployees] = useState('')
   const [pendingLeaveRequest,setPendingLeaveRequest] = useState('')
   const [onLeaveToday,setOnLeaveToday] = useState([])
+  const [comment, setComment] = useState('');
+
+  
   
 
   const handleClickOpen = (userId,leaveId) => {
@@ -30,10 +34,8 @@ const Leavemanagment = () => {
   };
 
   const handleClose = async(action) => {
-    console.log(`Action: ${action}, leave ID: ${leaveId}`);
+    console.log(`Action: ${action}, leave ID: ${leaveId}, Comment: ${comment}`);
     
-    console.log(action);
-
     if (action === 'cancel') {
       setOpen(false);
       return;
@@ -41,37 +43,34 @@ const Leavemanagment = () => {
     
     const userData = {
       action,
-      userId
+      userId,
+      comment: action === 'Rejected' ? comment : '' // Only include comment if action is 'Rejected'
     }
-
+  
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/leave/status/${leaveId}`,userData);
-       toast.success('Status updated successfully!', {
-          position: 'top-right',
-          autoClose: 1500,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          // onClose: () => navigate('/employee/leave'),
-        });
-
-        setLeaves(prevLeaves => 
-          prevLeaves.map(leave => 
-            leave._id === leaveId ? { ...leave, status: action } : leave
-          )
-        );
-      
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/leave/status/${leaveId}`, userData);
+      toast.success('Status updated successfully!', {
+        position: 'top-right',
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+  
+      setLeaves(prevLeaves => 
+        prevLeaves.map(leave => 
+          leave._id === leaveId ? { ...leave, status: action } : leave
+        )
+      );
+    
     } catch (error) {
       toast.error('Error updating status');
     }
-    
-    
-
-
-
+  
     setOpen(false); // Close the dialog
+    setComment(''); // Reset the comment field
   };
 
 
@@ -154,6 +153,7 @@ const Leavemanagment = () => {
           </nav>
         </header>
         <ToastContainer/>
+        
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
           <div className="lg:col-span-1 space-y-4 sm:space-y-6">
@@ -223,10 +223,10 @@ const Leavemanagment = () => {
                         {leave.status}
                       </td>
                         <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <button onClick={()=>handleClickOpen(leave.userId,`${leave._id}`)}  className="text-red-600 hover:text-red-900 mr-1 ">Reject</button>
-                          <button onClick={()=>handleClickOpen(leave.userId,`${leave._id}`)} className="text-green-600 hover:text-green-900  ml-2  ">Approve</button>
+                          <button onClick={()=>handleClickOpen(leave.userId,`${leave._id}`)}  className="text-blue-600 hover:text-blue-900 mr-1 ">Manage</button>
+                          
                           <Link to={`/admin/leavedetails/${leave._id}`}>
-                          <button  className="text-blue-600  ml-2   hover:text-blue-900">Info</button>
+                          <button  className="text-green-600  mr-2 ml-3   hover:text-green-900">Info</button>
                           </Link>
                         </td>
                       </tr>
@@ -304,27 +304,40 @@ const Leavemanagment = () => {
 </div>
 
             </div>
-            <Dialog
-        open={open}
-        onClose={() => handleClose('cancel')}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Are you sure..?"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you want to approve this leave request?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => handleClose('cancel')}>Cancel</Button>
-          <Button onClick={() => handleClose('Rejected')}>Reject request</Button>
-          <Button onClick={() => handleClose('Approved')} autoFocus>
-            Accept Request
-          </Button>
-        </DialogActions>
-      </Dialog>
+          
             {/* Other Content */}
+            <Dialog
+  open={open}
+  onClose={() => handleClose('cancel')}
+  aria-labelledby="alert-dialog-title"
+  aria-describedby="alert-dialog-description"
+>
+  <DialogTitle id="alert-dialog-title">{"Are you sure..?"}</DialogTitle>
+  <DialogContent>
+    <DialogContentText id="alert-dialog-description">
+      Are you sure you want to reject this leave request?
+    </DialogContentText>
+    <TextField
+      autoFocus
+      margin="dense"
+      id="comment"
+      label="Comment"
+      type="text"
+      fullWidth
+      variant="outlined"
+      value={comment}
+      onChange={(e) => setComment(e.target.value)}
+    />
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={() => handleClose('cancel')}>Cancel</Button>
+    <Button onClick={() => handleClose('Rejected')} color="error">Reject request</Button>
+    <Button onClick={() => handleClose('Approved')} color="primary" autoFocus>
+      Accept Request
+    </Button>
+  </DialogActions>
+</Dialog>
+
           </div>
         </div>
       </div>

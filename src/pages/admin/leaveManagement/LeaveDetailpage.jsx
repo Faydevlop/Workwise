@@ -87,6 +87,7 @@ const LeaveDetailpage = () => {
                   <p><span className="font-medium">Request Date:</span> {new Date(leave.createdAt).toLocaleDateString()}</p>
                   <p><span className="font-medium">Leave Status:</span> <span className={`px-2 py-1 rounded-full text-sm ${leave.status === 'Approved' ? 'bg-green-200 text-green-800' : leave.status === 'Pending' ? 'bg-yellow-200 text-yellow-800' : 'bg-red-200 text-red-800'}`}>{leave.status}</span></p>
                   <p><span className="font-medium">Reason:</span> {leave.reason}</p>
+                  <p><span className="font-medium">Comments:</span> {leave.comment}</p>
                 </div>
                 {/* <div className="mt-6 flex space-x-4">
                   <button className="px-4 py-2 bg-blue-600 text-white rounded-lg">Approve</button>

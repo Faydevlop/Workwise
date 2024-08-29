@@ -29,7 +29,17 @@ const employeeAuthSlice = createSlice({
     error: null,
     isAuthenticated: false,
   },
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      // Clear the localStorage token
+      // localStorage.removeItem('token');
+      // Reset the state to initial values
+      state.employee = null;
+      state.isAuthenticated = false;
+      state.error = null;
+      state.loading = false;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(LoginAuth.pending, (state) => {
@@ -47,4 +57,5 @@ const employeeAuthSlice = createSlice({
   },
 });
 
+export const { logout } = employeeAuthSlice.actions;
 export const employeeAuth = employeeAuthSlice.reducer;

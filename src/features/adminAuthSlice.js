@@ -21,6 +21,8 @@ export const registerAuth = createAsyncThunk(
   }
 );
 
+
+
 // Admin Login
 export const LoginAuth = createAsyncThunk(
   'admin/login',
@@ -60,7 +62,17 @@ const adminAuthSlice = createSlice({
     error: null, 
     isAuthenticated :false
   },
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      // Clear the localStorage token
+      
+      // Reset the state to initial values
+      state.admin = null;
+      state.isAuthenticated = false;
+      state.error = null;
+      state.loading = false;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(registerAuth.pending, (state) => {
@@ -90,4 +102,5 @@ const adminAuthSlice = createSlice({
   },
 });
 
+export const { logout } = adminAuthSlice.actions;
 export const authadmin = adminAuthSlice.reducer;
