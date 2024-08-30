@@ -130,7 +130,7 @@ const TaskForm = () => {
               >
                 <option value="">Select Status</option>
                 <option value="Pending">Pending</option>
-                <option value="InProgress">In Progress</option>
+                <option value="InProgress">In-Progress</option>
                 <option value="Completed">Completed</option>
               </select>
               {errors.status && <p className="text-red-500 text-sm mt-1">{errors.status}</p>}

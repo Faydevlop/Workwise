@@ -133,6 +133,9 @@ const TasktManagement = () => {
     </div>
   </div>
 ))}
+{
+  projectData.length == 0 ? (<p>No Project Assigned</p> ) : ''
+}
           </div>
         </section>
         <div data-orientation="horizontal" role="none" className="shrink-0 bg-border h-[1px] w-full my-6"></div>
@@ -298,6 +301,9 @@ const TasktManagement = () => {
             </table>
           </div>
         </section>
+        {
+  tasks.length == 0 ? (<p className='text-center'>No Tasks are Created</p> ) : ''
+}
       </main>
     </div>
 

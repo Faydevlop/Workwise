@@ -15,6 +15,7 @@ import ResetPassword from '../pages/employee/ResetPass';
 import Resetpage from '../pages/employee/Resetpage';
 import ApplyLeave from '../pages/employee/leavemanagment/ApplyLeave';
 import LeaveDetailpage from '../pages/employee/leavemanagment/LeaveDetailpage';
+import TaskDetails from '../pages/employee/taskmanagement/TaskDetails';
 
 function EmployeeRoutes() {
   const isEmployeeAuth = useSelector((state) => state.employeeAuth.isAuthenticated);
@@ -24,6 +25,7 @@ function EmployeeRoutes() {
       <Route path="login" element={<EmployeeLogin />} />
       <Route path="dashboard" element={isEmployeeAuth ? <EmployeeDashboard /> : <Navigate to="/employee/login" />} />
       <Route path="tasks" element={isEmployeeAuth ? <EmployeeTaskmanagment /> : <Navigate to="/employee/login" />} />
+      <Route path="tasks/details/:taskId" element={isEmployeeAuth ? <TaskDetails /> : <Navigate to="/employee/login" />} />
       <Route path="meetings" element={isEmployeeAuth ? <EmployeeMeetingSchedule /> : <Navigate to="/employee/login" />} />
       <Route path="payroll" element={isEmployeeAuth ? <EmployeePayroll /> : <Navigate to="/employee/login" />} />
       <Route path="leave" element={isEmployeeAuth ? <EmployeeLeavemanagment /> : <Navigate to="/employee/login" />} />

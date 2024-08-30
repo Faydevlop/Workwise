@@ -208,6 +208,7 @@ const AddProjectPage = () => {
                                 value={sdepartment}
                                 onChange={(e) => setSDepartment(e.target.value)}
                             >
+                                <option value="" disabled> select a team </option>
                                 {Array.isArray(department) && department.length > 0 ? (
                                     department.map(dep => (
                                         <option key={dep._id} value={dep._id}>

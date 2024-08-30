@@ -1,19 +1,45 @@
 import React, { useEffect, useState } from 'react'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
 import ManagerSidebar from '../../../components/Sidebar/ManagerSidebar'
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const TaskDetail = () => {
   const {taskId} = useParams()
   const [taskData,setTaskData] = useState([])
+  const [comment,setComment] = useState('');
+  const [listcomments,setListcomments] = useState([])
+  
+  const { manager } = useSelector((state) => state.managerAuth);
+  const userId = manager.manager._id;
 
   const fetchdata = async ()=>{
     try {
       const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/task/taskdetails/${taskId}`);
       setTaskData(response.data.task)
-  console.log(response.data.task);
+  // console.log(response.data.task);
 
+    } catch (error) {
+      
+    }
+  }
+
+
+  const fetchComments = async ()=>{
+    try {
+
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/comment/listcomments/${taskId}`);
+
+      setListcomments(response.data.comments)
+      console.log(response.data.comments);
+      
+      
     } catch (error) {
       
     }
@@ -21,7 +47,45 @@ const TaskDetail = () => {
 
   useEffect(()=>{
     fetchdata()
+    fetchComments()
   },[])
+
+  const handlSubmit = async()=>{
+    const commentData = {
+      comment:comment,
+      commentedBy:userId
+      
+    }
+
+    
+
+
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/comment/addcomment/${taskId}`,commentData)
+      toast.success("Comment added successfully!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        
+       
+      });
+      fetchComments()
+    } catch (error) {
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  }
   
 
   return (
@@ -38,7 +102,7 @@ const TaskDetail = () => {
                  
           {/* section 1 */}
           
-
+<ToastContainer/>
 
 <div className="grid gap-8 px-4 py-6 mx-auto max-w-6xl sm:px-6 lg:px-8">
   <div className="flex items-center justify-between">
@@ -213,62 +277,59 @@ const TaskDetail = () => {
         </div>
       </div>
     </div>
-    <div className='bg-white'>
-      <div className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-        <div className="flex flex-col space-y-1.5 p-6">
-          <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">Comments</h3>
-        </div>
-        <div className="p-6 grid gap-4">
-          <div className="grid gap-4">
+    <div className='bg-white ' style={{ width: '350px' }}>
+  <div className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+    <div className="flex flex-col space-y-1.5 p-6">
+      <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">Comments</h3>
+    </div>
+    <div className="p-6 grid gap-4">
+      <div className="grid gap-4 h-60 overflow-y-scroll"> {/* Adjust height as needed */}
+        
+        {
+          listcomments.map((list)=>(
             <div className="flex items-start gap-4">
-              <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
-                <img className="aspect-square h-full w-full" alt="John Doe" src="https://tailwindui.com/placeholder-user.jpg"  />
-              </span>
-              <div className="grid gap-2">
-                <div className="flex items-center justify-between">
-                  <div className="font-medium">John Doe</div>
-                  <div className="text-xs text-muted-foreground">2 days ago</div>
-                </div>
-                <p className="text-muted-foreground">
-                  Great work on the new feature! I think it will really improve the user experience.
-                </p>
+            <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
+              <img className="aspect-square h-full w-full" alt="Jane Smith" src="https://tailwindui.com/placeholder-user.jpg" />
+            </span>
+            <div className="grid gap-2">
+              <div className="flex items-center justify-between">
+                <div className="font-medium">{list.commentedBy ? `${list.commentedBy.firstName}${list.commentedBy.lastName}`:"Not available" }</div>
+                <div className="text-xs text-muted-foreground">{dayjs(list.createdAt).fromNow()}</div>
               </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
-                <img className="aspect-square h-full w-full" alt="Jane Smith" src="https://tailwindui.com/placeholder-user.jpg"  />
-              </span>
-              <div className="grid gap-2">
-                <div className="flex items-center justify-between">
-                  <div className="font-medium">Jane Smith</div>
-                  <div className="text-xs text-muted-foreground">3 days ago</div>
-                </div>
-                <p className="text-muted-foreground">
-                  I have a few suggestions for the new feature. Let's discuss them in our next meeting.
-                </p>
-              </div>
+              <p className="text-muted-foreground">
+                {list.comment}
+              </p>
             </div>
           </div>
-          <div className="grid gap-2">
-            <label
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              htmlFor="new-comment"
-            >
-              Add a comment
-            </label>
-            <textarea
-              className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              id="new-comment"
-              rows="3"
-              placeholder="Write your comment here..."
-            ></textarea>
-            <button className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3">
-              Submit
-            </button>
-          </div>
-        </div>
+          ))
+        }
+       
+        
+
+      </div>
+      <div className="grid gap-2">
+        <label
+          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          htmlFor="new-comment"
+        >
+          Add a comment
+        </label>
+        <textarea
+          className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          id="new-comment"
+          rows="3"
+          placeholder="Write your comment here..."
+          value={comment}
+          onChange={(e)=>setComment(e.target.value)}
+        ></textarea>
+        <button onClick={handlSubmit} className="inline-flex bg-black text-white hover:bg-gray-700 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3">
+          Submit
+        </button>
       </div>
     </div>
+  </div>
+</div>
+
   </div>
 </div>
 
