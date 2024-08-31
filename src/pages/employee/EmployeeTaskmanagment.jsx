@@ -22,7 +22,7 @@ const EmployeeTaskmanagment = () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/task/listtasks/${userId}`)
         const fetchedTasks = response.data;
-        console.log(response.data);
+        // console.log(response.data);
         
 
         if (!fetchedTasks) {

@@ -12,6 +12,7 @@ import HrChat from '../pages/Hr/HrChat';
 import HrMeetings from '../pages/Hr/HrMeetings';
 import Leaves from '../pages/Hr/Leaves';
 import LeaveRequests from '../pages/Hr/leaveManagement/LeaveRequests';
+import Payrolldettails from '../pages/Hr/payrolldetails/Payrolldettails';
 // import EditHrProfile from '../pages/Hr/EditHrProfile';
 
 const HrRoutes = () => {
@@ -23,6 +24,7 @@ const HrRoutes = () => {
       <Route path="dashboard" element={isHrAuth ? <HrDashboard /> : <Navigate to="/hr/login" />} />
       <Route path="employeerecords" element={isHrAuth ? <EmployeeRecords /> : <Navigate to="/hr/login" />} />
       <Route path="payrollmanagement" element={isHrAuth ? <PayrollManagement /> : <Navigate to="/hr/login" />} />
+      <Route path="payrollmanagement/edit/:userId" element={isHrAuth ? <Payrolldettails /> : <Navigate to="/hr/login" />} />
       <Route path="leaves" element={isHrAuth ? <Leaves /> : <Navigate to="/hr/login" />} />
       <Route path="leaves/applyleave" element={isHrAuth ? <LeaveRequests /> : <Navigate to="/hr/login" />} />
       <Route path="recruitment" element={isHrAuth ? <Recruitment /> : <Navigate to="/hr/login" />} />

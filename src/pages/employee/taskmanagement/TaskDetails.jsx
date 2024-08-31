@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react'
 import EmployeeSidebar from '../../../components/Sidebar/EmployeeSidebar'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import axios from 'axios'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import dayjs from 'dayjs'
 
 const TaskDetails = () => {
     const {taskId} = useParams()
@@ -17,7 +21,7 @@ const TaskDetails = () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/task/taskdetails/${taskId}`);
         setTaskData(response.data.task)
-        console.log(response.data.task);
+        console.log('the task details is here',response.data);
    
   
       } catch (error) {
@@ -68,6 +72,7 @@ const TaskDetails = () => {
           
          
         });
+        setComment('')
         fetchComments()
       } catch (error) {
         toast.error(errorMessage, {
@@ -100,12 +105,12 @@ const TaskDetails = () => {
   <div className="col-span-2 flex flex-col space-y-6">
 
   <div className="bg-white rounded-lg shadow-md p-6">
-    <h1 className="text-2xl font-bold mb-4">Redesign the company website</h1>
-    <p className="text-gray-600 mb-6">The marketing team needs a complete overhaul of the website.</p>
+    <h1 className="text-2xl font-bold mb-4">{taskData.name}</h1>
+    <p className="text-gray-600 mb-6">{taskData.description}</p>
     <div className="grid grid-cols-2 gap-4 mb-6">
       <div>
         <h3 className="text-lg font-medium mb-2">Due Date</h3>
-        <p className="text-gray-600">September 30, 2024</p>
+        <p className="text-gray-600">{(new Date(taskData.dueDate).toLocaleDateString())}</p>
       </div>
       <div>
         <h3 className="text-lg font-medium mb-2">Assigned To</h3>
@@ -113,7 +118,7 @@ const TaskDetails = () => {
           <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
             <img className="aspect-square h-full w-full" alt="John Doe" src="https://tailwindui.com/placeholder-user.jpg" />
           </span>
-          <p className="text-gray-600">John Doe</p>
+          <p className="text-gray-600">{taskData.assignedTo ? `${taskData.assignedTo[0].firstName}${taskData.assignedTo[0].lastName}` : 'Not available'}</p>
         </div>
       </div>
       <div>
@@ -121,7 +126,7 @@ const TaskDetails = () => {
         <div
           className="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-yellow-100 text-yellow-600"
         >
-          In Progress
+          {taskData.status}
         </div>
       </div>
       <div>
@@ -129,43 +134,32 @@ const TaskDetails = () => {
         <div
           className="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-red-100 text-red-600"
         >
-          High
+         {taskData.priority}
         </div>
       </div>
     </div>
   </div>
+  <ToastContainer/>
 
   
   <div className="bg-white rounded-lg shadow-md p-6">
   <h2 className="text-xl font-bold mb-4">Comments</h2>
   <div className="max-h-[300px] overflow-y-auto space-y-4 mb-6">
-    <div className="flex items-start space-x-4">
+    
+  {
+    listcomments.map((list)=>(<div className="flex items-start space-x-4">
       <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
         <img className="aspect-square h-full w-full" alt="Jane Smith" src="https://tailwindui.com/placeholder-user.jpg" />
       </span>
       <div className="flex-1">
         <div className="flex items-center justify-between mb-2">
-          <p className="font-medium">Jane Smith</p>
-          <p className="text-gray-500 text-sm">2 days ago</p>
+          <p className="font-medium">{list.commentedBy ? `${list.commentedBy.firstName}${list.commentedBy.lastName}`:"Not available" }</p>
+          <p className="text-gray-500 text-sm">{dayjs(list.createdAt).fromNow()}</p>
         </div>
-        <p className="text-gray-600">Great work</p>
+        <p className="text-gray-600">{list.comment}</p>
       </div>
-    </div>
-    <div className="flex items-start space-x-4">
-      <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
-        <img className="aspect-square h-full w-full" alt="Michael Johnson" src="https://tailwindui.com/placeholder-user.jpg" />
-      </span>
-      <div className="flex-1">
-        <div className="flex items-center justify-between mb-2">
-          <p className="font-medium">Michael Johnson</p>
-          <p className="text-gray-500 text-sm">5 days ago</p>
-        </div>
-        <p className="text-gray-600">
-          I've reviewed the latest designs and they look great. I think we're on the right track to deliver
-          a fantastic new website.
-        </p>
-      </div>
-    </div>
+    </div>))
+  }
     
   </div>
   <div className="bg-gray-100 h-[1px] w-full my-6"></div>
@@ -175,9 +169,11 @@ const TaskDetails = () => {
       className="flex min-h-[80px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full"
       placeholder="Write your comment here..."
       rows="3"
+      value={comment}
+      onChange={(e)=>setComment(e.target.value)}
     ></textarea>
     <div className="flex justify-end mt-4">
-      <button className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3">
+      <button onClick={handlSubmit} className="inline-flex bg-black text-white items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3">
         Submit
       </button>
     </div>
@@ -196,18 +192,17 @@ const TaskDetails = () => {
             <div>
               <h3 className="text-lg font-medium mb-2">Description</h3>
               <p className="text-gray-600">
-                The marketing team has requested a complete overhaul of the company website to align with the new
-                brand guidelines and improve user experience.
+               {taskData.description}
               </p>
             </div>
             <div>
               <h3 className="text-lg font-medium mb-2">Due Date</h3>
-              <p className="text-gray-600">September 30, 2023</p>
+              <p className="text-gray-600">{new Date(taskData.dueDate).toLocaleDateString()}</p>
             </div>
             <div>
               <h3 className="text-lg font-medium mb-2">Assigned To</h3>
               <div className="flex items-center space-x-2">
-                <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"></span>
+                <span className="relative flex h-10 w-10 shrink-0 overflow-hidden ">{taskData.assignedTo ? `${taskData.assignedTo[0].firstName}${taskData.assignedTo[0].lastName}` : 'Not available'}</span>
               </div>
             </div>
           </div>

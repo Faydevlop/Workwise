@@ -74,6 +74,7 @@ const TaskDetail = () => {
        
       });
       fetchComments()
+      setComment('')
     } catch (error) {
       toast.error(errorMessage, {
         position: "top-right",
