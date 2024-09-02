@@ -139,7 +139,7 @@ const Payrollmanagment = () => {
               <thead className="[&_tr]:border-b">
                 <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                   <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Employee</th>
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Date</th>
+                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Current Month Pay</th>
                   <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Amount</th>
                   <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Status</th>
                   <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Actions</th>
@@ -154,11 +154,11 @@ const Payrollmanagment = () => {
                       <div className="text-sm text-muted-foreground">{employee.email}</div>
                       </Link>
                     </td>
-                    <td className="p-4 align-middle">{employee.date}</td>
+                    <td className="p-4 align-middle">{employee.payroll ? `${employee.payroll.permonthsalary}` : 'Not available'}</td>
                     <td className="p-4 align-middle">{employee.payroll ? `${employee.payroll.baseSalary}` : 'Not available'}</td>
                     <td className="p-4 align-middle">
-                      <div className={`inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent ${employee.payroll.paymentStatus === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                        {employee.payroll ? `${employee.payroll.paymentStatus}` : 'Not available'}
+                      <div className={`inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent ${employee.payroll?.paymentStatus === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                        {employee.payroll ? `${employee.payroll?.paymentStatus}` : 'Not available'}
                       </div>
                     </td>
                     <td className="p-4 align-middle">

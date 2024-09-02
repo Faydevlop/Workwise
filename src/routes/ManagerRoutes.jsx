@@ -17,6 +17,7 @@ import Payrollmanagement from '../pages/manager/Payrollmanagement';
 import Editpage from '../pages/manager/payroll/Editpage';
 import EditProfile from '../pages/manager/EditProfile';
 import ResetPass from '../pages/manager/resetpassword';
+import AddMeeting from '../pages/manager/meeting/AddMeeting';
 
 const ManagerRoutes = () => {
   const isManagerAuth = useSelector((state) => state.managerAuth.isAuthenticated);
@@ -29,6 +30,7 @@ const ManagerRoutes = () => {
       <Route path="leavemanagement" element={isManagerAuth ? <LeaveManagement /> : <Navigate to="/manager/login" />} />
       <Route path="tasksmanagement" element={isManagerAuth ? <TasktManagement /> : <Navigate to="/manager/login" />} />
       <Route path="meetings" element={isManagerAuth ? <Meetings /> : <Navigate to="/manager/login" />} />
+      <Route path="meetings/addmeeting" element={isManagerAuth ? <AddMeeting /> : <Navigate to="/manager/login" />} />
       <Route path="profile" element={isManagerAuth ? <ManagerProfile /> : <Navigate to="/manager/login" />} />
       <Route path="profile/editprofile/:userId" element={isManagerAuth ? <EditProfile /> : <Navigate to="/manager/login" />} />
       <Route path="chat" element={isManagerAuth ? <Managerchat /> : <Navigate to="/manager/login" />} />

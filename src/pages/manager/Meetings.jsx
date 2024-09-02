@@ -1,13 +1,81 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import ManagerSidebar from '../../components/Sidebar/ManagerSidebar'
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Meetings = () => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
+  const [listdata,setListdata] = useState([])
+  const [listnext,setListnext] = useState([])
 
   const toggleDropdown = (index) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
   };
+
+  const { manager } = useSelector((state) => state.managerAuth);
+  const userId = manager.manager._id;
+
+  const fetchdata = async()=>{
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/meeting/listmeeting/${userId}`)
+      setListdata(response.data.listData)
+      // console.log(response.data.listData);
+      
+    } catch (error) {
+      
+    }
+  }
+  const fetchnext = async()=>{
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/meeting/nextmeet`)
+      setListnext(response.data.upcomingMeetings)
+      console.log(response.data);
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+
+  useEffect(()=>{
+   
+    fetchdata()
+    fetchnext()
+  },[])
+
+  const handledelete = async(meetingId)=>{
+    try {
+
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/meeting/deletemeeting/${meetingId}`)
+      toast.success("Meeting deleted successfully!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+       
+      });
+      fetchdata()
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "An error occurred while deleting the meeting."
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  }
  
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
@@ -52,27 +120,14 @@ const Meetings = () => {
          
        </nav>
      </div>
-     <div className="flex items-center gap-2 md:ml-auto">
+     
+     <div className="flex items-center gap-2 ">
+      <Link to={'/manager/meetings/addmeeting'}>
+       <button className="  inline-flex justify-center rounded-md border border-gray-300 bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        Add Meeting
       
-       <button className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 rounded-full md:hidden">
-         <svg
-           xmlns="http://www.w3.org/2000/svg"
-           width="24"
-           height="24"
-           viewBox="0 0 24 24"
-           fill="none"
-           stroke="currentColor"
-           strokeWidth="2"
-           strokeLinecap="round"
-           strokeLinejoin="round"
-           className="w-6 h-6"
-         >
-           <line x1="4" x2="20" y1="12" y2="12"></line>
-           <line x1="4" x2="20" y1="6" y2="6"></line>
-           <line x1="4" x2="20" y1="18" y2="18"></line>
-         </svg>
-         <span className="sr-only">Toggle menu</span>
        </button>
+       </Link>
      </div>
    </header>
    <main className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6 p-4 md:p-6">
@@ -104,8 +159,10 @@ const Meetings = () => {
           </th>
         </tr>
       </thead>
+      <ToastContainer/>
       <tbody className="[&_tr:last-child]:border-0">
-        {["Weekly Sync", "Sales Review", "Design Review"].map((meeting, index) => (
+        
+        {listdata.map((meeting, index) => (
           <tr
             key={index}
             className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
@@ -113,21 +170,21 @@ const Meetings = () => {
             <td className="p-4 align-middle">
               <div className="flex items-center gap-3">
                 <div className={`bg-primary text-primary-foreground rounded-md px-2 py-1 text-xs font-medium`}>
-                  {meeting}
+                  {meeting.meetingName}
                 </div>
                 <div>
-                  <div className="font-medium">{meeting}</div>
-                  <div className="text-sm text-muted-foreground">Meeting description</div>
+                  {/* <div className="font-medium">{meeting.meetingName}</div> */}
+                  <div className="text-sm text-muted-foreground">{meeting.topic}</div>
                 </div>
               </div>
             </td>
-            <td className="p-4 align-middle">May 15, 2023</td>
-            <td className="p-4 align-middle">2:00 PM - 3:00 PM</td>
+            <td className="p-4 align-middle">{new Date(meeting.date).toLocaleDateString()}</td>
+            <td className="p-4 align-middle">{meeting.time}</td>
             <td className="p-4 align-middle">
               <div className="flex -space-x-2 overflow-hidden">
-                {[...Array(4)].map((_, i) => (
+                {meeting.participants.map((_, i) => (
                   <span key={i} className="relative flex shrink-0 overflow-hidden rounded-full w-6 h-6 border-2 border-background">
-                    <img className="aspect-square h-full w-full" alt={`attendee ${i}`} src="https://tailwindui.com/placeholder-user.jpg" />
+                    <img className="aspect-square h-full w-full" alt={`attendee ${i}`} src="https://thumbs.dreamstime.com/z/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg?ct=jpeg" />
                   </span>
                 ))}
               </div>
@@ -153,7 +210,7 @@ const Meetings = () => {
                       <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         Edit Meeting
                       </a>
-                      <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      <a href="#" onClick={()=>handledelete(meeting._id)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         Delete Meeting
                       </a>
                     </div>
@@ -164,42 +221,55 @@ const Meetings = () => {
           </tr>
         ))}
       </tbody>
+      
     </table>
+    {
+          listdata.length == 0 ? (<p className='text-center'>No Meetings Scheduled</p>) : ''
+        } 
          </div>
        </div>
      </div>
      <div className="bg-background border rounded-lg shadow-sm p-6 space-y-6">
-       <div>
-         <h2 className="text-xl font-bold">Next Meeting</h2>
-         <p className="text-muted-foreground">Your next upcoming meeting is in 2 hours.</p>
-       </div>
-       <div className="flex items-center gap-4">
-         <div className="bg-primary text-primary-foreground rounded-md px-2 py-1 text-xs font-medium">Weekly Sync</div>
-         <div>
-           <div className="font-medium">Weekly Sync</div>
-           <div className="text-sm text-muted-foreground">2:00 PM - 3:00 PM</div>
-         </div>
-       </div>
-       <div className="flex items-center gap-4">
-         <span className="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 border-2 border-background">
-           <img className="aspect-square h-full w-full" alt="@username" src="https://tailwindui.com/placeholder-user.jpg"  />
-         </span>
-         <span className="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 border-2 border-background">
-           <img className="aspect-square h-full w-full" alt="@username" src="https://tailwindui.com/placeholder-user.jpg"  />
-         </span>
-         <span className="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 border-2 border-background">
-           <img className="aspect-square h-full w-full" alt="@username" src="https://tailwindui.com/placeholder-user.jpg"  />
-         </span>
-         <span className="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 border-2 border-background">
-           <img className="aspect-square h-full w-full" alt="@username" src="https://tailwindui.com/placeholder-user.jpg"  />
-         </span>
-       </div>
-       <div className="flex gap-2">
-         <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2">
-           Join Meeting
-         </button>
-       </div>
-     </div>
+  <div>
+    <h2 className="text-xl font-bold">Upcoming Meetings</h2>
+    <p className="text-muted-foreground">Here are your upcoming scheduled meetings.</p>
+  </div>
+  {
+    listnext.length == 0 ? (<p>No Meeting Scheduled</p>) : ''
+  }
+
+  {listnext.map((meeting) => (
+    <div key={meeting._id} className="mb-6">
+      <div className="flex items-center gap-4">
+        <div className="bg-primary text-primary-foreground rounded-md px-2 py-1 text-xs font-medium">
+          {meeting.meetingName}
+        </div>
+        <div>
+          <div className="font-medium">{meeting.topic}</div>
+          <div className="text-sm text-muted-foreground">
+            {new Date(meeting.date).toLocaleDateString()} - {meeting.time}
+          </div>
+        </div>
+      </div>
+      <div className="flex items-center gap-4 mt-4">
+        {meeting.participants.map((participant, index) => (
+          <span key={index} className="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 border-2 border-background">
+            <img className="aspect-square h-full w-full  " alt={`Participant ${index + 1}`} src="https://thumbs.dreamstime.com/z/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg?ct=jpeg" />
+          </span>
+        ))}
+      </div>
+      <div className="flex gap-2 mt-4">
+        <button
+          className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2"
+          onClick={() => window.open(meeting.link, "_blank")}
+        >
+          Join Meeting
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
+
    </main>
  </div>
 
