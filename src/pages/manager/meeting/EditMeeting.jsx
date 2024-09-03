@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import ManagerSidebar from '../../../components/Sidebar/ManagerSidebar';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const AddMeeting = () => {
-  // State variables for each input field
+const EditMeeting = () => {
+  const { meetingId } = useParams();
   const [meetingName, setMeetingName] = useState('');
   const [date, setDate] = useState('');
   const [participants, setParticipants] = useState([]);
@@ -31,35 +31,39 @@ const AddMeeting = () => {
     const newErrors = {};
     if (!meetingName.trim()) newErrors.meetingName = "Meeting name is required.";
     if (!date.trim()) newErrors.date = "Date is required.";
-    if (!time.trim()) newErrors.time = "time is required.";
-    if (participants.length === 0) newErrors.participants = "At least one participant must be selected.";
+    if (!time.trim()) newErrors.time = "Time is required.";
+    if (participants.length === 0 && !meetingId) newErrors.participants = "At least one participant must be selected.";
     if (!meetingLink.trim()) newErrors.meetingLink = "Meeting link is required.";
     if (!topic.trim()) newErrors.topic = "Meeting topic is required.";
-
+  
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   // Handle form submission
-  const handleMeeting = async (e) => {
+  const handleUpdateMeeting = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-
+  
     setLoading(true);
     try {
-      console.log(meetingName, date, participants, meetingLink, topic);
-
-      // Make an API request to save the meeting details
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/meeting/addmeeting/${userId}`, {
+      const dataToUpdate = {
         meetingName,
         date,
-        participants,
         meetingLink,
         topic,
-        time
-      });
-
-      toast.success("Meeting Scheduled successfully!", {
+        time,
+      };
+  
+      // Only include participants if the user has selected new ones
+      if (participants.length > 0) {
+        dataToUpdate.participants = participants;
+      }
+  
+      // Make an API request to update the meeting details
+      const response = await axios.put(`${import.meta.env.VITE_BASE_URL}/meeting/update/${meetingId}`, dataToUpdate);
+  
+      toast.success("Meeting updated successfully!", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -67,14 +71,11 @@ const AddMeeting = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        onClose:()=>navigate('/manager/meetings')
-       
+        onClose: () => navigate('/manager/meetings')
       });
-      
     } catch (error) {
-    
-      console.error('Error saving the meeting:', errorMessage);
-      const errorMessage = error.response?.data?.message || "An error occurred while shcheduling the meeting."
+      console.error('Error updating the meeting:', error);
+      const errorMessage = error.response?.data?.message || "An error occurred while updating the meeting.";
       toast.error(errorMessage, {
         position: "top-right",
         autoClose: 3000,
@@ -90,7 +91,29 @@ const AddMeeting = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchMeetingData = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/meeting/listmeeiting/${meetingId}/list`);
+        const meetingData = response.data.meetingData ;
+        console.log(response.data.meetingData);
+        
+        setMeetingName(meetingData.meetingName || '');
+    setDate(meetingData.date ? meetingData.date.split('T')[0] : '');
+    
+    // Filter out null participants and map to their IDs
+    const validParticipants = meetingData.participants ? meetingData.participants.filter(p => p !== null).map(p => p._id) : [];
+    setParticipants(validParticipants);
+    
+    setMeetingLink(meetingData.link || '');
+    setTopic(meetingData.topic || '');
+    setTime(meetingData.time || '');
+      } catch (error) {
+        console.error('Error fetching meeting data:', error);
+        toast.error('Failed to load meeting data');
+      }
+    };
+
+    const fetchUsers = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/meeting/listuser/${userId}`);
         setListingUser(response.data.users);
@@ -100,8 +123,9 @@ const AddMeeting = () => {
       }
     };
 
-    fetchData();
-  }, [userId]);
+    fetchMeetingData();
+    fetchUsers();
+  }, [meetingId, userId]);
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
@@ -116,11 +140,11 @@ const AddMeeting = () => {
         <div className="w-full px-4 md:px-6">
           <div className="rounded-lg border bg-card text-card-foreground shadow-sm w-full" data-v0-t="card">
             <div className="flex flex-col space-y-1.5 p-6">
-              <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">Add Meeting</h3>
-              <p className="text-sm text-muted-foreground">Fill out the details for your upcoming meeting.</p>
+              <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">Edit Meeting</h3>
+              <p className="text-sm text-muted-foreground">Update the details of your meeting.</p>
             </div>
             <div className="p-6">
-              <form className="grid gap-4" onSubmit={handleMeeting}>
+              <form className="grid gap-4" onSubmit={handleUpdateMeeting}>
                 <div className="grid gap-2">
                   <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" htmlFor="name">
                     Meeting Name
@@ -167,7 +191,8 @@ const AddMeeting = () => {
                     type="time"
                     value={time}
                     onChange={(e) => setTime(e.target.value)}
-                    
+                    min="09:00"
+                    max="18:00"
                   />
                   {errors.time && <p className="text-red-500 text-sm mt-1">{errors.time}</p>}
                 </div>
@@ -226,7 +251,7 @@ const AddMeeting = () => {
                     type="submit"
                     className="inline-flex items-center bg-black text-white hover:bg-gray-800 justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 ml-auto"
                   >
-                    {loading ? <ScaleLoader color="#fff" height={15} /> : 'Save Meeting'}
+                    {loading ? <ScaleLoader color="#fff" height={15} /> : 'Update Meeting'}
                   </button>
                 </div>
               </form>
@@ -238,7 +263,7 @@ const AddMeeting = () => {
 
         <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 text-center items-center justify-between">
           <p className="text-sm leading-loose text-muted-foreground">
-            Copyright © 2023
+            Copyright © 2024
           </p>
         </footer>
       </div>
@@ -246,4 +271,4 @@ const AddMeeting = () => {
   );
 };
 
-export default AddMeeting;
+export default EditMeeting;

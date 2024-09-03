@@ -13,6 +13,8 @@ import HrMeetings from '../pages/Hr/HrMeetings';
 import Leaves from '../pages/Hr/Leaves';
 import LeaveRequests from '../pages/Hr/leaveManagement/LeaveRequests';
 import Payrolldettails from '../pages/Hr/payrolldetails/Payrolldettails';
+import AddMeeting from '../pages/Hr/meetingmanagement/AddMeeting';
+import EditMeeting from '../pages/Hr/meetingmanagement/EditMeeting';
 // import EditHrProfile from '../pages/Hr/EditHrProfile';
 
 const HrRoutes = () => {
@@ -30,6 +32,8 @@ const HrRoutes = () => {
       <Route path="recruitment" element={isHrAuth ? <Recruitment /> : <Navigate to="/hr/login" />} />
       <Route path="profile" element={isHrAuth ? <HrProfile /> : <Navigate to="/hr/login" />} />
       <Route path="meetings" element={isHrAuth ? <HrMeetings /> : <Navigate to="/hr/login" />} />
+      <Route path="meetings/addmeeting" element={isHrAuth ? <AddMeeting /> : <Navigate to="/hr/login" />} />
+      <Route path="meetings/editmeeting/:meetingId" element={isHrAuth ? <EditMeeting /> : <Navigate to="/hr/login" />} />
       <Route path="chat" element={isHrAuth ? <HrChat /> : <Navigate to="/hr/login" />} />
       <Route path="chat" element={isHrAuth ? <HrChat /> : <Navigate to="/hr/login" />} />
       {/* <Route path="hr/editprofile/:userId" element={isHrAuth ? <EditHrProfile /> : <Navigate to="/hr/login" />} /> */}

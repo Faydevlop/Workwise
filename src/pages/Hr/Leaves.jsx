@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 const Leaves = () => {
     const [leaves,setLeaves] = useState([])
   const {hr} = useSelector((state)=>state.hrAuth)
-  const userId = hr.manager._id
+  const userId = hr.hr._id
 
   useEffect(()=>{
    

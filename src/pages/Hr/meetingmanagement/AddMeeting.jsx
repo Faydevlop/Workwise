@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ScaleLoader from 'react-spinners/ScaleLoader';
-import ManagerSidebar from '../../../components/Sidebar/ManagerSidebar';
+import HrSidebar from '../../../components/Sidebar/HrSidebar';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -22,9 +22,11 @@ const AddMeeting = () => {
 
   const [listingUser, setListingUser] = useState([]);
   const navigate = useNavigate();
+  const {hr} = useSelector((state)=>state.hrAuth)
+  const userId = hr.hr._id
+  
 
-  const { manager } = useSelector((state) => state.managerAuth);
-  const userId = manager.manager._id;
+ 
 
   // Validation function
   const validateForm = () => {
@@ -67,7 +69,7 @@ const AddMeeting = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        onClose:()=>navigate('/manager/meetings')
+        onClose:()=>navigate('/hr/meetings')
        
       });
       
@@ -92,7 +94,7 @@ const AddMeeting = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/meeting/listuser/${userId}`);
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/meeting/listallUsers`);
         setListingUser(response.data.users);
         console.log(response.data.users);
       } catch (error) {
@@ -106,10 +108,10 @@ const AddMeeting = () => {
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
       <div className="hidden lg:block" style={{ width: '250px' }}>
-        <ManagerSidebar />
+        <HrSidebar />
       </div>
       <div className="lg:hidden">
-        <ManagerSidebar />
+        <HrSidebar />
       </div>
 
       <div style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
@@ -167,7 +169,8 @@ const AddMeeting = () => {
                     type="time"
                     value={time}
                     onChange={(e) => setTime(e.target.value)}
-                    
+                    min="09:00"
+                    max="18:00"
                   />
                   {errors.time && <p className="text-red-500 text-sm mt-1">{errors.time}</p>}
                 </div>

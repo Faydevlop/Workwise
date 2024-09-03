@@ -11,9 +11,22 @@ const Meetings = () => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [listdata,setListdata] = useState([])
   const [listnext,setListnext] = useState([])
+  const [visibleCount, setVisibleCount] = useState(3);
 
   const toggleDropdown = (index) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
+  };
+
+  const sortedMeetings = [...listnext].sort((a, b) => {
+    if (a.status === 'ongoing' && b.status !== 'ongoing') return -1;
+    if (a.status !== 'ongoing' && b.status === 'ongoing') return 1;
+    if (a.status === 'scheduled' && b.status !== 'scheduled') return -1;
+    if (a.status !== 'scheduled' && b.status === 'scheduled') return 1;
+    return 0;
+  });
+  // Function to handle showing more meetings
+  const showMoreMeetings = () => {
+    setVisibleCount(listnext.length); // Show all meetings
   };
 
   const { manager } = useSelector((state) => state.managerAuth);
@@ -207,9 +220,12 @@ const Meetings = () => {
                       <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         View Details
                       </a>
+                      <Link to={`/manager/meetings/editmeeting/${meeting._id}`} >
                       <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         Edit Meeting
                       </a>
+                      </Link>
+                      
                       <a href="#" onClick={()=>handledelete(meeting._id)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         Delete Meeting
                       </a>
@@ -217,7 +233,9 @@ const Meetings = () => {
                   </div>
                 )}
               </div>
+              
             </td>
+            
           </tr>
         ))}
       </tbody>
@@ -230,46 +248,73 @@ const Meetings = () => {
        </div>
      </div>
      <div className="bg-background border rounded-lg shadow-sm p-6 space-y-6">
-  <div>
-    <h2 className="text-xl font-bold">Upcoming Meetings</h2>
-    <p className="text-muted-foreground">Here are your upcoming scheduled meetings.</p>
-  </div>
-  {
-    listnext.length == 0 ? (<p>No Meeting Scheduled</p>) : ''
-  }
+      <div>
+        <h2 className="text-xl font-bold">Upcoming Meetings</h2>
+        <p className="text-muted-foreground">Here are your upcoming scheduled meetings.</p>
+      </div>
+      {listnext.length === 0 ? (<p>No Meeting Scheduled</p>) : ''}
 
-  {listnext.map((meeting) => (
-    <div key={meeting._id} className="mb-6">
-      <div className="flex items-center gap-4">
-        <div className="bg-primary text-primary-foreground rounded-md px-2 py-1 text-xs font-medium">
-          {meeting.meetingName}
-        </div>
-        <div>
-          <div className="font-medium">{meeting.topic}</div>
-          <div className="text-sm text-muted-foreground">
-            {new Date(meeting.date).toLocaleDateString()} - {meeting.time}
+      {sortedMeetings.slice(0, visibleCount).map((meeting) => (
+        <div key={meeting._id} className="mb-6">
+          <div className="flex items-center gap-4">
+            <div className="bg-primary text-primary-foreground rounded-md px-2 py-1 text-xs font-medium">
+              {meeting.meetingName}
+            </div>
+            <div>
+              <div className="font-medium">{meeting.topic}</div>
+              <div className="text-sm text-muted-foreground">
+                {new Date(meeting.date).toLocaleDateString()} - {meeting.time}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div className="flex items-center gap-4 mt-4">
-        {meeting.participants.map((participant, index) => (
-          <span key={index} className="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 border-2 border-background">
-            <img className="aspect-square h-full w-full  " alt={`Participant ${index + 1}`} src="https://thumbs.dreamstime.com/z/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg?ct=jpeg" />
-          </span>
-        ))}
-      </div>
-      <div className="flex gap-2 mt-4">
-        <button
-          className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2"
-          onClick={() => window.open(meeting.link, "_blank")}
-        >
-          Join Meeting
-        </button>
-      </div>
-    </div>
-  ))}
-</div>
+          <div className="flex items-center gap-4 mt-4">
+            {meeting.participants.map((participant, index) => (
+              <span key={index} className="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 border-2 border-background">
+                <img className="aspect-square h-full w-full" alt={`Participant ${index + 1}`} src="https://thumbs.dreamstime.com/z/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg?ct=jpeg" />
+              </span>
+            ))}
+          </div>
 
+          <div className="flex gap-2 mt-4">
+            {meeting.status === 'scheduled' && (
+              <button
+                className="inline-flex bg-black text-slate-50 items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2"
+                onClick={() => window.open(meeting.link, "_blank")}
+              >
+                scheduled
+              </button>
+            )}
+            {meeting.status === 'completed' && (
+              <button
+                className="inline-flex bg-black text-slate-50 items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2"
+                onClick={() => window.open(meeting.link, "_blank")}
+              >
+                Meet completed
+              </button>
+            )}
+            {meeting.status === 'ongoing' && (
+              <button
+                className="inline-flex bg-black text-slate-50 items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2"
+                onClick={() => window.open(meeting.link, "_blank")}
+              >
+                Join Meeting
+              </button>
+            )}
+          </div>
+          <br />
+          <hr />
+        </div>
+      ))}
+
+      {visibleCount < listnext.length && (
+        <button
+          className="mt-4 bg-primary text-primary-foreground rounded-md px-4 py-2 text-sm font-medium hover:bg-primary/80 transition-colors"
+          onClick={showMoreMeetings}
+        >
+          Show More
+        </button>
+      )}
+    </div>
    </main>
  </div>
 
