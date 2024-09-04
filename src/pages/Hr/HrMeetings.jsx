@@ -139,7 +139,7 @@ const HrMeetings = () => {
      </div>
      
      <div className="flex items-center gap-2 ">
-      <Link to={'/manager/meetings/addmeeting'}>
+      <Link to={'/hr/meetings/addmeeting'}>
        <button className="  inline-flex justify-center rounded-md border border-gray-300 bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
         Add Meeting
       

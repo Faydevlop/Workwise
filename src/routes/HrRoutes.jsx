@@ -15,6 +15,7 @@ import LeaveRequests from '../pages/Hr/leaveManagement/LeaveRequests';
 import Payrolldettails from '../pages/Hr/payrolldetails/Payrolldettails';
 import AddMeeting from '../pages/Hr/meetingmanagement/AddMeeting';
 import EditMeeting from '../pages/Hr/meetingmanagement/EditMeeting';
+import AddJobPost from '../pages/Hr/requirementmanagement/AddJobPost';
 // import EditHrProfile from '../pages/Hr/EditHrProfile';
 
 const HrRoutes = () => {
@@ -30,6 +31,7 @@ const HrRoutes = () => {
       <Route path="leaves" element={isHrAuth ? <Leaves /> : <Navigate to="/hr/login" />} />
       <Route path="leaves/applyleave" element={isHrAuth ? <LeaveRequests /> : <Navigate to="/hr/login" />} />
       <Route path="recruitment" element={isHrAuth ? <Recruitment /> : <Navigate to="/hr/login" />} />
+      <Route path="recruitment/addpost" element={isHrAuth ? <AddJobPost /> : <Navigate to="/hr/login" />} />
       <Route path="profile" element={isHrAuth ? <HrProfile /> : <Navigate to="/hr/login" />} />
       <Route path="meetings" element={isHrAuth ? <HrMeetings /> : <Navigate to="/hr/login" />} />
       <Route path="meetings/addmeeting" element={isHrAuth ? <AddMeeting /> : <Navigate to="/hr/login" />} />
