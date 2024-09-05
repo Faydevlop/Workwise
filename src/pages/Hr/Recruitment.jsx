@@ -8,13 +8,23 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Recruitment = () => {
   const [listData,setListData] = useState([])
+  const [showData,setshowData] = useState([])
 
   const fetchdata = async()=>{
     try {
       const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/jobs/listitems`)
       setListData(response.data.listingData);
-      console.log(response.data.listingData);
+       
+    } catch (error) {
       
+    }
+  }
+
+  const fetchlist = async()=>{
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/jobs/listJob`)
+      setshowData(response.data.listData);
+      console.log(response.data.listData);
       
     } catch (error) {
       
@@ -24,6 +34,7 @@ const Recruitment = () => {
 
   useEffect(()=>{
     fetchdata()
+    fetchlist()
   },[])
 
   const handleDelete = async(listId)=>{
@@ -120,75 +131,50 @@ const Recruitment = () => {
             <tr className="border-b">
               <th className="h-12 px-4 text-left align-middle font-medium text-gray-600">Applicant</th>
               <th className="h-12 px-4 text-left align-middle font-medium text-gray-600">Position</th>
-              <th className="h-12 px-4 text-left align-middle font-medium text-gray-600">Date</th>
-              <th className="h-12 px-4 text-left align-middle font-medium text-gray-600">Status</th>
+              <th className="h-12 px-4 text-left align-middle font-medium text-gray-600">Contact No.</th>
+              <th className="h-12 px-4 text-left align-middle font-medium text-gray-600">Refered By</th>
+              <th className="h-12 px-4 text-left align-middle font-medium text-gray-600">Job</th>
               <th className="h-12 px-4 text-right align-middle font-medium text-gray-600">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b hover:bg-gray-50">
-              <td className="p-4 align-middle">
-                <div className="font-medium">John Doe</div>
-                <div className="text-sm text-gray-500">Software Engineer</div>
-              </td>
-              <td className="p-4 align-middle">Software Engineer</td>
-              <td className="p-4 align-middle">2023-04-15</td>
-              <td className="p-4 align-middle">
-                <div className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-yellow-100 text-yellow-800">
-                  Pending
-                </div>
-              </td>
-              <td className="p-4 align-middle text-right">
-                <button className="mr-2 inline-flex items-center justify-center text-sm font-medium border bg-gray-100 hover:bg-gray-200 h-9 rounded-md px-3">
-                  Approve
-                </button>
-                <button className="inline-flex items-center justify-center text-sm font-medium border bg-gray-100 hover:bg-gray-200 h-9 rounded-md px-3 text-red-500">
-                  Reject
-                </button>
-              </td>
-            </tr>
-            <tr className="border-b hover:bg-gray-50">
-              <td className="p-4 align-middle">
-                <div className="font-medium">Jane Smith</div>
-                <div className="text-sm text-gray-500">Product Manager</div>
-              </td>
-              <td className="p-4 align-middle">Product Manager</td>
-              <td className="p-4 align-middle">2023-04-12</td>
-              <td className="p-4 align-middle">
-                <div className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-yellow-100 text-yellow-800">
-                  Pending
-                </div>
-              </td>
-              <td className="p-4 align-middle text-right">
-                <button className="mr-2 inline-flex items-center justify-center text-sm font-medium border bg-gray-100 hover:bg-gray-200 h-9 rounded-md px-3">
-                  Approve
-                </button>
-                <button className="inline-flex items-center justify-center text-sm font-medium border bg-gray-100 hover:bg-gray-200 h-9 rounded-md px-3 text-red-500">
-                  Reject
-                </button>
-              </td>
-            </tr>
-            <tr className="border-b hover:bg-gray-50">
-              <td className="p-4 align-middle">
-                <div className="font-medium">Michael Johnson</div>
-                <div className="text-sm text-gray-500">UI/UX Designer</div>
-              </td>
-              <td className="p-4 align-middle">UI/UX Designer</td>
-              <td className="p-4 align-middle">2023-04-10</td>
-              <td className="p-4 align-middle">
-                <div className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-yellow-100 text-yellow-800">
-                  Pending
-                </div>
-              </td>
-              <td className="p-4 align-middle text-right">
-                <button className="mr-2 inline-flex items-center justify-center text-sm font-medium border bg-gray-100 hover:bg-gray-200 h-9 rounded-md px-3">
-                  Approve
-                </button>
-                <button className="inline-flex items-center justify-center text-sm font-medium border bg-gray-100 hover:bg-gray-200 h-9 rounded-md px-3 text-red-500">
-                  Reject
-                </button>
-              </td>
-            </tr>
+          {showData && showData.length > 0 ? (
+    showData.map((item, index) => (
+      <tr key={index} className="border-b hover:bg-gray-50">
+        <td className="p-4 align-middle">
+          <Link to={`/hr/recruitment/view/${item._id}`} >
+          <div className="font-medium">{item.name}</div>
+          <div className="text-sm text-gray-500">{item.email}</div>
+          </Link>
+        </td>
+        <td className="p-4 align-middle">{new Date(item.updatedAt).toLocaleDateString()}</td>
+        <td className="p-4 align-middle">{item.phone}</td>
+        <td className="p-4 align-middle">
+          {item.referer ? `${item.referer.firstName}${item.referer.lastName}` : 'Not Found'}
+        </td>
+        <td className="p-4 align-middle">
+          {item.jobId ? `${item.jobId.jobTitle}` : 'Not Found'}
+        </td>
+        <td className="p-4 align-middle text-right">
+          <button className="mr-2 inline-flex items-center justify-center text-sm font-medium border bg-gray-100 hover:bg-gray-200 h-9 rounded-md px-3">
+            Approve
+          </button>
+          <button className="inline-flex items-center justify-center text-sm font-medium border bg-gray-100 hover:bg-gray-200 h-9 rounded-md px-3 text-red-500">
+            Reject
+          </button>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan="5" className="text-center p-4">
+        No applications found
+      </td>
+    </tr>
+  )}
+           
+           
+            
           </tbody>
         </table>
        
@@ -233,7 +219,7 @@ const Recruitment = () => {
             </div>
           </td>
           <td className="p-4 align-middle text-right">
-            <Link to={`/hr/recruitment/editlist/:${job._id}`}>
+            <Link to={`/hr/recruitment/editlist/${job._id}`}>
             <button className="mr-2 inline-flex items-center justify-center text-sm font-medium border bg-gray-100 hover:bg-gray-200 h-9 rounded-md px-3">
               Edit
             </button>

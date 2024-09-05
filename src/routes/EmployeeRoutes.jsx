@@ -16,6 +16,9 @@ import Resetpage from '../pages/employee/Resetpage';
 import ApplyLeave from '../pages/employee/leavemanagment/ApplyLeave';
 import LeaveDetailpage from '../pages/employee/leavemanagment/LeaveDetailpage';
 import TaskDetails from '../pages/employee/taskmanagement/TaskDetails';
+import Jobsection from '../pages/employee/Jobsection';
+import ReferForm from '../pages/employee/ReferForm';
+
 
 function EmployeeRoutes() {
   const isEmployeeAuth = useSelector((state) => state.employeeAuth.isAuthenticated);
@@ -31,6 +34,8 @@ function EmployeeRoutes() {
       <Route path="leave" element={isEmployeeAuth ? <EmployeeLeavemanagment /> : <Navigate to="/employee/login" />} />
       <Route path="profile" element={isEmployeeAuth ? <EmployeeProfile /> : <Navigate to="/employee/login" />} />
       <Route path="chat" element={isEmployeeAuth ? <EmployeeChat /> : <Navigate to="/employee/login" />} />
+      <Route path="jobs" element={isEmployeeAuth ? <Jobsection /> : <Navigate to="/employee/login" />} />
+      <Route path="jobs/refer/:jobId" element={isEmployeeAuth ? <ReferForm /> : <Navigate to="/employee/login" />} />
       <Route path="editprofile/:userId" element={isEmployeeAuth ? <EditProfile /> : <Navigate to="/employee/login" />} />
       <Route path="request-reset-password" element={isEmployeeAuth ? <ResetPassword /> : <Navigate to="/employee/login" />} />
       <Route path="leave/applyLeave" element={isEmployeeAuth ? <ApplyLeave /> : <Navigate to="/employee/login" />} />
@@ -39,5 +44,6 @@ function EmployeeRoutes() {
     </Routes>
   );
 }
+
 
 export default EmployeeRoutes;
