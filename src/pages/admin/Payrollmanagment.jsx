@@ -6,6 +6,7 @@ import axios from 'axios';
 const Payrollmanagment = () => {
   const [users,setUsers] = useState([])
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [listData,setListData] = useState([])
 
   const toggleDropdown = (index) => {
     setOpenDropdown(openDropdown === index ? null : index);
@@ -22,8 +23,21 @@ const Payrollmanagment = () => {
     }
   }
 
+  const fetchViewData = async()=>{
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/payroll/viewlist`)
+      setListData(response.data.listView)
+      
+    } catch (error) {
+      
+    }
+   }
+
+
+
   useEffect(()=>{
     fetchlist()
+    fetchViewData()
   },[])
 
 
@@ -43,7 +57,7 @@ const Payrollmanagment = () => {
          
     
 
-          <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:px-6">
+          <header className="sticky bg-[#2F3849] text-white top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:px-6">
         <nav aria-label="breadcrumb" className="hidden md:flex">
           <ol className="flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5">
             <li className="inline-flex items-center gap-1.5">
@@ -75,30 +89,11 @@ const Payrollmanagment = () => {
           </ol>
         </nav>
         <div className="relative ml-auto flex-1 md:grow-0">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"
-          >
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.3-4.3"></path>
-          </svg>
-          <input
-            className="flex h-10 w-full border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            placeholder="Search"
-            type="search"
-          />
+          
         </div>
         <Link to={'/admin/Payrollmanagment/addpayroll'}>
         <button
-          className="inline-flex bg-black text-slate-50 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 p-2 rounded-lg overflow-hidden "
+          className="px-4 py-2 rounded-full  text-white  hover:bg-white transition-colors duration-300 hover:text-slate-600 focus:outline-none focus:bg-blue-600"
           type="button"
           id="radix-:rq:"
           aria-haspopup="menu"
@@ -113,18 +108,17 @@ const Payrollmanagment = () => {
       </header>
 
       <main className="flex-1 p-4 sm:px-6 sm:py-4">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            { title: "Total Employees", value: "125" },
-            { title: "Total Payroll", value: "$450,000" },
-            { title: "Paid This Month", value: "$38,000" },
-            { title: "Unpaid Invoices", value: "12" },
-          ].map((item, index) => (
-            <div key={index} className="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
-              <h3 className="text-xl font-semibold leading-none tracking-tight mb-2">{item.title}</h3>
-              <div className="text-3xl font-bold">{item.value}</div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
+         
+            <div  className="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
+              <h3 className="text-xl font-semibold leading-none tracking-tight mb-2">No Payroll Data Employee</h3>
+              <div className="text-3xl font-bold">{listData.nopayrollUser}</div>
             </div>
-          ))}
+            <div  className="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
+              <h3 className="text-xl font-semibold leading-none tracking-tight mb-2">Total Employee</h3>
+              <div className="text-3xl font-bold">{listData.totalUser}</div>
+            </div>
+        
         </div>
 
         <div className="mt-8 rounded-lg border bg-card text-card-foreground shadow-sm">

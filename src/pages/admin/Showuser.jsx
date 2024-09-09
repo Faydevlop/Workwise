@@ -98,15 +98,15 @@ const Showuser = () => {
           {/* Profile picture */}
           <div className="w-24 h-24 rounded-full border-4 border-white">
             <img
-              src="https://via.placeholder.com/150"
+              src={user.profileImageUrl ? user.profileImageUrl : "https://via.placeholder.com/150"}
               alt="Profile"
               className="w-full h-full object-cover rounded-full"
             />
           </div>
           {/* User Information */}
           <div className="text-center md:text-left">
-            <h2 className="text-2xl font-bold text-gray-800">John Doe</h2>
-            <p className="text-gray-600">User ID: 101</p>
+            <h2 className="text-2xl font-bold text-gray-800">{user.firstName}{user.lastName}</h2>
+            <p className="text-gray-600">{user._id}</p>
           </div>
         </div>
         

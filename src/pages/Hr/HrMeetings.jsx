@@ -104,12 +104,12 @@ const HrMeetings = () => {
         <HrSidebar />
       </div>
 
-      <div style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
+      <div  style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
                  
           {/* section 1 */}
           <div className="flex flex-col min-h-screen bg-muted/40">
-   <header className="bg-background border-b px-4 md:px-6 flex items-center h-14 sm:h-16">
-     <div className="flex-1 flex items-center gap-4">
+   <header className="bg-background bg-[#2F3849] border-b px-4 md:px-6 flex items-center h-14 sm:h-16">
+     <div className="flex-1 flex text-white items-center gap-4">
        <a className="flex items-center gap-2 text-lg font-semibold" href="/">
          <svg
            xmlns="http://www.w3.org/2000/svg"
@@ -140,7 +140,7 @@ const HrMeetings = () => {
      
      <div className="flex items-center gap-2 ">
       <Link to={'/hr/meetings/addmeeting'}>
-       <button className="  inline-flex justify-center rounded-md border border-gray-300 bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+       <button className="  px-4 py-2 rounded-full  text-white  hover:bg-white transition-colors duration-300 hover:text-slate-600 focus:outline-none focus:bg-blue-600 " >
         Add Meeting
       
        </button>
@@ -150,7 +150,7 @@ const HrMeetings = () => {
    <main className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6 p-4 md:p-6">
      <div>
        <div className="mb-6">
-         <h1 className="text-2xl font-bold">Upcoming Meetings</h1>
+         <h1 className="text-2xl   font-bold">Upcoming Meetings</h1>
          <p className="text-muted-foreground">View and manage your upcoming meetings.</p>
        </div>
        
@@ -249,9 +249,9 @@ const HrMeetings = () => {
          </div>
        </div>
      </div>
-     <div className="bg-background border rounded-lg shadow-sm p-6 space-y-6">
+     <div className="bg-background  border  rounded-lg shadow-sm p-6 space-y-6">
       <div>
-        <h2 className="text-xl font-bold">Upcoming Meetings</h2>
+        <h2 className="text-xl  font-bold">Upcoming Meetings</h2>
         <p className="text-muted-foreground">Here are your upcoming scheduled meetings.</p>
       </div>
       {listnext.length === 0 ? (<p>No Meeting Scheduled</p>) : ''}

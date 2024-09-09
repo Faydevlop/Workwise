@@ -260,7 +260,7 @@ const EditDepartment = () => {
                 >
                   <div className="flex items-center">
                     <img
-                      src={`https://i.pravatar.cc/150?u=${member._id}`}
+                      src={ member.profileImageUrl ? member.profileImageUrl : "https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg"}
                       alt={member.firstName}
                       className="w-10 h-10 rounded-full mr-3"
                     />

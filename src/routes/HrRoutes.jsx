@@ -17,6 +17,9 @@ import AddMeeting from '../pages/Hr/meetingmanagement/AddMeeting';
 import EditMeeting from '../pages/Hr/meetingmanagement/EditMeeting';
 import AddJobPost from '../pages/Hr/requirementmanagement/AddJobPost';
 import Detailview from '../pages/Hr/requirementmanagement/Detailview';
+import EditJobPost from '../pages/Hr/requirementmanagement/EditJobPost';
+import EditProfile from '../pages/Hr/EditProfile';
+import ChangePass from '../pages/Hr/ChangePass';
 // import EditHrProfile from '../pages/Hr/EditHrProfile';
 
 const HrRoutes = () => {
@@ -34,7 +37,10 @@ const HrRoutes = () => {
       <Route path="recruitment" element={isHrAuth ? <Recruitment /> : <Navigate to="/hr/login" />} />
       <Route path="recruitment/addpost" element={isHrAuth ? <AddJobPost /> : <Navigate to="/hr/login" />} />
       <Route path="recruitment/view/:reqId" element={isHrAuth ? <Detailview /> : <Navigate to="/hr/login" />} />
+      <Route path="recruitment/editlist/:jobId" element={isHrAuth ? <EditJobPost /> : <Navigate to="/hr/login" />} />
       <Route path="profile" element={isHrAuth ? <HrProfile /> : <Navigate to="/hr/login" />} />
+      <Route path="profile/editprofile/:userId" element={isHrAuth ? <EditProfile /> : <Navigate to="/hr/login" />} />
+      <Route path="request-reset-password" element={isHrAuth ? <ChangePass /> : <Navigate to="/hr/login" />} />
       <Route path="meetings" element={isHrAuth ? <HrMeetings /> : <Navigate to="/hr/login" />} />
       <Route path="meetings/addmeeting" element={isHrAuth ? <AddMeeting /> : <Navigate to="/hr/login" />} />
       <Route path="meetings/editmeeting/:meetingId" element={isHrAuth ? <EditMeeting /> : <Navigate to="/hr/login" />} />

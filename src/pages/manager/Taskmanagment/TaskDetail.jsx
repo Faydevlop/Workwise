@@ -290,7 +290,7 @@ const TaskDetail = () => {
           listcomments.map((list)=>(
             <div className="flex items-start gap-4">
             <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
-              <img className="aspect-square h-full w-full" alt="Jane Smith" src="https://tailwindui.com/placeholder-user.jpg" />
+              <img className="aspect-square h-full w-full" alt="Jane Smith" src={ list.profileImageUrl ? member.profileImageUrl : "https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg"} />
             </span>
             <div className="grid gap-2">
               <div className="flex items-center justify-between">

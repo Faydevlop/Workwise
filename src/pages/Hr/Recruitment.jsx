@@ -54,9 +54,9 @@ const Recruitment = () => {
        
       });
 
-      fetchdata()
+      
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "An error occurred while adding the user."
+      const errorMessage = error.response?.data?.message || "An error occurred while deleting the job listing."
       toast.error(errorMessage, {
         position: "top-right",
         autoClose: 3000,
@@ -67,6 +67,37 @@ const Recruitment = () => {
         progress: undefined,
       });
       
+    }
+  }
+
+  const handleClick = async(appId)=>{
+    try {
+
+      const response = await axios.delete(`${import.meta.env.VITE_BASE_URL}/jobs/deleteapplication/${appId}`)
+      toast.success("application deleted successfully!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        // onClose:()=>navigate('/admin/Usermanagment')
+       
+      });
+      fetchlist()
+      
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "An error occurred while deleting the application."
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   }
 
@@ -81,43 +112,38 @@ const Recruitment = () => {
         <HrSidebar />
       </div>
 
-        <div style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
+        <div className='bg-blue-50' style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
                  
         <div className="flex flex-col w-full min-h-screen">
         <header
-  class="bg-background border-b px-4 md:px-6 flex items-center h-16 shrink-0 justify-between"
+  class="bg-background bg-[#2F3849] text-white border-b px-4 md:px-6 flex items-center h-16 shrink-0 justify-between"
   id="c13eo4kwptn"
 >
-  <h1 class="text-xl font-bold">Recruiter Management</h1>
+  <h1 class="text-xl ">Recruitment Management</h1>
   <Link to={'/hr/recruitment/addpost'} >
-  <button class="inline-flex bg-black text-white items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+  <button class="rounded-full  text-white  hover:bg-white transition-colors duration-300 py-1 px-2 hover:text-slate-600">
     Add Job Post
   </button>
   </Link>
 </header>
  
  
-  <main className="flex-1  gap-2 p-4 md:p-6">
+  <main className="flex-1 bg-white rounded-md  gap-2 p-4 md:p-6">
     
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" >
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4" >
       <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
         <div className="flex flex-col space-y-1.5 p-4 lg:p-2 items-center justify-between">
-          <h3 className="whitespace-nowrap text-xl md:text-2xl font-semibold leading-none tracking-tight">Pending</h3>
-          <div className="text-2xl font-bold">24</div>
+          <h3 className="whitespace-nowrap text-xl md:text-2xl font-semibold leading-none tracking-tight">Pending Application </h3>
+          <div className="text-2xl font-bold">{showData.length}</div>
         </div>
       </div>
       <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
         <div className="flex flex-col space-y-1.5 p-4 lg:p-2 items-center justify-between">
-          <h3 className="whitespace-nowrap text-xl md:text-2xl font-semibold leading-none tracking-tight">Approved</h3>
-          <div className="text-2xl font-bold">12</div>
+          <h3 className="whitespace-nowrap text-xl md:text-2xl font-semibold leading-none tracking-tight">Job Listings</h3>
+          <div className="text-2xl font-bold">{listData.length}</div>
         </div>
       </div>
-      <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-        <div className="flex flex-col space-y-1.5 p-4 lg:p-2 items-center justify-between">
-          <h3 className="whitespace-nowrap text-xl md:text-2xl font-semibold leading-none tracking-tight">Rejected</h3>
-          <div className="text-2xl font-bold">8</div>
-        </div>
-      </div>
+     
     </div>
 
     <ToastContainer/>
@@ -142,10 +168,10 @@ const Recruitment = () => {
     showData.map((item, index) => (
       <tr key={index} className="border-b hover:bg-gray-50">
         <td className="p-4 align-middle">
-          <Link to={`/hr/recruitment/view/${item._id}`} >
+          
           <div className="font-medium">{item.name}</div>
           <div className="text-sm text-gray-500">{item.email}</div>
-          </Link>
+        
         </td>
         <td className="p-4 align-middle">{new Date(item.updatedAt).toLocaleDateString()}</td>
         <td className="p-4 align-middle">{item.phone}</td>
@@ -156,12 +182,15 @@ const Recruitment = () => {
           {item.jobId ? `${item.jobId.jobTitle}` : 'Not Found'}
         </td>
         <td className="p-4 align-middle text-right">
+        <Link to={`/hr/recruitment/view/${item._id}`} >
           <button className="mr-2 inline-flex items-center justify-center text-sm font-medium border bg-gray-100 hover:bg-gray-200 h-9 rounded-md px-3">
-            Approve
+              View
+            </button>
+          </Link>
+          <button onClick={()=>handleClick(item._id)}  className="inline-flex items-center justify-center text-sm font-medium border bg-gray-100 hover:bg-gray-200 h-9 rounded-md px-3 text-red-500">
+            Delete
           </button>
-          <button className="inline-flex items-center justify-center text-sm font-medium border bg-gray-100 hover:bg-gray-200 h-9 rounded-md px-3 text-red-500">
-            Reject
-          </button>
+          
         </td>
       </tr>
     ))
@@ -189,7 +218,7 @@ const Recruitment = () => {
 
   <br />
   
-  <main className="flex-1  gap-2 p-4 md:p-6">
+  <main className="flex-1 bg-white gap-2 p-4 md:p-6">
   <h3 className='whitespace-nowrap text-xl md:text-2xl font-semibold leading-none ml-5 tracking-tight' >Job Listings</h3>
   <br />
         <div className="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden">

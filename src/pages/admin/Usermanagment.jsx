@@ -107,14 +107,14 @@ const handleDelete = async (userId) =>{
      <div className='bg-blue-50'      style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
               
        {/* section 2 */}
-       <header className="flex border shadow-lg rounded-lg  mb-5 border-gray-200 pl-4 flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-3">
+       <header className="flex border shadow-lg rounded-s,m bg-[#2F3849]  mb-5 border-gray-200 pl-4 flex-wrap sm:justify-start sm:flex-nowrap w-full  text-sm py-3">
   <nav className="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between">
-    <a className="flex-none font-semibold text-xl  text-black focus:outline-none focus:opacity-80" href="/" aria-label="Brand">
+    <a className="flex-none font-semibold text-xl  text-white focus:outline-none focus:opacity-80" href="/" aria-label="Brand">
       Employee List
     </a>
     <div className="flex flex-row items-center gap-5 mt-5 sm:justify-start sm:mt-0 sm:ps-5">
       <Link to={'/admin/Usermanagment/adduser'} >
-      <button className="px-4 py-2 bg-blue-700 rounded-xl text-white font-medium rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
+      <button className="px-4 py-2 rounded-full  text-white  hover:bg-white transition-colors duration-300 hover:text-slate-600 focus:outline-none focus:bg-blue-600">
         Add Employee
       </button>
       </Link>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import EmployeeSidebar from '../../components/Sidebar/EmployeeSidebar';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -8,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
-const ResetPass = () => {
+const ChangePass = () => {
 
   const [email,setEmail] = useState('')
   const [emailError, setEmailError] = useState('');
@@ -21,13 +22,12 @@ const ResetPass = () => {
 
   const handleContinue = () => {
     setShowModal(false); // Close the modal
-    navigate('/manager/profile'); // Redirect to profile page
+    navigate('/hr/profile'); // Redirect to profile page
   };
 
   
-  const { manager } = useSelector((state) => state.managerAuth);
-  const userId = manager.manager._id;
-  console.log();
+  const {hr} = useSelector((state)=>state.hrAuth)
+  const userId = hr.hr._id
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -145,4 +145,4 @@ const ResetPass = () => {
   );
 };
 
-export default ResetPass;
+export default ChangePass;

@@ -111,7 +111,7 @@ const PayrollDetails = () => {
                   <img
                     className="aspect-square h-full w-full"
                     alt="Employee Avatar"
-                    src="https://tailwindui.com/placeholder-user.jpg"
+                    src={ data?.employee?.profileImageUrl ? data?.employee?.profileImageUrl : "https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg"}
                   />
                 </span>
                 <div className="grid gap-2">

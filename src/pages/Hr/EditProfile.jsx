@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import HrSidebar from '../../components/Sidebar/HrSidebar';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
@@ -6,7 +7,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ManagerSidebar from '../../components/Sidebar/ManagerSidebar';
+
 
 const EditProfile = () => {
     const [loading, setLoading] = useState(true);
@@ -92,7 +93,7 @@ const EditProfile = () => {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                onClose:()=>navigate('/manager/profile')
+                onClose:()=>navigate('/hr/profile')
             });
         } catch (error) {
             console.error('Error updating user:', error);
@@ -109,10 +110,10 @@ const EditProfile = () => {
     return (
         <div style={{ display: 'flex', height: '100vh' }}>
             <div className="hidden lg:block" style={{ width: '250px' }}>
-                <ManagerSidebar />
+                <HrSidebar />
             </div>
             <div className="lg:hidden">
-                <ManagerSidebar />
+                <HrSidebar />
             </div>
 
             <div style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>

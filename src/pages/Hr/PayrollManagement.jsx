@@ -7,6 +7,7 @@ const PayrollManagement = () => {
 
 
   const [data,setData] = useState([])
+  const [listData,setListData] = useState([])
 
   
   
@@ -24,8 +25,19 @@ const PayrollManagement = () => {
         }
      }
 
+     const fetchViewData = async()=>{
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/payroll/viewlist`)
+        setListData(response.data.listView)
+        
+      } catch (error) {
+        
+      }
+     }
+
      useEffect(()=>{
         fetchdata()
+        fetchViewData()
      },[])
 
   return (
@@ -38,23 +50,15 @@ const PayrollManagement = () => {
         <HrSidebar />
       </div>
 
-        <div style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
+        <div className='bg-blue-50' style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
                  
         <div className="flex flex-col lg:flex-row min-h-screen">
       
 
-      <div className="flex-grow overflow-x-hidden">
-        <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-muted/40 px-4 sm:px-6">
+      <div className="flex-grow bg-white overflow-x-hidden">
+        <header className="flex h-14 lg:h-[60px] items-center gap-4 bg-[#2F3849]   border-b bg-muted/40 px-4 sm:px-6">
           <div className="flex-1 flex items-center">
-            <form className="w-full max-w-sm">
-              <div className="relative">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="m21 21-4.3-4.3"></path>
-                </svg>
-                <input className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-8" placeholder="Search employees" type="search" />
-              </div>
-            </form>
+          <h1 class="text-xl text-white">Payroll Management</h1>
           </div>
         </header>
 
@@ -81,24 +85,19 @@ const PayrollManagement = () => {
           </div>
 
           <div className="grid gap-6 mb-6">
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-6">
               {/* Card components */}
               <div className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
           <div className="flex flex-col space-y-1.5 p-6">
-            <p className="text-sm text-muted-foreground">Total Payroll</p>
-            <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">$20709.00</h3>
+            <p className="text-sm text-muted-foreground">No Payroll Employees</p>
+            <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">{listData.nopayrollUser}</h3>
           </div>
         </div>
+        
         <div className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
           <div className="flex flex-col space-y-1.5 p-6">
-            <p className="text-sm text-muted-foreground">Average Payroll</p>
-            <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">$5177.25</h3>
-          </div>
-        </div>
-        <div className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-          <div className="flex flex-col space-y-1.5 p-6">
-            <p className="text-sm text-muted-foreground">Employees</p>
-            <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">4</h3>
+            <p className="text-sm text-muted-foreground">Total employee</p>
+            <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">{listData.totalUser}</h3>
           </div>
         </div>
             </div>

@@ -147,7 +147,7 @@ const TaskForm = () => {
                 <option value="">Select a team member</option>
                 {employees.map((employee) => (
                   <option key={employee._id} value={employee._id}>
-                    {employee.firstName}
+                    {employee.firstName}{employee.lastName}
                   </option>
                 ))}
               </select>

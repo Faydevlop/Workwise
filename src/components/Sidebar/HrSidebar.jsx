@@ -102,7 +102,7 @@ export default function HRSidebar() {
               Dashboard
             </a>
           </Link>
-          <Link to='/hr/employeerecords'>
+          {/* <Link to='/hr/employeerecords'>
             <a
               className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/hr/employees' ? 'bg-muted text-foreground' : ''}`}
             >
@@ -125,7 +125,7 @@ export default function HRSidebar() {
               </svg>
               Employee Management
             </a>
-          </Link>
+          </Link> */}
           <Link to='/hr/recruitment'>
             <a
               className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/hr/attendance' ? 'bg-muted text-foreground' : ''}`}

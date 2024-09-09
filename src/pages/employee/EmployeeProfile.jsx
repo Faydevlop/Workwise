@@ -75,7 +75,7 @@ console.log(user.profileImageUrl);
             <div className="absolute top-32 left-1/2 transform -translate-x-1/2">
               <div className="relative">
                 <img
-                  src={ user.profileImageUrl? ` http://localhost:4000/${user.profileImageUrl}` : `https://cdn.pixabay.com/photo/2019/08/11/18/59/icon-4399701_1280.png`}
+                  src={ user.profileImageUrl }
                   alt="Profile"
                   className="rounded-full w-32 h-32 mb-4 md:mb-0 md:mr-6 border-4 border-white"
                 />

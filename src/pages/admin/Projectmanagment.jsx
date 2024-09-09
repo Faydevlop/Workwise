@@ -38,69 +38,124 @@ const Projectmanagment = () => {
 
       <div className='bg-blue-50' style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
 
-      <header className="flex border  mb-5 border-gray-200 pl-4 flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-3">
-  <nav className="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between">
-    <a className="flex-none font-semibold text-xl  text-black focus:outline-none focus:opacity-80" href="/" aria-label="Brand">
-      Projects and Overview
-    </a>
-    <div className="flex flex-row items-center gap-5 mt-5 sm:justify-start sm:mt-0 sm:ps-5">
-      <Link to={'/admin/projectmanagment/addproject'} >
-      <button className="px-4 py-2 bg-blue-700 rounded-xl text-white font-medium rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
-        Add Project
-      </button>
-      </Link>
+      
+
+        
+        
      
-    </div>
-  </nav>
-</header>
 
-        
-        
-      {/* list section start */}
-      {
-        projects.map(project =>(
-          
-          <div className="bg-white  rounded-lg shadow-md p-6 mb-6">
-  <Link to={`/admin/Projectmanagment/${project._id}`}>
-    <h2 className="text-xl font-bold mb-4">{project.name}</h2>
-  </Link>
-  <div className="flex justify-between items-center mb-4">
-    <div className="flex items-center">
-      <span className="text-blue-600 font-semibold mr-2">{project.priority}</span>
-      <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">{project.status}</span>
-    </div>
-    <div className="text-sm text-gray-500">
-      <span className="mr-4">Start Date: {new Date(project.startDate).toLocaleDateString()}</span>
-      <span>Due Date: {new Date(project.endDate).toLocaleDateString()}</span>
-    </div>
-  </div>
-  <div className="w-full bg-gray-200 rounded-full h-2.5 mb-6">
-    <div className="bg-blue-600 h-2.5 rounded-full" style={{width: "10%"}}></div>
-  </div>
-  
-  <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-    <div className="bg-gray-50 rounded-lg p-4">
-      <div className="mb-2">
-        <h3 className="font-semibold">Description</h3>
-        <p className="text-sm text-gray-600">{project.description}</p>
-      </div>
-          
-      <div className="mt-2 text-sm text-gray-500">
-        <div className="flex items-center mb-1">
-          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-          </svg>
-          Team Lead:{project.teamLead ? `${project.teamLead.firstName} ${project.teamLead.lastName}` : "N/A"}
+      <div className="w-full min-h-screen bg-background text-foreground">
+      <header className="flex items-center bg-[#2F3849] rounded-lg justify-between px-6 py-4 border-b">
+        <h1 className="text-2xl text-white ">All Projects</h1>
+        <div className="flex items-center gap-4">
+          <Link to={'/admin/projectmanagment/addproject'}>
+            <button className="inline-flex items-center bg-white justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-4 h-4 mr-2"
+              >
+                <path d="M5 12h14"></path>
+                <path d="M12 5v14"></path>
+              </svg>
+              New Project
+            </button>
+          </Link>
+         
         </div>
-       
+      </header>
+
+      <div className="container mx-auto py-8 px-6">
+        <div className="mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="border bg-card bg-white text-card-foreground shadow-lg rounded-xl p-6" data-v0-t="card">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold">Total Projects</h3>
+                <div className="text-2xl font-bold">{projects.length}</div>
+              </div>
+              <p className="text-sm text-muted-foreground">Total number of projects in the system.</p>
+            </div>
+            <div className="border bg-card bg-white text-card-foreground shadow-lg rounded-xl p-6" data-v0-t="card">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold">Completed</h3>
+                <div className="text-2xl font-bold">
+                  {projects.filter(project => project.status === 'Completed').length}
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground">The number of completed projects.</p>
+            </div>
+            <div className="border bg-card bg-white text-card-foreground shadow-lg rounded-xl p-6" data-v0-t="card">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold">In Progress</h3>
+                <div className="text-2xl font-bold">
+                  {projects.filter(project => project.status === 'in-progress').length}
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground">Projects currently in progress.</p>
+            </div>
+          </div>
+        </div>
+
+        <br />
+        <hr className='h-2' />
+        <h2 className="text-xl font-bold">Current Projects</h2>
+        <br />
+        <div className="grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 gap-6">
+          {projects.map(project => (
+            <Link to={`/admin/Projectmanagment/${project._id}`}>
+            <div key={project._id} className="border bg-white bg-card text-card-foreground shadow-lg rounded-xl overflow-hidden" data-v0-t="card">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-bold">{project.name}</h2>
+                  <div
+                    className="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    data-v0-t="badge"
+                  >
+                    {project.status}
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
+                <div className="text-sm text-muted-foreground">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="w-4 h-4 mr-1 inline-block"
+                    >
+                      <path d="M8 2v4"></path>
+                      <path d="M16 2v4"></path>
+                      <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                      <path d="M3 10h18"></path>
+                      <path d="M8 14h.01"></path>
+                      <path d="M12 14h.01"></path>
+                      <path d="M16 14h.01"></path>
+                      <path d="M8 18h.01"></path>
+                      <path d="M12 18h.01"></path>
+                      <path d="M16 18h.01"></path>
+                    </svg>
+                    {new Date(project.startDate).toLocaleDateString()}
+                  </div>
+               
+              </div>
+            </div>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
-  </div>
-</div>
-
-
-        ))
-      }
        
      
       {/* list section end */}

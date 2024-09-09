@@ -6,6 +6,7 @@ import { toast ,ToastContainer} from 'react-toastify';
 
 const ProjectDetailspage = () => {
   const [project, setProject] = useState(null);
+  const [tasks,setTasks] = useState([])
   const { projectId } = useParams();
   const navigate = useNavigate()
 
@@ -22,6 +23,22 @@ const ProjectDetailspage = () => {
         console.error("Error fetching project data:", error);
       }
     };
+
+
+    const fetchTask = async()=>{
+      try {
+
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/listtask/${projectId}`)
+        setTasks(response.data.tasks)
+        console.log(response.data.tasks);
+        
+        
+      } catch (error) {
+        console.error("Error fetching project tasks:", error);
+      }
+    }
+
+    fetchTask()
     fetchData();
   }, [projectId]);
 
@@ -64,6 +81,34 @@ const ProjectDetailspage = () => {
     }
 
 }
+
+const calculateProjectProgress = (tasks) => {
+  if (tasks.length === 0) return 0; // If no tasks, no progress
+
+  let totalProgress = 0;
+
+  tasks.forEach(task => {
+    switch (task.status) {
+      case "Pending":
+        totalProgress += 0;
+        break;
+      case "InProgress":
+        totalProgress += 50;
+        break;
+      case "Completed":
+        totalProgress += 100;
+        break;
+      default:
+        totalProgress += 0;
+    }
+  });
+
+  return totalProgress / tasks.length;
+};
+
+const projectProgress = calculateProjectProgress(tasks);
+
+
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
@@ -128,69 +173,75 @@ const ProjectDetailspage = () => {
               {project.description}
             </p>
             <div className="relative">
-              <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200">
-                <div style={{ width: "60%" }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
-              </div>
-              <div className="flex justify-between text-sm font-medium text-blue-600">
-                <span>Not Started</span>
-                <span>In Progress</span>
-                <span>Completed</span>
-                <span>Reviewed</span>
-              </div>
-            </div>
+  <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200">
+    <div style={{ width: `${projectProgress}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
+  </div>
+  <div className="flex justify-between text-sm font-medium text-blue-600">
+    <span>Not Started</span>
+    <span>In Progress</span>
+    <span>Completed</span>
+    <span>Reviewed</span>
+  </div>
+</div>
+
           </div>
           <div className="grid mt-10 grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-gray-50 rounded-lg p-4">
-            <div className="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="Project icon" className="w-10 h-10 mr-3 rounded" />
-              <div>
-                <h3 className="font-semibold">Requirement Gathering and Analysis</h3>
-                <p className="text-sm text-gray-600">Analyze current CRM system capabilities...</p>
-              </div>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-0.5 rounded">High</span>
-              <div className="flex items-center">
-                <span className="text-sm mr-2">Progress</span>
-                <div className="w-24 bg-gray-200 rounded-full h-2">
-                  <div className="bg-blue-600 h-2 rounded-full" style={{width: "90%"}}></div>
+
+            {
+             tasks.map((task) => {
+              // Define progress level based on status
+              let progressPercentage = 0;
+              
+              switch (task.status) {
+                case "Pending":
+                  progressPercentage = 10;
+                  break;
+                case "InProgress":
+                  progressPercentage = 50;
+                  break;
+                case "Completed":
+                  progressPercentage = 100;
+                  break;
+                default:
+                  progressPercentage = 0;
+              }
+            
+              return (
+                <div className="bg-gray-50 rounded-lg p-4" key={task.id}>
+                  <div className="flex items-center mb-2">
+                    <img src="https://via.placeholder.com/40" alt="Project icon" className="w-10 h-10 mr-3 rounded" />
+                    <div>
+                      <h3 className="font-semibold">{task.name}</h3>
+                      <p className="text-sm text-gray-600">{task.description}</p>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="bg-red-100 text-xs font-semibold px-2.5 py-0.5 rounded">{task.priority}</span>
+                    <div className="flex items-center">
+                      <span className="text-sm mr-2">Progress</span>
+                      <div className="w-24 bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-blue-600 h-2 rounded-full" 
+                          style={{ width: `${progressPercentage}%` }} // Dynamic width based on status
+                        ></div>
+                      </div>
+                      <span className="text-sm ml-2">{progressPercentage}%</span>
+                    </div>
+                  </div>
+                  <div className="mt-2 text-sm text-gray-500 flex items-center">
+                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    {new Date(task.dueDate).toLocaleDateString()}
+                  </div>
                 </div>
-                <span className="text-sm ml-2">90%</span>
-              </div>
-            </div>
-            <div className="mt-2 text-sm text-gray-500 flex items-center">
-              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-              </svg>
-              2024-09-30
-            </div>
-          </div>
+              );
+            })
+            
+            }
+         
           
-          <div className="bg-gray-50 rounded-lg p-4">
-            <div className="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="Project icon" className="w-10 h-10 mr-3 rounded" />
-              <div>
-                <h3 className="font-semibold">Requirement Gathering and Analysis</h3>
-                <p className="text-sm text-gray-600">Analyze current CRM system capabilities...</p>
-              </div>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded">Low</span>
-              <div className="flex items-center">
-                <span className="text-sm mr-2">Progress</span>
-                <div className="w-24 bg-gray-200 rounded-full h-2">
-                  <div className="bg-blue-600 h-2 rounded-full" style={{width: "30%"}}></div>
-                </div>
-                <span className="text-sm ml-2">30%</span>
-              </div>
-            </div>
-            <div className="mt-2 text-sm text-gray-500 flex items-center">
-              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-              </svg>
-              2024-09-30
-            </div>
-          </div>
+         
         </div>
         </div>
         

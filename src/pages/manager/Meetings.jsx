@@ -36,7 +36,7 @@ const Meetings = () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/meeting/listmeeting/${userId}`)
       setListdata(response.data.listData)
-      // console.log(response.data.listData);
+      console.log(response.data.listData);
       
     } catch (error) {
       
@@ -195,9 +195,13 @@ const Meetings = () => {
             <td className="p-4 align-middle">{meeting.time}</td>
             <td className="p-4 align-middle">
               <div className="flex -space-x-2 overflow-hidden">
-                {meeting.participants.map((_, i) => (
+                {meeting?.participants.map((user, i) => (
                   <span key={i} className="relative flex shrink-0 overflow-hidden rounded-full w-6 h-6 border-2 border-background">
-                    <img className="aspect-square h-full w-full" alt={`attendee ${i}`} src="https://thumbs.dreamstime.com/z/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg?ct=jpeg" />
+                    <img className="aspect-square h-full w-full" alt={`attendee ${i}`}  src={
+            user?.profileImageUrl
+              ? user?.profileImageUrl
+              : "https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg"
+          } />
                   </span>
                 ))}
               </div>
@@ -217,9 +221,9 @@ const Meetings = () => {
                     style={{ backgroundColor: "white", zIndex: 1000 }}
                   >
                     <div className="py-1">
-                      <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      {/* <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         View Details
-                      </a>
+                      </a> */}
                       <Link to={`/manager/meetings/editmeeting/${meeting._id}`} >
                       <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         Edit Meeting
@@ -270,7 +274,11 @@ const Meetings = () => {
           <div className="flex items-center gap-4 mt-4">
             {meeting.participants.map((participant, index) => (
               <span key={index} className="relative flex shrink-0 overflow-hidden rounded-full w-10 h-10 border-2 border-background">
-                <img className="aspect-square h-full w-full" alt={`Participant ${index + 1}`} src="https://thumbs.dreamstime.com/z/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg?ct=jpeg" />
+                <img className="aspect-square h-full w-full" alt={`Participant ${index + 1}`} src={
+            participant?.profileImageUrl
+              ? participant?.profileImageUrl
+              : "https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg"
+          } />
               </span>
             ))}
           </div>
