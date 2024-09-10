@@ -11,6 +11,8 @@ import { toast , ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import { TextField } from '@mui/material';
+import Backdrop from '@mui/material/Backdrop';
+import { ScaleLoader } from 'react-spinners';
 
 const Leavemanagment = () => {
   const [leaves,setLeaves] = useState([])
@@ -23,6 +25,7 @@ const Leavemanagment = () => {
   const [pendingLeaveRequest,setPendingLeaveRequest] = useState('')
   const [onLeaveToday,setOnLeaveToday] = useState([])
   const [comment, setComment] = useState('');
+  const [loading ,setLoading] = useState(false)
 
   
   
@@ -75,7 +78,7 @@ const Leavemanagment = () => {
 
 
   useEffect(() => {
-
+    setLoading(true)
     const fetchdata = async()=>{
       try {
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/leave/getAllLeaves`);
@@ -86,6 +89,9 @@ const Leavemanagment = () => {
         
       } catch (error) {
         
+      }
+      finally{
+        setLoading(false)
       }
     }
 
@@ -153,6 +159,22 @@ const Leavemanagment = () => {
           </nav>
         </header>
         <ToastContainer/>
+        <Backdrop
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
         
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">

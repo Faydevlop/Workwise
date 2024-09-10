@@ -108,7 +108,7 @@ export default function ManagerSidebar() {
               Dashboard
             </a>
           </Link>
-          <Link to='/manager/usermanagement'>
+          {/* <Link to='/manager/usermanagement'>
             <a
               className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/manager/usermanagement' ? 'bg-muted text-foreground' : ''}`}
             >
@@ -131,7 +131,7 @@ export default function ManagerSidebar() {
               </svg>
               User Management
             </a>
-          </Link>
+          </Link> */}
           <Link to='/manager/leavemanagement'>
             <a
               className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/manager/leavemanagement' ? 'bg-muted text-foreground' : ''}`}

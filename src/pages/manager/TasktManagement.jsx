@@ -5,11 +5,19 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 
+
+import Backdrop from '@mui/material/Backdrop';
+import { ScaleLoader } from 'react-spinners';
+
+
+
 const TasktManagement = () => {
   const [projectData,setProjectData] = useState([])
   const [tasks, setTasks] = useState([]);
   const { manager } = useSelector((state) => state.managerAuth);
   const userId = manager.manager._id
+
+  const [loading ,setLoading] = useState(false)
 
   const [openDropdown, setOpenDropdown] = useState(null);
 
@@ -44,6 +52,8 @@ const TasktManagement = () => {
   const statusItems = ['Status 1', 'Status 2', 'Status 3'];
 
   useEffect(()=>{
+
+    setLoading(true)
     const fetchdata = async()=>{
       try {
         
@@ -55,6 +65,8 @@ const TasktManagement = () => {
         
       } catch (error) {
         
+      }finally{
+        setLoading(false)
       }
     }
     
@@ -84,12 +96,29 @@ const TasktManagement = () => {
       
               
          <div className="flex flex-col w-full min-h-screen bg-background">
-      <header className="sticky bg-white top-0 z-30 flex h-16 items-center justify-between border-b bg-background px-4 md:px-6">
-        <h1 className="text-xl font-bold">Manager's Overview</h1>
+      <header className="sticky  top-0 bg-[#2F3849] z-30 flex h-16 items-center justify-between border-b bg-background px-4 md:px-6">
+        <h1 className="text-xl text-white">Manager's Overview</h1>
         <div className="flex items-center gap-4">
           
         </div>
       </header>
+      
+      <Backdrop
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
       <main className="flex-1 p-4 md:p-6">
         <section>
           <h2 className="mb-4 text-lg font-semibold">Projects</h2>

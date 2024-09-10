@@ -5,6 +5,9 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 
+import Backdrop from '@mui/material/Backdrop';
+import { ScaleLoader } from 'react-spinners';
+
 const ManagerProfile   = () => {
   const [user,setUser] = useState('')
 
@@ -50,6 +53,22 @@ console.log(user.profileImageUrl);
         {/* You can create a mobile version of the sidebar or a toggle button to show/hide it */}
         <ManagerSidebar />
       </div>
+      <Backdrop
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
 
         <div style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
         <div className="bg-white ml-7 rounded-lg shadow-md p-6 md:p-8">

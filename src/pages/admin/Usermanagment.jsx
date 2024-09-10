@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
+import { ScaleLoader } from 'react-spinners';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -241,12 +241,21 @@ const handleDelete = async (userId) =>{
           </tr>
         ))}
           <Backdrop
-            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={loading}
-            
-          >
-            <CircularProgress color="inherit" />
-          </Backdrop>
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
 
                         
                        

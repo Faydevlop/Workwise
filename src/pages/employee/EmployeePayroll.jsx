@@ -3,14 +3,20 @@ import EmployeeSidebar from '../../components/Sidebar/EmployeeSidebar'
 import axios from 'axios'
 import { useSelector } from 'react-redux';
 
+import Backdrop from '@mui/material/Backdrop';
+import { ScaleLoader } from 'react-spinners';
+
 const EmployeePayroll = () => {
   const [data,setDate] = useState('');
+  const [loading ,setLoading] = useState(false)
 
   const { employee } = useSelector((state) => state.employeeAuth);
+
 
   const userId = employee.user._id
 
   useEffect(()=>{
+    setLoading(true)
 
     const fetchdata = async()=>{
       try {
@@ -21,6 +27,8 @@ const EmployeePayroll = () => {
 
       } catch (error) {
         
+      }finally{
+        setLoading(false)
       }
       
     }
@@ -51,6 +59,22 @@ const EmployeePayroll = () => {
     data.length == 0 ? (<p className='text-center'>No Payroll Data Found</p>) : (<><header className="bg-primary text-primary-foreground py-4 px-6 flex items-center justify-between">
       <h1 className="text-2xl font-bold">Payroll</h1>
     </header>
+    <Backdrop
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
     <main className="flex-1 bg-background p-8 md:p-12 lg:p-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <div className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
         <div className="flex flex-col space-y-1.5 p-6">

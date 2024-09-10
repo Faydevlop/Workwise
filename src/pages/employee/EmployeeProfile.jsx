@@ -3,11 +3,14 @@ import EmployeeSidebar from '../../components/Sidebar/EmployeeSidebar';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Backdrop from '@mui/material/Backdrop';
+import { ScaleLoader } from 'react-spinners';
 
 const EmployeeProfile = () => {
   const [user,setUser] = useState('')
-  const [loading,setLoading] = useState(true)
+  const [loading,setLoading] = useState(false)
   const [showPasswordSection, setShowPasswordSection] = useState(false);
+
 
   const togglePasswordSection = () => {
     setShowPasswordSection(!showPasswordSection);
@@ -18,6 +21,7 @@ const EmployeeProfile = () => {
   const userId = employee.user._id
 
   useEffect(() => {
+    setLoading(true)
     const fetchUser = async () => {
         try {
             const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getuser/${userId}`,{
@@ -46,6 +50,22 @@ console.log(user.profileImageUrl);
       <div className="lg:hidden">
         <EmployeeSidebar />
       </div>
+      <Backdrop
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
 
       <div style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
         <div className="bg-white ml-7 rounded-lg shadow-md p-6 md:p-8">

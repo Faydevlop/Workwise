@@ -7,11 +7,15 @@ import { useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import Backdrop from '@mui/material/Backdrop';
+import { ScaleLoader } from 'react-spinners';
+
 const Meetings = () => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [listdata,setListdata] = useState([])
   const [listnext,setListnext] = useState([])
   const [visibleCount, setVisibleCount] = useState(3);
+  const [loading ,setLoading] = useState(false)
 
   const toggleDropdown = (index) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
@@ -33,6 +37,7 @@ const Meetings = () => {
   const userId = manager.manager._id;
 
   const fetchdata = async()=>{
+    setLoading(true)
     try {
       const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/meeting/listmeeting/${userId}`)
       setListdata(response.data.listData)
@@ -41,9 +46,13 @@ const Meetings = () => {
     } catch (error) {
       
     }
+    finally{
+      setLoading(false)
+    }
   }
   const fetchnext = async()=>{
     try {
+      setLoading(true)
       const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/meeting/nextmeet`)
       setListnext(response.data.upcomingMeetings)
       console.log(response.data);
@@ -51,6 +60,8 @@ const Meetings = () => {
     } catch (error) {
       console.log(error);
       
+    }finally{
+      setLoading(false)
     }
   }
 
@@ -104,8 +115,8 @@ const Meetings = () => {
                  
           {/* section 1 */}
           <div className="flex flex-col min-h-screen bg-muted/40">
-   <header className="bg-background border-b px-4 md:px-6 flex items-center h-14 sm:h-16">
-     <div className="flex-1 flex items-center gap-4">
+   <header className="bg-background bg-[#2F3849] border-b px-4 md:px-6 flex items-center h-14 sm:h-16">
+     <div className="flex-1 flex text-white items-center gap-4">
        <a className="flex items-center gap-2 text-lg font-semibold" href="/">
          <svg
            xmlns="http://www.w3.org/2000/svg"
@@ -136,13 +147,28 @@ const Meetings = () => {
      
      <div className="flex items-center gap-2 ">
       <Link to={'/manager/meetings/addmeeting'}>
-       <button className="  inline-flex justify-center rounded-md border border-gray-300 bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-        Add Meeting
-      
-       </button>
+      <button className="px-4 py-2 rounded-full  text-white  hover:bg-white transition-colors duration-300 hover:text-slate-600 focus:outline-none focus:bg-blue-600">
+        Add Employee
+      </button>
        </Link>
      </div>
    </header>
+   <Backdrop
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
    <main className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6 p-4 md:p-6">
      <div>
        <div className="mb-6">

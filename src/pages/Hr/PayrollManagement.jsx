@@ -3,16 +3,20 @@ import HrSidebar from '../../components/Sidebar/HrSidebar'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 
+import Backdrop from '@mui/material/Backdrop';
+import { ScaleLoader } from 'react-spinners';
+
 const PayrollManagement = () => {
 
 
   const [data,setData] = useState([])
   const [listData,setListData] = useState([])
-
+  const [loading ,setLoading] = useState(false)
   
   
 
      const fetchdata = async()=>{
+      setLoading(true)
         
 
         try {
@@ -23,15 +27,21 @@ const PayrollManagement = () => {
         } catch (error) {
             
         }
+        finally{
+          setLoading(false)
+        }
      }
 
      const fetchViewData = async()=>{
+      setLoading(true)
       try {
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/payroll/viewlist`)
         setListData(response.data.listView)
         
       } catch (error) {
         
+      }finally{
+        setLoading(false)
       }
      }
 
@@ -93,6 +103,22 @@ const PayrollManagement = () => {
             <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">{listData.nopayrollUser}</h3>
           </div>
         </div>
+        <Backdrop
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
         
         <div className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
           <div className="flex flex-col space-y-1.5 p-6">

@@ -7,12 +7,16 @@ import { useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import Backdrop from '@mui/material/Backdrop';
+import { ScaleLoader } from 'react-spinners';
+
 const HrMeetings = () => {
   
 
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [listdata,setListdata] = useState([])
   const [listnext,setListnext] = useState([])
+  const [loading ,setLoading] = useState(false)
 
   const [visibleCount, setVisibleCount] = useState(3);
 
@@ -37,6 +41,7 @@ const HrMeetings = () => {
   const userId = hr.hr._id
 
   const fetchdata = async()=>{
+    setLoading(true)
     try {
       const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/meeting/listmeeting/${userId}`)
       setListdata(response.data.listData)
@@ -44,9 +49,12 @@ const HrMeetings = () => {
       
     } catch (error) {
       
+    }finally{
+      setLoading(false)
     }
   }
   const fetchnext = async()=>{
+    setLoading(true)
     try {
       const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/meeting/nextmeet`)
       setListnext(response.data.upcomingMeetings)
@@ -55,6 +63,8 @@ const HrMeetings = () => {
     } catch (error) {
       console.log(error);
       
+    }finally{
+      setLoading(false)
     }
   }
 
@@ -105,6 +115,22 @@ const HrMeetings = () => {
       </div>
 
       <div  style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
+      <Backdrop
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
                  
           {/* section 1 */}
           <div className="flex flex-col min-h-screen bg-muted/40">

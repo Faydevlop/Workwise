@@ -5,22 +5,29 @@ import axios from 'axios'
 
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Backdrop from '@mui/material/Backdrop';
+import { ScaleLoader } from 'react-spinners';
 
 const Recruitment = () => {
   const [listData,setListData] = useState([])
   const [showData,setshowData] = useState([])
+  const [loading ,setLoading] = useState(false)
 
   const fetchdata = async()=>{
+    setLoading(true)
     try {
       const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/jobs/listitems`)
       setListData(response.data.listingData);
        
     } catch (error) {
       
+    }finally{
+      setLoading(false)
     }
   }
 
   const fetchlist = async()=>{
+    setLoading(true)
     try {
       const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/jobs/listJob`)
       setshowData(response.data.listData);
@@ -28,6 +35,8 @@ const Recruitment = () => {
       
     } catch (error) {
       
+    }finally{
+      setLoading(false)
     }
   }
   
@@ -126,7 +135,22 @@ const Recruitment = () => {
   </button>
   </Link>
 </header>
- 
+<Backdrop
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
  
   <main className="flex-1 bg-white rounded-md  gap-2 p-4 md:p-6">
     

@@ -5,8 +5,12 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 
+import Backdrop from '@mui/material/Backdrop';
+import { ScaleLoader } from 'react-spinners';
+
 const HrProfile   = () => {
   const [user,setUser] = useState('')
+  
 
   const [loading,setLoading] = useState(true)
   const [showPasswordSection, setShowPasswordSection] = useState(false);
@@ -86,6 +90,22 @@ console.log(user.profileImageUrl);
                 
               </div>
             </div>
+            <Backdrop
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
           </div>
           <div className="mt-20 md:flex md:justify-between">
             <div>

@@ -13,14 +13,22 @@ import { useSelector } from 'react-redux';
 import ManagerSidebar from '../../components/Sidebar/ManagerSidebar';
 import { Link } from 'react-router-dom';
 
+
+import Backdrop from '@mui/material/Backdrop';
+import { ScaleLoader } from 'react-spinners';
+
 const LeaveManagement = () => {
   const [leaves, setLeaves] = useState([]);
   const [data,setData] = useState([])
   const { manager } = useSelector((state) => state.managerAuth);
   const userId = manager.manager._id;
+  const [loading ,setLoading] = useState(false)
 
 
   useEffect(() => {
+
+    setLoading(true)
+    
     const fetchLeaves = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/leave/getleaves/${userId}`);
@@ -39,6 +47,8 @@ const LeaveManagement = () => {
         
       } catch (error) {
         
+      }finally{
+        setLoading(false)
       }
     }
     fetchRequests()
@@ -104,6 +114,22 @@ const LeaveManagement = () => {
             </button>
           </Link>
         </div>
+        <Backdrop
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="rounded-lg border bg-card text-card-foreground shadow-sm col-span-2">
             <div className="flex flex-col space-y-1.5 p-6">

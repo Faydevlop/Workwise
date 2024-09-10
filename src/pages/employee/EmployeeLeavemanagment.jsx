@@ -4,18 +4,25 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
+import Backdrop from '@mui/material/Backdrop';
+import { ScaleLoader } from 'react-spinners';
+
 const EmployeeLeavemanagment = () => {
   const [leaves, setLeaves] = useState([]);
+  const [loading ,setLoading] = useState(false)
   const { employee } = useSelector((state) => state.employeeAuth);
   const userId = employee.user._id;
 
   useEffect(() => {
+    setLoading(true)
     const fetchLeaves = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/leave/getleaves/${userId}`);
         setLeaves(response.data.leaves);
       } catch (error) {
         console.log(error);
+      }finally{
+        setLoading(false)
       }
     };
     fetchLeaves();
@@ -30,9 +37,10 @@ const EmployeeLeavemanagment = () => {
         <EmployeeSidebar />
       </div>
 
-      <div className="flex-1 p-6 overflow-auto ">
+      <div className="flex-1 p-6 overflow-auto  ">
         {/* Header Section */}
-        <div className="flex justify-between items-center mb-6">
+        <header >
+        <div className="flex justify-between  items-center mb-6">
           <h1 className="text-2xl font-bold">Leaves and Overview</h1>
           <Link to={'/employee/leave/applyleave'}>
             <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-primary/90 h-10 px-4 py-2 bg-blue-600 text-white">
@@ -40,6 +48,23 @@ const EmployeeLeavemanagment = () => {
             </button>
           </Link>
         </div>
+        </header>
+        <Backdrop
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
 
         {/* Leave History and Summary Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

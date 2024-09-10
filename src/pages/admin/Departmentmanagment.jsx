@@ -4,11 +4,15 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Backdrop from '@mui/material/Backdrop';
+import { ScaleLoader } from 'react-spinners';
 
 const Departmentmanagment = () => {
   const [data,setData] = useState([])
+  const [loading ,setLoading] = useState(false)
 
   useEffect(()=>{
+    setLoading(true)
     const fetchdata = async()=>{
       try {
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/department/list`)
@@ -20,6 +24,8 @@ const Departmentmanagment = () => {
 
       } catch (error) {
        
+      }finally{
+        setLoading(false)
       }
     }
     fetchdata()
@@ -95,6 +101,22 @@ const Departmentmanagment = () => {
     </button>
     </Link>
   </div>
+  <Backdrop
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
 
   {/* Responsive Table */}
   <div className="overflow-x-auto">

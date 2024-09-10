@@ -30,7 +30,7 @@ const hrAuthSlice = createSlice({
         hr:null,
         loading:false,
         error:null,
-        isAuthenticated:false
+        isAuthenticated: !!localStorage.getItem('token')
     },
     reducers:{
         logout: (state) => {

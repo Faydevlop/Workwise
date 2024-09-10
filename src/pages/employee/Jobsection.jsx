@@ -3,10 +3,15 @@ import EmployeeSidebar from '../../components/Sidebar/EmployeeSidebar'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 
+import Backdrop from '@mui/material/Backdrop';
+import { ScaleLoader } from 'react-spinners';
+
 const Jobsection = () => {
     const [listData,setListData] = useState([])
+    const [loading ,setLoading] = useState(false)
 
     const fetchdata = async()=>{
+      setLoading(true)
         try {
             const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/jobs/listitems`);
             setListData(response.data.listingData)
@@ -14,6 +19,8 @@ const Jobsection = () => {
             
         } catch (error) {
             
+        }finally{
+          setLoading(false)
         }
     }
 
@@ -34,6 +41,22 @@ const Jobsection = () => {
       </div>
 
         <div style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
+        <Backdrop
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
                  
           {/* section 1 */}
         
@@ -84,6 +107,7 @@ const Jobsection = () => {
               </Link>
            
             </div>
+            
           </div>))
        }
        

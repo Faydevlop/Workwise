@@ -27,7 +27,7 @@ const employeeAuthSlice = createSlice({
     employee: null,
     loading: false,
     error: null,
-    isAuthenticated: false,
+    isAuthenticated: !!localStorage.getItem('token')
   },
   reducers: {
     logout: (state) => {

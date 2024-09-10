@@ -5,6 +5,9 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import Backdrop from '@mui/material/Backdrop';
+import { ScaleLoader } from 'react-spinners';
+
 const EmployeeTaskmanagment = () => {
 
   // Initial data for tasks
@@ -13,11 +16,13 @@ const EmployeeTaskmanagment = () => {
     inProgress: [],
     done: [],
   });
+  const [loading ,setLoading] = useState(false)
 
   const { employee } = useSelector((state) => state.employeeAuth);
   const userId = employee.user._id
 
   useEffect(()=>{
+    setLoading(true)
     const fetchtasks = async()=>{
       try {
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/task/listtasks/${userId}`)
@@ -56,6 +61,8 @@ const EmployeeTaskmanagment = () => {
       } catch (error) {
         console.error("Error fetching tasks:", error);
         
+      }finally{
+        setLoading(false)
       }
     }
     fetchtasks()
@@ -120,6 +127,22 @@ const EmployeeTaskmanagment = () => {
       <div className="lg:hidden">
         <EmployeeSidebar />
       </div>
+      <Backdrop
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
 
       <div style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
       <DragDropContext onDragEnd={onDragEnd}>

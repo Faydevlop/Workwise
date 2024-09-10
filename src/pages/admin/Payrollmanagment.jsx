@@ -3,16 +3,21 @@ import AdminSidebar from '../../components/Sidebar/AdminSidebar'
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
+import Backdrop from '@mui/material/Backdrop';
+import { ScaleLoader } from 'react-spinners';
+
 const Payrollmanagment = () => {
   const [users,setUsers] = useState([])
   const [openDropdown, setOpenDropdown] = useState(null);
   const [listData,setListData] = useState([])
+  const [loading ,setLoading] = useState(false)
 
   const toggleDropdown = (index) => {
     setOpenDropdown(openDropdown === index ? null : index);
   };
 
   const fetchlist = async()=>{
+    setLoading(true)
     try {
       const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/payroll/listusers`);
       setUsers(response.data.users)
@@ -20,16 +25,21 @@ const Payrollmanagment = () => {
       
     } catch (error) {
       
+    }finally{
+      setLoading(false)
     }
   }
 
   const fetchViewData = async()=>{
+    setLoading(true)
     try {
       const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/payroll/viewlist`)
       setListData(response.data.listView)
       
     } catch (error) {
       
+    }finally{
+      setLoading(false)
     }
    }
 
@@ -52,6 +62,22 @@ const Payrollmanagment = () => {
       </div>
 
         <div style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
+        <Backdrop
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
                  
           {/* section 1 */}
          

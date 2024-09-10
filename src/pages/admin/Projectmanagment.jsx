@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import AdminSidebar from '../../components/Sidebar/AdminSidebar';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Backdrop from '@mui/material/Backdrop';
+import { ScaleLoader } from 'react-spinners';
 
 
 const Projectmanagment = () => {
   const [projects,setProjects] = useState([]);
+  const [loading ,setLoading] = useState(false)
   useEffect(()=>{
     const fetchData = async()=>{
+      setLoading(true)
      try {
       const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getprojects`,{
         headers:{
@@ -19,7 +23,9 @@ const Projectmanagment = () => {
       
      } catch (error) {
       
-     }
+     }finally{
+      setLoading(false)
+    }
     }
 
     fetchData()
@@ -71,6 +77,22 @@ const Projectmanagment = () => {
          
         </div>
       </header>
+      <Backdrop
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
 
       <div className="container mx-auto py-8 px-6">
         <div className="mt-8">

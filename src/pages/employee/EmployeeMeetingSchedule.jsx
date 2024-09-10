@@ -3,13 +3,18 @@ import EmployeeSidebar from '../../components/Sidebar/EmployeeSidebar'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 
+import Backdrop from '@mui/material/Backdrop';
+import { ScaleLoader } from 'react-spinners';
+
 const EmployeeMeetingSchedule = () => {
   const [listData,setListData] = useState([])
+  const [loading ,setLoading] = useState(false)
 
   const { employee } = useSelector((state) => state.employeeAuth);
   const userId = employee.user._id
 
   const fetchdata = async()=>{
+    setLoading(true)
     try {
       const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/meeting/listmeeting/${userId}/employee`);
       setListData(response.data.data)
@@ -17,6 +22,8 @@ const EmployeeMeetingSchedule = () => {
 
     } catch (error) {
       
+    }finally{
+      setLoading(false)
     }
   }
 
@@ -41,11 +48,11 @@ const EmployeeMeetingSchedule = () => {
                  
           {/* section 1 */}
           <div className="flex flex-col min-h-screen">
-  <header className="bg-primary text-primary-foreground py-4 px-6 flex items-center justify-between">
+  <header className="bg-primary bg-[#2F3849] text-primary-foreground py-4 px-6 flex items-center justify-between">
     <a className="flex items-center gap-2" href="/">
       
        
-      <span className="text-xl font-bold">Meetings List</span>
+      <span className="text-xl text-white">Meetings List</span>
     </a>
     {/* <nav className="hidden md:flex items-center gap-6">
       <a className="text-sm font-medium hover:underline" href="/">
@@ -63,6 +70,22 @@ const EmployeeMeetingSchedule = () => {
     </nav> */}
    
   </header>
+  <Backdrop
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
   <main className="flex-1 p-6">
     <div className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
       <div className="flex flex-col space-y-1.5 p-6">
@@ -97,7 +120,7 @@ const EmployeeMeetingSchedule = () => {
               </tr>
             </thead>
             <tbody className="[&_tr:last-child]:border-0">
-             
+           
              {
               listData.map((list)=>(
                 <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
@@ -148,6 +171,10 @@ const EmployeeMeetingSchedule = () => {
               
             </tbody>
           </table>
+          {
+                listData.length === 0 ? (<p className='text-center m-2' >No Meeting Schedules</p> ) : ''
+              }
+             
         </div>
       </div>
     </div>

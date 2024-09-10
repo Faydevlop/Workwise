@@ -4,15 +4,20 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 
+import Backdrop from '@mui/material/Backdrop';
+import { ScaleLoader } from 'react-spinners';
+
 
 const Leaves = () => {
     const [leaves,setLeaves] = useState([])
+    const [loading ,setLoading] = useState(false)
   const {hr} = useSelector((state)=>state.hrAuth)
   const userId = hr.hr._id
 
   useEffect(()=>{
    
       const fetchLeaves = async() => {
+        setLoading(true)
         try {
           const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/leave/getleaves/${userId}`)
           setLeaves(response.data.leaves)
@@ -22,6 +27,8 @@ const Leaves = () => {
         } catch (error) {
           console.log(error);
           
+        }finally{
+          setLoading(false)
         }
         
 
@@ -59,6 +66,22 @@ const Leaves = () => {
     </div>
   </nav>
 </header>
+<Backdrop
+  sx={{
+    color: '#fff',
+    
+    zIndex: (theme) => theme.zIndex.drawer + 1,
+  }}
+  open={loading}
+>
+  <ScaleLoader
+    color="#ffffff" // Adjust the spinner color
+    height={35}     // Adjust the height
+    width={4}       // Adjust the width
+    radius={2}      // Adjust the radius
+    margin={2}      // Adjust the margin between spinners
+  />
+</Backdrop>
        
   {/* Main container to align items */}
   <div className="flex flex-col lg:flex-row lg:space-x-8">

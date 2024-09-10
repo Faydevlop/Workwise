@@ -30,7 +30,7 @@ const managerAuthSlice = createSlice({
         manager:null,
         loading:false,
         error:null,
-        isAuthenticated:false
+        isAuthenticated: !!localStorage.getItem('token')
     },
     reducers:{
         logout: (state) => {
