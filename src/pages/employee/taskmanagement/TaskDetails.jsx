@@ -116,7 +116,7 @@ const TaskDetails = () => {
         <h3 className="text-lg font-medium mb-2">Assigned To</h3>
         <div className="flex items-center space-x-2">
           <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
-            <img className="aspect-square h-full w-full" alt="John Doe" src={ taskData.assignedTo[0].profileImageUrl? taskData.assignedTo[0].profileImageUrl : `https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg`} />
+            <img className="aspect-square h-full w-full" alt="John Doe" src={ taskData.assignedTo ? taskData.assignedTo[0].profileImageUrl : `https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg`} />
           </span>
           <p className="text-gray-600">{taskData.assignedTo ? `${taskData.assignedTo[0].firstName}${taskData.assignedTo[0].lastName}` : 'Not available'}</p>
         </div>
@@ -202,7 +202,7 @@ const TaskDetails = () => {
             <div>
               <h3 className="text-lg font-medium mb-2">Assigned To</h3>
               <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
-            <img className="aspect-square h-full w-full" alt="John Doe" src={ taskData.assignedTo[0].profileImageUrl? taskData.assignedTo[0].profileImageUrl : `https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg`} />
+            <img className="aspect-square h-full w-full" alt="John Doe" src={ taskData.assignedTo ? taskData.assignedTo[0].profileImageUrl : `https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg`} />
           </span>
             </div>
           </div>

@@ -8,8 +8,10 @@ export const loginAuth = createAsyncThunk(
     async(userData,{rejectWithValue})=>{
         try {
             const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/manager/login`,userData);
-            const {token} = response.data;
-            localStorage.setItem('token',token)
+            const {accessToken} = response.data;
+            console.log('token is here',accessToken);
+            
+            localStorage.setItem('token',accessToken)
             return response.data    
         } catch (error) {
             if(error.response && error.response.data){

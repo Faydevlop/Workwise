@@ -148,7 +148,7 @@ const Meetings = () => {
      <div className="flex items-center gap-2 ">
       <Link to={'/manager/meetings/addmeeting'}>
       <button className="px-4 py-2 rounded-full  text-white  hover:bg-white transition-colors duration-300 hover:text-slate-600 focus:outline-none focus:bg-blue-600">
-        Add Employee
+        Add Meeting
       </button>
        </Link>
      </div>

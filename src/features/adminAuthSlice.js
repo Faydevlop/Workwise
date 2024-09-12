@@ -8,8 +8,10 @@ export const registerAuth = createAsyncThunk(
   async (userData,{rejectWithValue} ) => {
     try {
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/admin/signup`, userData);
-      console.log('response data is here', response);
-      return response.data;
+      const { accessToken, refreshToken } = response.data;
+
+      localStorage.setItem('token', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
       
     } catch (error) {
       if(error.response && error.response.data){
@@ -29,8 +31,10 @@ export const LoginAuth = createAsyncThunk(
   async (userDate ,{rejectWithValue})=>{
     try {
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/admin/login`,userDate)
-      const {token} = response.data;
-      localStorage.setItem('token',token)
+      const { accessToken, refreshToken } = response.data;
+
+      localStorage.setItem('token', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
       return response.data
 
       

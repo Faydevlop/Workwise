@@ -186,7 +186,7 @@ const AddMeeting = () => {
                     onChange={(e) => setParticipants([...e.target.selectedOptions].map(option => option.value))}
                   >
                     {listingUser.map((user, index) => (
-                      <option key={index} value={user._id}>{user.email}</option>
+                      <option key={index} value={user._id}>{user.firstName}{user.lastName}</option>
                     ))}
                   </select>
                   {errors.participants && <p className="text-red-500 text-sm mt-1">{errors.participants}</p>}

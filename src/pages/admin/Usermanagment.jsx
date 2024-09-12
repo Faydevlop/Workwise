@@ -7,6 +7,7 @@ import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import api from '../../features/auth/axiosInstance';
 
 const Usermanagment = () => {
 
@@ -72,7 +73,7 @@ const handleDelete = async (userId) =>{
     useEffect(()=>{
         const fetchUser = async () =>{
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getusers`,{
+                const response = await api.get(`/admin/getusers`,{
                   headers:{
                     Authorization:`Bearer ${localStorage.getItem('token')}`,
                   }
