@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AdminSidebar from "../../../components/Sidebar/AdminSidebar";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const PayrollDetails = () => {
   const {payrollId} = useParams()
@@ -67,6 +67,7 @@ const PayrollDetails = () => {
                       </svg>
                     </li>
                     <li className="inline-flex items-center gap-1.5">Payroll Management</li>
+                    
                     <li
                       aria-hidden="true"
                       className="[&>svg]:size-3.5"
@@ -97,6 +98,7 @@ const PayrollDetails = () => {
                       >
                         Payroll Details
                       </span>
+                      
                     </li>
                   </ol>
                 </nav>
@@ -137,9 +139,20 @@ const PayrollDetails = () => {
                 data-v0-t="card"
               >
                 <div className="flex flex-col space-y-1.5 p-6">
+                  <Link to={`/admin/Payrollmanagment/details/export/${data._id}`}>
+                <button className="inline-flex p-5 m-4 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 h-4 w-4">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" x2="12" y1="15" y2="3"></line>
+                </svg>
+                Export
+              </button>
+              </Link>
                   <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">
                     Payroll Summary
                   </h3>
+                 
                   <p className="text-sm text-muted-foreground">June 2023</p>
                 </div>
                 <div className="p-6 grid gap-4">

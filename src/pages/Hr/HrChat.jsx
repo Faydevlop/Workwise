@@ -31,7 +31,7 @@ const HrChat = () => {
       </div>
 
         <div style={{ flex: 1, padding: '', overflow: 'auto', marginLeft: '0' }}>
-        <div className="flex h-screen w-screen overflow-hidden">
+        <div className="flex h-screen w-screeny overflow-hidden">
       {/* Sidebar */}
       <div ref={sidebarRef} className={`bg-white border-r w-full max-w-[300px] md:relative absolute inset-y-0 left-0 transform ${showSidebar ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition duration-200 ease-in-out z-30`}>
         <div className="flex items-center justify-between p-3 border-b">
