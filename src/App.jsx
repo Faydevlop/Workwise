@@ -6,6 +6,7 @@ import EmployeeRoutes from './routes/EmployeeRoutes';
 import ManagerRoutes from './routes/ManagerRoutes';
 import HrRoutes from './routes/HrRoutes';
 import TestPage from './pages/Test';
+import VideoCallPage from './pages/Hr/VedioCallPage';
 
 function App() {
   return (
@@ -27,6 +28,8 @@ function App() {
         <Route path="/" element={<Navigate to="employee/login" />} />
        
         <Route path="/test" element={<TestPage/>} />
+        <Route path="/chat/video-call/:roomId" element={<VideoCallPage /> } />
+
       </Routes>
     </BrowserRouter>
   );

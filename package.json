@@ -17,8 +17,11 @@
     "@mui/material": "^5.16.6",
     "@radix-ui/react-alert-dialog": "^1.1.1",
     "@reduxjs/toolkit": "^2.2.7",
+    "@zegocloud/zego-uikit-prebuilt": "^2.9.1",
     "axios": "^1.7.2",
     "dayjs": "^1.11.13",
+    "peerjs": "^1.5.4",
+    "randombytes": "^2.1.0",
     "react": "^18.3.1",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.3.1",
@@ -31,8 +34,10 @@
     "react-toastify": "^10.0.5",
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
+    "simple-peer": "^9.11.1",
     "socket.io-client": "^4.7.5",
-    "sweetalert2": "^11.12.4"
+    "sweetalert2": "^11.12.4",
+    "vite-plugin-node-polyfills": "^0.22.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
@@ -43,8 +48,10 @@
     "eslint-plugin-react": "^7.34.3",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
+    "global": "^4.4.0",
     "postcss": "^8.4.40",
     "tailwindcss": "^3.4.7",
-    "vite": "^5.3.4"
+    "vite": "^5.3.4",
+    "webpack": "^5.94.0"
   }
 }

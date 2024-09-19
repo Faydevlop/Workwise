@@ -31,9 +31,9 @@ function AdminRoutes() {
 
   return (
     <Routes>
-      <Route path="login" element={<AdminLogin />} />
-      <Route path="signin" element={<AdminSignin />} />
 
+      <Route path="signin" element={<AdminSignin />} />
+      <Route path="login" element={isAuthenticated ? <Navigate to="/admin/dashboard" /> : <AdminLogin /> } />
       <Route path="dashboard" element={isAuthenticated ? <AdminDashBoard /> : <Navigate to="/admin/login" />} />
       <Route path="Leavemanagment" element={isAuthenticated ? <Leavemanagment /> : <Navigate to="/admin/login" />} />
       <Route path="Departmentmanagment" element={isAuthenticated ? <Departmentmanagment /> : <Navigate to="/admin/login" />} />

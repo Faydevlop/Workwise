@@ -20,6 +20,7 @@ import Detailview from '../pages/Hr/requirementmanagement/Detailview';
 import EditJobPost from '../pages/Hr/requirementmanagement/EditJobPost';
 import EditProfile from '../pages/Hr/EditProfile';
 import ChangePass from '../pages/Hr/ChangePass';
+import VideoCallPage from '../pages/Hr/VedioCallPage';
 // import EditHrProfile from '../pages/Hr/EditHrProfile';
 
 const HrRoutes = () => {
@@ -27,7 +28,7 @@ const HrRoutes = () => {
 
   return (
     <Routes>
-      <Route path="login" element={<HrLogin />} />
+      <Route path="login" element={isHrAuth ? <Navigate to="/hr/dashboard" /> : <HrLogin /> } />
       <Route path="dashboard" element={isHrAuth ? <HrDashboard /> : <Navigate to="/hr/login" />} />
       <Route path="employeerecords" element={isHrAuth ? <EmployeeRecords /> : <Navigate to="/hr/login" />} />
       <Route path="payrollmanagement" element={isHrAuth ? <PayrollManagement /> : <Navigate to="/hr/login" />} />
@@ -45,7 +46,8 @@ const HrRoutes = () => {
       <Route path="meetings/addmeeting" element={isHrAuth ? <AddMeeting /> : <Navigate to="/hr/login" />} />
       <Route path="meetings/editmeeting/:meetingId" element={isHrAuth ? <EditMeeting /> : <Navigate to="/hr/login" />} />
       <Route path="chat" element={isHrAuth ? <HrChat /> : <Navigate to="/hr/login" />} />
-      <Route path="chat" element={isHrAuth ? <HrChat /> : <Navigate to="/hr/login" />} />
+      {/* <Route path="chat/video-call" element={isHrAuth ? <VideoCallPage /> : <Navigate to="/hr/login" />} /> */}
+      
       {/* <Route path="hr/editprofile/:userId" element={isHrAuth ? <EditHrProfile /> : <Navigate to="/hr/login" />} /> */}
     </Routes>
   );

@@ -21,12 +21,14 @@ import AddMeeting from '../pages/manager/meeting/AddMeeting';
 import EditMeeting from '../pages/manager/meeting/EditMeeting';
 
 
+
 const ManagerRoutes = () => {
   const isManagerAuth = useSelector((state) => state.managerAuth.isAuthenticated);
 
   return (
     <Routes>
-      <Route path="login" element={<ManagerLogin />} />
+     
+      <Route path="login" element={isManagerAuth ? <Navigate to="/manager/dashboard" /> : <ManagerLogin /> } />
       <Route path="dashboard" element={isManagerAuth ? <ManagerDashboard /> : <Navigate to="/manager/login" />} />
       <Route path="usermanagement" element={isManagerAuth ? <ManagerUsermanagent /> : <Navigate to="/manager/login" />} />
       <Route path="leavemanagement" element={isManagerAuth ? <LeaveManagement /> : <Navigate to="/manager/login" />} />
@@ -37,6 +39,7 @@ const ManagerRoutes = () => {
       <Route path="profile" element={isManagerAuth ? <ManagerProfile /> : <Navigate to="/manager/login" />} />
       <Route path="profile/editprofile/:userId" element={isManagerAuth ? <EditProfile /> : <Navigate to="/manager/login" />} />
       <Route path="chat" element={isManagerAuth ? <Managerchat /> : <Navigate to="/manager/login" />} />
+      {/* <Route path="chat/video-call" element={isManagerAuth ? <VideoCallPage /> : <Navigate to="/manager/login" />} /> */}
       <Route path="payrollmanagement" element={isManagerAuth ? <Payrollmanagement /> : <Navigate to="/manager/login" />} />
       <Route path="payrollmanagement/edit/:userId" element={isManagerAuth ? <Editpage /> : <Navigate to="/manager/login" />} />
       <Route path="leave/applyLeave" element={isManagerAuth ? <ApplyLeave /> : <Navigate to="/manager/login" />} />

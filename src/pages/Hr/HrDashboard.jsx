@@ -1,7 +1,44 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import HrSidebar from '../../components/Sidebar/HrSidebar'
+import { useSelector } from 'react-redux'
+import axios from 'axios'
 
 const HrDashboard = () => {
+  const [meetings,setMeetings]= useState([])
+  const [jobs,setJobs] = useState([])
+  const [leaves,setLeave] = useState([]) 
+  
+
+  const {hr} = useSelector((state)=>state.hrAuth)
+  const userId = hr.hr._id
+
+  const fetchData = async()=>{
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/hr/dashboard/${userId}`);
+      console.log(response.data);
+      setMeetings(response.data.upcomingMeetings)
+      setJobs(response.data.pendingReqeusts)
+      setLeave(response.data.leaves)
+      
+     
+
+      
+
+
+    } catch (error) {
+      console.log(error);
+      
+      
+    }
+  }
+
+  useEffect(()=>{
+    fetchData()
+  },[])
+
+
+
+
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
        <div className="hidden lg:block" style={{ width: '250px' }}>
@@ -12,68 +49,211 @@ const HrDashboard = () => {
         <HrSidebar />
       </div>
 
-        <div style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
+        <div style={{ flex: 1,overflow: 'auto', marginLeft: '0' }}>
                  
-          {/* section 1 */}
-          <div className="flex flex-wrap gap-x-4 gap-y-12 bg-white-100 px-4 py-20 lg:px-20">
-  <div className="flex w-72">
-    <div className="flex w-full max-w-full flex-col break-words rounded-lg border border-gray-100 bg-white text-gray-600 shadow-lg">
-      <div className="p-3">
-        <div className="absolute -mt-10 h-16 w-16 rounded-xl bg-gradient-to-tr from-gray-700 to-gray-400 text-center text-white shadow-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" className="mt-4 h-7 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+       
+<div className="flex flex-col w-full min-h-screen bg-muted/40">
+  <header className="sticky mt-5 mb-5 top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+    <nav aria-label="breadcrumb" className="hidden md:flex">
+      <ol className="flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5">
+        <li className="inline-flex items-center gap-1.5"></li>
+        <li aria-hidden="true" className="[&>svg]:size-3.5" role="presentation">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-chevron-right"
+          >
+            <path d="m9 18 6-6-6-6"></path>
           </svg>
+        </li>
+        <li className="inline-flex items-center gap-1.5">
+          <span aria-current="page" aria-disabled="true" className="font-normal text-foreground" role="link">
+            HR Dashboard
+          </span>
+        </li>
+      </ol>
+    </nav>
+    <div className="relative ml-auto flex-1 md:grow-0">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="lucide lucide-search absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"
+      >
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.3-4.3"></path>
+      </svg>
+      <input
+        className="flex h-10 border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
+        placeholder="Search..."
+        type="search"
+       />
+    </div>
+  </header>
+  <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+        <div className="flex flex-col space-y-1.5 p-6 px-7">
+          <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">
+            Pending Job Vacancy Requests
+          </h3>
+          <p className="text-sm text-muted-foreground">Review and manage pending</p>
         </div>
-        <div className="pt-1 text-right">
-          <p className="text-sm font-light capitalize">Pageviews</p>
-          <h4 className="text-2xl font-semibold tracking-tighter xl:text-2xl">14,000</h4>
+        <div className="p-6">
+          <div className="relative w-full overflow-auto">
+            <table className="w-full caption-bottom text-sm">
+              <thead className="[&_tr]:border-b">
+                <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
+                    Position
+                  </th>
+                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
+                    Department
+                  </th>
+                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
+                    Status
+                  </th>
+                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
+                    <span className="sr-only">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="[&_tr:last-child]:border-0">
+                <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0 font-medium">Software Engineer</td>
+                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">Engineering</td>
+                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                    <div
+                      className="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground"
+                      data-v0-t="badge"
+                    >
+                      Pending
+                    </div>
+                  </td>
+                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0"></td>
+                </tr>
+                <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0 font-medium">Marketing Manager</td>
+                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">Marketing</td>
+                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                    <div
+                      className="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground"
+                      data-v0-t="badge"
+                    >
+                      Pending
+                    </div>
+                  </td>
+                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0"></td>
+                </tr>
+                <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0 font-medium">HR Coordinator</td>
+                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">Human Resources</td>
+                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                    <div
+                      className="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground"
+                      data-v0-t="badge"
+                    >
+                      Pending
+                    </div>
+                  </td>
+                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-      <hr className="opacity-50"  />
-      <div className="p-4">
-        <p className="font-light"><span className="text-sm font-bold text-green-600">+22% </span>vs last month</p>
+      <div className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+        <div className="flex flex-col space-y-1.5 p-6 px-7">
+          <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">Upcoming Meetings</h3>
+          <p className="text-sm text-muted-foreground">View and manage your upcoming meetings.</p>
+        </div>
+        <div className="p-6">
+          <div className="grid gap-4">
+            {
+              meetings.map((meet,index)=>(
+                <div key={index} className="flex items-center justify-between">
+                <div className="grid gap-1">
+                  <p className="text-sm font-medium">{meet.meetingName}</p>
+                  <p className="text-sm text-muted-foreground">{new Date(meet.date).toLocaleDateString()},{meet.time}</p>
+                </div>
+                <button className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3">
+                  {meet.status}
+                </button>
+              </div>
+              ))
+            }
+           
+           
+          </div>
+        </div>
+      </div>
+      <div className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+        <div className="flex flex-col space-y-1.5 p-6 px-7">
+          <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">
+            Pending Leave Approvals
+          </h3>
+          <p className="text-sm text-muted-foreground">Review and approve pending leave requests.</p>
+        </div>
+        <div className="p-6">
+          <div className="relative w-full overflow-auto">
+            <table className="w-full caption-bottom text-sm">
+              <thead className="[&_tr]:border-b">
+                <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
+                    Employee
+                  </th>
+                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
+                    Leave Dates
+                  </th>
+                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
+                    Status
+                  </th>
+                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
+                    <span className="sr-only">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="[&_tr:last-child]:border-0">
+                {
+                  leaves.map((leave,index)=>(
+                    <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0 font-medium">{leave?.userId?.firstName}{leave?.userId?.lastName}</td>
+                    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">{new Date(leave.startDate).toLocaleDateString()}</td>
+                    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                      <div
+                        className="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground"
+                        data-v0-t="badge"
+                      >
+                       {leave.status}
+                      </div>
+                    </td>
+                    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0"></td>
+                  </tr>
+                  ))
+                }
+             
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <div className="flex w-72">
-  <div className="flex w-full max-w-full flex-col break-words rounded-lg border border-gray-100 bg-white text-gray-600 shadow-lg">
-      <div className="p-3">
-        <div className="absolute -mt-10 h-16 w-16 rounded-xl bg-gradient-to-tr from-blue-700 to-blue-500 text-center text-white shadow-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" className="mt-4 h-7 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-        </div>
-        <div className="pt-1 text-right">
-          <p className="text-sm font-light capitalize">Users</p>
-          <h4 className="text-2xl font-semibold tracking-tighter xl:text-2xl">2,300</h4>
-        </div>
-      </div>
-      <hr className="opacity-50"  />
-      <div className="p-4">
-        <p className="font-light"><span className="text-sm font-bold text-green-600">+3% </span>vs last month</p>
-      </div>
-    </div>
-  </div>
-  <div className="flex w-72">
-    <div className="flex w-full max-w-full flex-col break-words rounded-lg border border-gray-100 bg-white text-gray-600 shadow-lg">
-      <div className="p-3">
-        <div className="absolute -mt-10 h-16 w-16 rounded-xl bg-gradient-to-tr from-emerald-700 to-emerald-500 text-center text-white shadow-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" className="mt-4 h-7 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <div className="pt-1 text-right">
-          <p className="text-sm font-light capitalize">Sales</p>
-          <h4 className="text-2xl font-semibold tracking-tighter xl:text-2xl">$5,360</h4>
-        </div>
-      </div>
-      <hr className="opacity-50"  />
-      <div className="p-4">
-        <p className="font-light"><span className="text-sm font-bold text-red-600">-3% </span>vs last month</p>
-      </div>
-    </div>
-  </div>
+  </main>
 </div>
 
         </div>

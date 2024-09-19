@@ -25,7 +25,7 @@ function EmployeeRoutes() {
 
   return (
     <Routes>
-      <Route path="login" element={<EmployeeLogin />} />
+      <Route path="login" element={isEmployeeAuth ? <Navigate to="/employee/dashboard" /> : <EmployeeLogin /> } />
       <Route path="dashboard" element={isEmployeeAuth ? <EmployeeDashboard /> : <Navigate to="/employee/login" />} />
       <Route path="tasks" element={isEmployeeAuth ? <EmployeeTaskmanagment /> : <Navigate to="/employee/login" />} />
       <Route path="tasks/details/:taskId" element={isEmployeeAuth ? <TaskDetails /> : <Navigate to="/employee/login" />} />
