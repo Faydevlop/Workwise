@@ -28,7 +28,7 @@ function App() {
         <Route path="/" element={<Navigate to="employee/login" />} />
        
         <Route path="/test" element={<TestPage/>} />
-        <Route path="/chat/video-call/:roomId" element={<VideoCallPage /> } />
+        <Route path="/chat/video-call/:roomId/:userId" element={<VideoCallPage /> } />
 
       </Routes>
     </BrowserRouter>

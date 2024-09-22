@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import EmployeeSidebar from '../../components/Sidebar/EmployeeSidebar'
 import axios from "axios";
 import api from "../../features/auth/axiosInstance";
@@ -6,11 +6,12 @@ import io from 'socket.io-client';
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const socket = io('http://localhost:4000');
+
 
 
 
 const EmployeeChat = () => {
+  const socket = useMemo(() => io('http://localhost:4000/'), []);
   const navigate = useNavigate();
   const [showSidebar, setShowSidebar] = useState(false);
   const sidebarRef = useRef(null);
@@ -23,6 +24,10 @@ const EmployeeChat = () => {
   console.log(employee.user);
   const sender = employee.user._id
   console.log('profile URL is here',employee.user.profileImageUrl);
+
+  useEffect(() => {
+    socket.emit('register', employee.user._id);
+  }, [employee.user._id]);
   
  
 
@@ -102,7 +107,7 @@ useEffect(() => {
       const videoCallNotification = notifications.find(notif => notif.type === 'video-call');
       if (videoCallNotification) {
         if (window.confirm('You have an incoming video call. Would you like to join?')) {
-          navigate(`/chat/video-call/${videoCallNotification.roomId}`);
+          navigate(`/chat/video-call/${videoCallNotification.roomId}/${sender}`);
         }
       }
     } catch (error) {
@@ -132,7 +137,7 @@ const generateRoomId = () => {
       roomId
     });
 
-    navigate(`/chat/video-call/${roomId}`);
+    navigate(`/chat/video-call/${roomId}/${sender}`);
   } catch (error) {
     console.error('Failed to initiate video call:', error);
   }
@@ -143,13 +148,28 @@ const handleChange = (event) => {
   setNewMessage(event.target.value);
 };
 
- const selectedUser = (userId)=>{
+ const selectedUser = async(userId)=>{
   const user = users.find((user) => user._id === userId);
     
     // Set the found user as the currentUser, or null if not found
     if (user) {
       setCurrentUser(user);
       console.log("Selected User:", user);
+      try {
+        await axios.post(`${import.meta.env.VITE_BASE_URL}/chat/mark-as-seen`, {
+          senderId: userId,
+          receiverId: sender,
+        });
+  
+        // Update message list to mark them as seen locally
+        setMessages(prevMessages =>
+          prevMessages.map(msg =>
+            msg.sender === userId ? { ...msg, seen: true } : msg
+          )
+        );
+      } catch (error) {
+        console.error('Failed to mark messages as seen:', error);
+      }
     } else {
       console.log(`User with ID ${userId} not found`);
     }
@@ -211,24 +231,28 @@ const handleChange = (event) => {
           </form>
         </div>
         {
-          users
-          .filter((user) => user._id !== sender)
-          .map((user)=>(
-            <div onClickCapture={()=>selectedUser(user._id)} className="grid gap-2 px-3">
-              
-            <a class="flex items-center gap-4 p-2 rounded-lg hover:bg-muted/50 bg-muted" >
-            <span class="relative flex shrink-0 overflow-hidden rounded-full border w-10 h-10">
-              <img class="aspect-square h-full w-full" alt="Image" src={user.profileImageUrl ? user.profileImageUrl : 'https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg' } />
-            </span>
-            <div class="grid gap-0.5">
-              <p class="text-sm font-medium leading-none">{user.firstName}{user.lastName}</p>
-              <p class="text-xs text-muted-foreground">{user.position}</p>
-            </div>
-            </a>
+  users
+  .filter((user) => user._id !== sender)
+  .map((user) => {
+    const hasUnreadMessages = messages.some(msg => msg.sender === user._id && !msg.seen);
+    
+    return (
+      <div onClickCapture={() => selectedUser(user._id)} className="grid gap-2 px-3">
+        <a className="flex items-center gap-4 p-2 rounded-lg hover:bg-muted/50 bg-muted">
+          <span className="relative flex shrink-0 overflow-hidden rounded-full border w-10 h-10">
+            <img className="aspect-square h-full w-full" alt="Image" src={user.profileImageUrl ? user.profileImageUrl : 'https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg'} />
+          </span>
+          <div className="grid gap-0.5">
+            <p className="text-sm font-medium leading-none">{user.firstName} {user.lastName}</p>
+            <p className="text-xs text-muted-foreground">{user.position}</p>
+          </div>
+          {hasUnreadMessages && <span className="text-red-500">● New Message</span>}
+        </a>
+      </div>
+    );
+  })
+}
 
-            </div>
-          ))
-        }
        
 
       </div>
