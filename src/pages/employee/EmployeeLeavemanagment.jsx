@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
+import NotificationBox from '../../components/notification/notificationBox';
 
 const EmployeeLeavemanagment = () => {
   const [leaves, setLeaves] = useState([]);
@@ -166,6 +167,7 @@ const EmployeeLeavemanagment = () => {
           </div>
         </div>
       </div>
+      <NotificationBox userId={userId} />
     </div>
   );
 };

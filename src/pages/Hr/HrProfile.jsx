@@ -7,6 +7,7 @@ import axios from 'axios'
 
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
+import NotificationBox from '../../components/notification/notificationBox'
 
 const HrProfile   = () => {
   const [user,setUser] = useState('')
@@ -167,6 +168,7 @@ console.log(user.profileImageUrl);
 
 
         </div>
+        <NotificationBox userId={userId} />
         
     
     </div>

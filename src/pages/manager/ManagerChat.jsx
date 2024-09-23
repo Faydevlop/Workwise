@@ -148,14 +148,26 @@ const ManagerChat = () => {
 
   useEffect(() => {
     socket.on("message", (data) => {
-      console.log("Message recived", data);
-      setMessages((prevMessages) => [...prevMessages, data]);
+      // Update messages if the message is for the currently selected user
+      if (data.sender === currentUser._id || data.receiver === currentUser._id) {
+        setMessages((prevMessages) => [...prevMessages, data]);
+      }
+  
+      // Update the user list to mark the user with a new message
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user._id === data.sender || user._id === data.receiver
+            ? { ...user, hasNewMessage: true } // Add 'hasNewMessage' property to show notification
+            : user
+        )
+      );
     });
-
+  
     return () => {
       socket.off("message");
     };
-  }, []);
+  }, [currentUser]);
+  
 
   useEffect(() => {
     if (currentUser) {
@@ -227,27 +239,29 @@ useEffect(() => {
 
   const selectedUser = async (userId) => {
     const user = users.find((user) => user._id === userId);
-
-    // Set the found user as the currentUser, or null if not found
+  
     if (user) {
       setCurrentUser(user);
-      console.log("Selected User:", user);
-
+  
+      // Mark this user as having no new messages
+      setUsers((prevUsers) =>
+        prevUsers.map((u) =>
+          u._id === userId ? { ...u, hasNewMessage: false } : u
+        )
+      );
+  
+      // Fetch messages and mark as seen
       try {
         await axios.post(`${import.meta.env.VITE_BASE_URL}/chat/mark-as-seen`, {
           senderId: userId,
           receiverId: sender,
         });
-  
-        // Update message list to mark them as seen locally
-      
       } catch (error) {
         console.error('Failed to mark messages as seen:', error);
       }
-    } else {
-      console.log(`User with ID ${userId} not found`);
     }
   };
+  
 
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
@@ -311,6 +325,10 @@ useEffect(() => {
           <p className="text-sm font-medium leading-none">{user.firstName} {user.lastName}</p>
           <p className="text-xs text-muted-foreground">{user.position}</p>
         </div>
+
+        {user.hasNewMessage && (
+        <span className="text-xs font-semibold justify-start text-red-500">⦿ New Message</span>
+      )}
       </a>
     </div>
   ))

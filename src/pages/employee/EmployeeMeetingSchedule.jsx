@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
+import NotificationBox from '../../components/notification/notificationBox';
 
 const EmployeeMeetingSchedule = () => {
   const [listData,setListData] = useState([])
@@ -180,6 +181,7 @@ const EmployeeMeetingSchedule = () => {
     </div>
   </main>
 </div>
+<NotificationBox userId={userId} />
         
         </div>
         

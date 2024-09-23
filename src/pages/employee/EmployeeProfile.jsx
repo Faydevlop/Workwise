@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
+import NotificationBox from '../../components/notification/notificationBox';
 
 const EmployeeProfile = () => {
   const [user,setUser] = useState('')
@@ -159,6 +160,7 @@ console.log(user.profileImageUrl);
          
         </div>
       </div>
+      <NotificationBox userId={userId} />
     </div>
   );
 };

@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
+import NotificationBox from '../../components/notification/notificationBox';
 
 const EmployeePayroll = () => {
   const [data,setDate] = useState('');
@@ -114,6 +115,7 @@ const EmployeePayroll = () => {
      
     </main></>)
   }
+  <NotificationBox userId={userId} />
 
       
         </div>

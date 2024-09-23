@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import EmployeeSidebar from '../../components/Sidebar/EmployeeSidebar'
 import axios from 'axios'
 import { useSelector } from 'react-redux';
+import NotificationBox from '../../components/notification/notificationBox';
 
 const EmployeeDashboard = () => {
 
@@ -277,6 +278,7 @@ const EmployeeDashboard = () => {
       </div>
     </div>
   </main>
+  <NotificationBox userId={userId} />
 </div>
 
         </div>

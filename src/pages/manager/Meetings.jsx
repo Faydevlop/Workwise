@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
+import NotificationBox from '../../components/notification/notificationBox';
 
 const Meetings = () => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
@@ -353,6 +354,7 @@ const Meetings = () => {
  </div>
 
         </div>
+        <NotificationBox userId={userId} />
         
     
     </div>

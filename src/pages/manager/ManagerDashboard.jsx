@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import ManagerSidebar from '../../components/Sidebar/ManagerSidebar'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
+import NotificationBox from '../../components/notification/notificationBox'
 
 const ManagerDashboard = () => {
   const [meetings,setMeetings] = useState([])
@@ -223,6 +224,7 @@ const ManagerDashboard = () => {
 </div>
 
         </div>
+        <NotificationBox userId={userId} />
         
     
     </div>

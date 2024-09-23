@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
+import NotificationBox from '../../components/notification/notificationBox';
 
 const LeaveManagement = () => {
   const [leaves, setLeaves] = useState([]);
@@ -327,6 +328,7 @@ const LeaveManagement = () => {
             </div>
           </div>
       </div>
+      <NotificationBox userId={userId} />
     </div>
   );
 };

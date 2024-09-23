@@ -102,24 +102,30 @@ const HrChat = () => {
     fetchUser();
   }, []);
 
+  // new code 1
   useEffect(() => {
     socket.on("message", (data) => {
-
-      if (data.sender === currentUser._id) {
-        setMessages((prevMessages) =>
-          prevMessages.map((msg) =>
-            msg._id === data._id ? { ...msg, messageStatus: "seen" } : msg
-          )
-        );
+      // Update messages if the message is for the currently selected user
+      if (data.sender === currentUser._id || data.receiver === currentUser._id) {
+        setMessages((prevMessages) => [...prevMessages, data]);
       }
-
-      setMessages((prevMessages) => [...prevMessages, data]);
+  
+      // Update the user list to mark the user with a new message
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user._id === data.sender || user._id === data.receiver
+            ? { ...user, hasNewMessage: true } // Add 'hasNewMessage' property to show notification
+            : user
+        )
+      );
     });
-
+  
     return () => {
       socket.off("message");
     };
-  }, []);
+  }, [currentUser]);
+  
+  
 
   useEffect(() => {
     if (currentUser) {
@@ -190,30 +196,33 @@ useEffect(() => {
   const handleChange = (event) => {
     setNewMessage(event.target.value);
   };
+//  new code 2
+const selectedUser = async (userId) => {
+  const user = users.find((user) => user._id === userId);
 
-  const selectedUser = async(userId) => {
-    const user = users.find((user) => user._id === userId);
+  if (user) {
+    setCurrentUser(user);
 
-    // Set the found user as the currentUser, or null if not found
-    if (user) {
-      setCurrentUser(user);
-      console.log("Selected User:", user);
-      try {
-        await axios.post(`${import.meta.env.VITE_BASE_URL}/chat/mark-as-seen`, {
-          senderId: userId,
-          receiverId: sender,
-        });
-  
-        // Update message list to mark them as seen locally
-      
-      } catch (error) {
-        console.error('Failed to mark messages as seen:', error);
-      }
+    // Mark this user as having no new messages
+    setUsers((prevUsers) =>
+      prevUsers.map((u) =>
+        u._id === userId ? { ...u, hasNewMessage: false } : u
+      )
+    );
 
-    } else {
-      console.log(`User with ID ${userId} not found`);
+    // Fetch messages and mark as seen
+    try {
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/chat/mark-as-seen`, {
+        senderId: userId,
+        receiverId: sender,
+      });
+    } catch (error) {
+      console.error('Failed to mark messages as seen:', error);
     }
-  };
+  }
+};
+
+  
 
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
@@ -299,25 +308,40 @@ useEffect(() => {
               </form>
             </div>
             {users
-  .filter((user) => user._id !== sender) // Exclude the current manager from the list
-  .filter((user) => 
-    `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) // Filter users based on the search input
-  )
-  .map((user) => (
-    <div key={user._id} onClickCapture={() => selectedUser(user._id)} className="grid gap-2 px-3">
-      <a className="flex items-center gap-4 p-2 rounded-lg hover:bg-muted/50 bg-muted">
-        <span className="relative flex shrink-0 overflow-hidden rounded-full border w-10 h-10">
-          <img className="aspect-square h-full w-full" alt="Image" src={user.profileImageUrl ? user.profileImageUrl : 'https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg'} />
-        </span>
-        <div className="grid gap-0.5">
-          <p className="text-sm font-medium leading-none">{user.firstName} {user.lastName}</p>
-          <p className="text-xs text-muted-foreground">{user.position}</p>
-        </div>
-      </a>
-    </div>
-  ))
-}
+              .filter((user) => user._id !== sender)
+              .map((user) => (
+                <div
+                  onClickCapture={() => selectedUser(user._id)}
+                  className="grid gap-2 px-3"
+                >
+                  <a class="flex items-center gap-4 p-2 rounded-lg hover:bg-muted/50 bg-muted">
+                    <span class="relative flex shrink-0 overflow-hidden rounded-full border w-10 h-10">
+                      <img
+                        class="aspect-square h-full w-full"
+                        alt="Image"
+                        src={
+                          user.profileImageUrl
+                            ? user.profileImageUrl
+                            : "https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg"
+                        }
+                      />
+                    </span>
+                    <div class="grid gap-0.5">
+                      <p class="text-sm font-medium leading-none">
+                        {user.firstName}
+                        {user.lastName}
+                      </p>
+                      <p class="text-xs text-muted-foreground">
+                        {user.position}
+                      </p>
 
+                    </div>
+                    {user.hasNewMessage && (
+        <span className="text-xs font-semibold justify-start text-red-500">⦿ New Message</span>
+      )}
+                  </a>
+                </div>
+              ))}
           </div>
 
           {currentUser !== null ? (

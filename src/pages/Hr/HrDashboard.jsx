@@ -3,6 +3,7 @@ import HrSidebar from '../../components/Sidebar/HrSidebar'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import NotificationBox from '../../components/notification/notificationBox'
 
 const HrDashboard = () => {
   const [meetings,setMeetings]= useState([])
@@ -268,6 +269,7 @@ const HrDashboard = () => {
 </div>
 
         </div>
+        <NotificationBox userId={userId} />
         
     
     </div>

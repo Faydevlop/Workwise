@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
+import NotificationBox from '../../components/notification/notificationBox';
 
 const EmployeeTaskmanagment = () => {
 
@@ -306,6 +307,7 @@ const EmployeeTaskmanagment = () => {
       </div>
     </DragDropContext>
       </div>
+      <NotificationBox userId={userId} />
     </div>
   )
 }

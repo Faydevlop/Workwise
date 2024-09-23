@@ -7,11 +7,16 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
+import NotificationBox from '../../components/notification/notificationBox';
+import { useSelector } from 'react-redux';
 
 const Recruitment = () => {
   const [listData,setListData] = useState([])
   const [showData,setshowData] = useState([])
   const [loading ,setLoading] = useState(false)
+  const {hr} = useSelector((state)=>state.hrAuth)
+  const userId = hr.hr._id
+
 
   const fetchdata = async()=>{
     setLoading(true)
@@ -305,6 +310,7 @@ const Recruitment = () => {
 
 
         </div>
+        <NotificationBox userId={userId} />
         
     
     </div>

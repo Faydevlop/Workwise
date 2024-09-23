@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom'
 
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
+import NotificationBox from '../../components/notification/notificationBox';
+import { useSelector } from 'react-redux';
 
 const PayrollManagement = () => {
 
@@ -12,6 +14,9 @@ const PayrollManagement = () => {
   const [data,setData] = useState([])
   const [listData,setListData] = useState([])
   const [loading ,setLoading] = useState(false)
+  const {hr} = useSelector((state)=>state.hrAuth)
+  const userId = hr.hr._id
+
   
   
 
@@ -214,6 +219,7 @@ const PayrollManagement = () => {
     </div>
 
         </div>
+        <NotificationBox userId={userId} />
         
     
     </div>

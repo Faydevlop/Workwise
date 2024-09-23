@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
+import NotificationBox from '../../components/notification/notificationBox'
 
 
 const Leaves = () => {
@@ -156,6 +157,7 @@ const Leaves = () => {
         
 
         </div>
+        <NotificationBox userId={userId} />
         
     
     </div>
