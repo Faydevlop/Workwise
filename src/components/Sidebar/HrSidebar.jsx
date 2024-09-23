@@ -79,9 +79,10 @@ export default function HRSidebar() {
         </a>
         <nav className="mt-8 flex flex-col gap-4">
           <Link to='/hr/dashboard'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/hr/dashboard' ? 'bg-muted text-foreground' : ''}`}
-            >
+          <a
+  className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-muted hover:text-foreground ${currentPath === '/hr/dashboard' ? 'bg-blue-100 text-foreground' : ''}`}
+>
+
                <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -127,9 +128,9 @@ export default function HRSidebar() {
             </a>
           </Link> */}
           <Link to='/hr/recruitment'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/hr/attendance' ? 'bg-muted text-foreground' : ''}`}
-            >
+          <a
+  className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-muted hover:text-foreground ${currentPath === '/hr/recruitment' ? 'bg-blue-100 text-foreground' : ''}`}
+>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -151,9 +152,9 @@ export default function HRSidebar() {
             </a>
           </Link>
           <Link to='/hr/payrollmanagement'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/hr/payroll' ? 'bg-muted text-foreground' : ''}`}
-            >
+          <a
+  className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-muted hover:text-foreground ${currentPath === '/hr/payrollmanagement' ? 'bg-blue-100 text-foreground' : ''}`}
+>
                 <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -175,9 +176,9 @@ export default function HRSidebar() {
           
           
           <Link to='/hr/meetings'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/hr/profile' ? 'bg-muted text-foreground' : ''}`}
-            >
+          <a
+  className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-muted hover:text-foreground ${currentPath === '/hr/meetings' ? 'bg-blue-100 text-foreground' : ''}`}
+>
              <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -199,9 +200,9 @@ export default function HRSidebar() {
           </Link>
           
           <Link to='/hr/leaves'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/hr/profile' ? 'bg-muted text-foreground' : ''}`}
-            >
+          <a
+  className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-muted hover:text-foreground ${currentPath === '/hr/leaves' ? 'bg-blue-100 text-foreground' : ''}`}
+>
               <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -224,9 +225,9 @@ export default function HRSidebar() {
             </a>
           </Link>
           <Link to='/hr/profile'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/hr/profile' ? 'bg-muted text-foreground' : ''}`}
-            >
+          <a
+  className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-muted hover:text-foreground ${currentPath === '/hr/profile' ? 'bg-blue-100 text-foreground' : ''}`}
+>
              <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -246,9 +247,9 @@ export default function HRSidebar() {
             </a>
           </Link>
           <Link to='/hr/chat'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/hr/profile' ? 'bg-muted text-foreground' : ''}`}
-            >
+          <a
+  className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-muted hover:text-foreground ${currentPath === '/hr/chat' ? 'bg-blue-100 text-foreground' : ''}`}
+>
              <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"

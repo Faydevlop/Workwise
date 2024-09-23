@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import HrSidebar from '../../components/Sidebar/HrSidebar'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 const HrDashboard = () => {
   const [meetings,setMeetings]= useState([])
@@ -50,7 +51,17 @@ const HrDashboard = () => {
       </div>
 
         <div style={{ flex: 1,overflow: 'auto', marginLeft: '0' }}>
-                 
+        <header className="flex border bg-[#2F3849]   mb-5 border-gray-200 pl-4 flex-wrap sm:justify-start sm:flex-nowrap w-full  text-sm py-3">
+  <nav className="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between">
+    <a className="flex-none font-semibold text-xl  text-white focus:outline-none focus:opacity-80" href="/" aria-label="Brand">
+      Dashboard and Overview
+    </a>
+    <div className="flex flex-row items-center gap-5 mt-5 sm:justify-start sm:mt-0 sm:ps-5">
+     
+     
+    </div>
+  </nav>
+</header>
        
 <div className="flex flex-col w-full min-h-screen bg-muted/40">
   <header className="sticky mt-5 mb-5 top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">

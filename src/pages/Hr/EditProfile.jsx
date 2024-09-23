@@ -183,7 +183,7 @@ const EditProfile = () => {
                                     <input
                                         type="date"
                                         className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
-                                        value={dob}
+                                        value={dob ? new Date(dob).toISOString().split('T')[0] : ''}
                                         onChange={(e) => setDob(e.target.value)}
                                     />
                                 </div>

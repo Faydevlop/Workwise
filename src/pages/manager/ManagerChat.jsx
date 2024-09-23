@@ -15,6 +15,8 @@ const ManagerChat = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
 
   const { manager } = useSelector((state) => state.managerAuth);
   const sender = manager.manager._id;
@@ -106,14 +108,14 @@ const ManagerChat = () => {
         receiverId: sender,         // The logged-in user (receiver of messages)
       });
     }
-  }, [currentUser]);
+  }, [messages,currentUser]);
 
   useEffect(() => {
     // Listen for the 'messages-seen' event and update the local message state
     socket.on('messages-seen', ({ senderId }) => {
       setMessages(prevMessages =>
         prevMessages.map(msg =>
-          msg.sender === senderId ? { ...msg, seen: true } : msg
+          msg.sender === senderId ? { ...msg, messageStatus: 'seen' } : msg
         )
       );
     });
@@ -141,6 +143,8 @@ const ManagerChat = () => {
       socket.off("video-call-initiate");
     };
   }, [navigate]);
+
+  
 
   useEffect(() => {
     socket.on("message", (data) => {
@@ -177,6 +181,31 @@ const ManagerChat = () => {
     }
   }, [currentUser]);
 
+
+  useEffect(() => {
+    if (currentUser) {
+      socket.emit('message-seen', {
+        senderId: currentUser._id,  // The user whose messages are being read
+        receiverId: sender,         // The logged-in user (receiver of the messages)
+      });
+    }
+  }, [messages,currentUser]);
+
+useEffect(() => {
+  // Listen for the 'messages-seen' event and update the local message state
+  socket.on('messages-seen', ({ senderId }) => {
+    setMessages(prevMessages =>
+      prevMessages.map(msg =>
+        msg.sender === senderId ? { ...msg, messageStatus: 'seen' } : msg
+      )
+    );
+  });
+
+  return () => {
+    socket.off('messages-seen');
+  };
+}, []);
+
   const sendMessage = (event) => {
     event.preventDefault();
     if (newMessage.trim() && currentUser) {
@@ -184,6 +213,7 @@ const ManagerChat = () => {
         sender,
         receiver: currentUser._id,
         content: newMessage,
+        messageStatus:"delivered"
       };
 
       socket.emit("message", message);
@@ -210,11 +240,7 @@ const ManagerChat = () => {
         });
   
         // Update message list to mark them as seen locally
-        setMessages(prevMessages =>
-          prevMessages.map(msg =>
-            msg.sender === userId ? { ...msg, seen: true } : msg
-          )
-        );
+      
       } catch (error) {
         console.error('Failed to mark messages as seen:', error);
       }
@@ -265,30 +291,29 @@ const ManagerChat = () => {
                 <input
                   className="w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm placeholder-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   placeholder="Search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)} 
                 />
               </form>
             </div>
-            {
-  users
-  .filter((user) => user._id !== sender)
-  .map((user) => {
-    const hasUnreadMessages = messages.some(msg => msg.sender === user._id && !msg.seen);
-    
-    return (
-      <div onClickCapture={() => selectedUser(user._id)} className="grid gap-2 px-3">
-        <a className="flex items-center gap-4 p-2 rounded-lg hover:bg-muted/50 bg-muted">
-          <span className="relative flex shrink-0 overflow-hidden rounded-full border w-10 h-10">
-            <img className="aspect-square h-full w-full" alt="Image" src={user.profileImageUrl ? user.profileImageUrl : 'https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg'} />
-          </span>
-          <div className="grid gap-0.5">
-            <p className="text-sm font-medium leading-none">{user.firstName} {user.lastName}</p>
-            <p className="text-xs text-muted-foreground">{user.position}</p>
-          </div>
-          {hasUnreadMessages && <span className="text-red-500">● New Message</span>}
-        </a>
-      </div>
-    );
-  })
+            {users
+  .filter((user) => user._id !== sender) // Exclude the current manager from the list
+  .filter((user) => 
+    `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) // Filter users based on the search input
+  )
+  .map((user) => (
+    <div key={user._id} onClickCapture={() => selectedUser(user._id)} className="grid gap-2 px-3">
+      <a className="flex items-center gap-4 p-2 rounded-lg hover:bg-muted/50 bg-muted">
+        <span className="relative flex shrink-0 overflow-hidden rounded-full border w-10 h-10">
+          <img className="aspect-square h-full w-full" alt="Image" src={user.profileImageUrl ? user.profileImageUrl : 'https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg'} />
+        </span>
+        <div className="grid gap-0.5">
+          <p className="text-sm font-medium leading-none">{user.firstName} {user.lastName}</p>
+          <p className="text-xs text-muted-foreground">{user.position}</p>
+        </div>
+      </a>
+    </div>
+  ))
 }
 
           </div>
@@ -412,7 +437,11 @@ const ManagerChat = () => {
                               : "bg-blue-100"
                           }`}
                         >
+                          
                           <p className="text-sm">{msg.content}</p>
+                          {msg.sender === sender && msg.messageStatus && (
+        <span className="text-blue-500 text-xs">{msg.messageStatus}</span>
+      )}
                         </div>
                         {msg.sender === sender && (
                           <div className="relative flex-shrink-0 w-8 h-8 rounded-full overflow-hidden">

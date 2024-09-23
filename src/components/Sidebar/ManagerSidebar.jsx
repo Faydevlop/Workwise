@@ -85,8 +85,8 @@ export default function ManagerSidebar() {
         </a>
         <nav className="mt-8 flex flex-col gap-4">
           <Link to='/manager/dashboard'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/manager/dashboard' ? 'bg-muted text-foreground' : ''}`}
+          <a
+              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/manager/dashboard' ? 'bg-blue-100 text-foreground' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -133,8 +133,8 @@ export default function ManagerSidebar() {
             </a>
           </Link> */}
           <Link to='/manager/leavemanagement'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/manager/leavemanagement' ? 'bg-muted text-foreground' : ''}`}
+          <a
+              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/manager/leavemanagement' ? 'bg-blue-100 text-foreground' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -157,8 +157,8 @@ export default function ManagerSidebar() {
             </a>
           </Link>
           <Link to='/manager/tasksmanagement'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/manager/projecttaskmanagement' ? 'bg-muted text-foreground' : ''}`}
+          <a
+              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/manager/tasksmanagement' ? 'bg-blue-100 text-foreground' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -179,8 +179,8 @@ export default function ManagerSidebar() {
             </a>
           </Link>
           <Link to='/manager/payrollmanagement'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/manager/projecttaskmanagement' ? 'bg-muted text-foreground' : ''}`}
+          <a
+              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/manager/payrollmanagement' ? 'bg-blue-100 text-foreground' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -201,8 +201,8 @@ export default function ManagerSidebar() {
             </a>
           </Link>
           <Link to='/manager/meetings'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/manager/meetingschedules' ? 'bg-muted text-foreground' : ''}`}
+          <a
+              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/manager/meetings' ? 'bg-blue-100 text-foreground' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -225,8 +225,8 @@ export default function ManagerSidebar() {
             </a>
           </Link>
           <Link to='/manager/profile'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/manager/feedback' ? 'bg-muted text-foreground' : ''}`}
+          <a
+              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/manager/profile' ? 'bg-blue-100 text-foreground' : ''}`}
             >
              
               <svg
@@ -248,8 +248,8 @@ export default function ManagerSidebar() {
             </a>
           </Link>
           <Link to='/manager/chat'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/manager/feedback' ? 'bg-muted text-foreground' : ''}`}
+          <a
+              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/manager/chat' ? 'bg-blue-100 text-foreground' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

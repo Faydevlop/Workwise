@@ -15,6 +15,8 @@ const HrChat = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
 
   const { hr } = useSelector((state) => state.hrAuth);
   const sender = hr.hr._id;
@@ -56,6 +58,8 @@ const HrChat = () => {
 
     return () => clearInterval(intervalId);
   }, [navigate]);
+
+
 
   const generateRoomId = () => {
     // Generate a random string of length 12
@@ -100,7 +104,15 @@ const HrChat = () => {
 
   useEffect(() => {
     socket.on("message", (data) => {
-      console.log("Message recived", data);
+
+      if (data.sender === currentUser._id) {
+        setMessages((prevMessages) =>
+          prevMessages.map((msg) =>
+            msg._id === data._id ? { ...msg, messageStatus: "seen" } : msg
+          )
+        );
+      }
+
       setMessages((prevMessages) => [...prevMessages, data]);
     });
 
@@ -140,6 +152,7 @@ const HrChat = () => {
         sender,
         receiver: currentUser._id,
         content: newMessage,
+        messageStatus:"delivered"
       };
 
       socket.emit("message", message);
@@ -147,17 +160,56 @@ const HrChat = () => {
     }
   };
 
+
+useEffect(() => {
+  if (currentUser) {
+    socket.emit('message-seen', {
+      senderId: currentUser._id,  // The user whose messages are being read
+      receiverId: sender,         // The logged-in user (receiver of the messages)
+    });
+  }
+}, [messages,currentUser]);
+
+
+
+useEffect(() => {
+  // Listen for the 'messages-seen' event and update the local message state
+  socket.on('messages-seen', ({ senderId }) => {
+    setMessages(prevMessages =>
+      prevMessages.map(msg =>
+        msg.sender === senderId ? { ...msg, messageStatus: 'seen' } : msg
+      )
+    );
+  });
+
+  return () => {
+    socket.off('messages-seen');
+  };
+}, []);
+
   const handleChange = (event) => {
     setNewMessage(event.target.value);
   };
 
-  const selectedUser = (userId) => {
+  const selectedUser = async(userId) => {
     const user = users.find((user) => user._id === userId);
 
     // Set the found user as the currentUser, or null if not found
     if (user) {
       setCurrentUser(user);
       console.log("Selected User:", user);
+      try {
+        await axios.post(`${import.meta.env.VITE_BASE_URL}/chat/mark-as-seen`, {
+          senderId: userId,
+          receiverId: sender,
+        });
+  
+        // Update message list to mark them as seen locally
+      
+      } catch (error) {
+        console.error('Failed to mark messages as seen:', error);
+      }
+
     } else {
       console.log(`User with ID ${userId} not found`);
     }
@@ -241,40 +293,31 @@ const HrChat = () => {
                 <input
                   className="w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm placeholder-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   placeholder="Search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)} 
                 />
               </form>
             </div>
             {users
-              .filter((user) => user._id !== sender)
-              .map((user) => (
-                <div
-                  onClickCapture={() => selectedUser(user._id)}
-                  className="grid gap-2 px-3"
-                >
-                  <a class="flex items-center gap-4 p-2 rounded-lg hover:bg-muted/50 bg-muted">
-                    <span class="relative flex shrink-0 overflow-hidden rounded-full border w-10 h-10">
-                      <img
-                        class="aspect-square h-full w-full"
-                        alt="Image"
-                        src={
-                          user.profileImageUrl
-                            ? user.profileImageUrl
-                            : "https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg"
-                        }
-                      />
-                    </span>
-                    <div class="grid gap-0.5">
-                      <p class="text-sm font-medium leading-none">
-                        {user.firstName}
-                        {user.lastName}
-                      </p>
-                      <p class="text-xs text-muted-foreground">
-                        {user.position}
-                      </p>
-                    </div>
-                  </a>
-                </div>
-              ))}
+  .filter((user) => user._id !== sender) // Exclude the current manager from the list
+  .filter((user) => 
+    `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) // Filter users based on the search input
+  )
+  .map((user) => (
+    <div key={user._id} onClickCapture={() => selectedUser(user._id)} className="grid gap-2 px-3">
+      <a className="flex items-center gap-4 p-2 rounded-lg hover:bg-muted/50 bg-muted">
+        <span className="relative flex shrink-0 overflow-hidden rounded-full border w-10 h-10">
+          <img className="aspect-square h-full w-full" alt="Image" src={user.profileImageUrl ? user.profileImageUrl : 'https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg'} />
+        </span>
+        <div className="grid gap-0.5">
+          <p className="text-sm font-medium leading-none">{user.firstName} {user.lastName}</p>
+          <p className="text-xs text-muted-foreground">{user.position}</p>
+        </div>
+      </a>
+    </div>
+  ))
+}
+
           </div>
 
           {currentUser !== null ? (
@@ -397,6 +440,9 @@ const HrChat = () => {
                           }`}
                         >
                           <p className="text-sm">{msg.content}</p>
+                          {msg.sender === sender && msg.messageStatus && (
+        <span className="text-blue-500 text-xs">{msg.messageStatus}</span>
+      )}
                         </div>
                         {msg.sender === sender && (
                           <div className="relative flex-shrink-0 w-8 h-8 rounded-full overflow-hidden">

@@ -105,15 +105,24 @@ const LeaveManagement = () => {
       <div className="lg:hidden">
         <ManagerSidebar />
       </div>
-      <div className="flex-1 p-6 overflow-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Leaves and Overview</h1>
-          <Link to={'/manager/leave/applyleave'}>
-            <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-primary/90 h-10 px-4 py-2 bg-blue-600 text-white">
-              Apply Leave
-            </button>
-          </Link>
-        </div>
+      
+      <div className="flex-1 p-5 overflow-auto">
+      
+        <header className="flex border bg-[#2F3849]   mb-5 border-gray-200 pl-4 flex-wrap sm:justify-start sm:flex-nowrap w-full  text-sm py-3">
+  <nav className="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between">
+    <a className="flex-none font-semibold text-xl  text-white focus:outline-none focus:opacity-80" href="/" aria-label="Brand">
+      Leaves and Overview
+    </a>
+    <div className="flex flex-row items-center gap-5 mt-5 sm:justify-start sm:mt-0 sm:ps-5">
+      <Link to={'/manager/leave/applyleave'} >
+      <button className="px-4 py-2 rounded-full  text-white  hover:bg-white transition-colors duration-300 hover:text-slate-600 focus:outline-none focus:bg-blue-600">
+        Apply Leave
+      </button>
+      </Link>
+     
+    </div>
+  </nav>
+</header>
         <Backdrop
   sx={{
     color: '#fff',

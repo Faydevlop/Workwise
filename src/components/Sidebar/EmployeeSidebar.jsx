@@ -84,8 +84,8 @@ export default function EmployeeSidebar() {
         </a>
         <nav className="mt-8 flex flex-col gap-4">
           <Link to='/employee/dashboard'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/employee/dashboard' ? 'bg-muted text-foreground' : ''}`}
+          <a
+              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/employee/dashboard' ? 'bg-blue-100 text-foreground' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -108,8 +108,8 @@ export default function EmployeeSidebar() {
             </a>
           </Link>
           <Link to='/employee/tasks'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/employee/tasks' ? 'bg-muted text-foreground' : ''}`}
+          <a
+              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/employee/tasks' ? 'bg-blue-100 text-foreground' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -130,8 +130,8 @@ export default function EmployeeSidebar() {
             </a>
           </Link>
           <Link to='/employee/meetings'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/employee/chat' ? 'bg-muted text-foreground' : ''}`}
+          <a
+              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/employee/meetings' ? 'bg-blue-100 text-foreground' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -153,8 +153,8 @@ export default function EmployeeSidebar() {
             </a>
           </Link>
           <Link to='/employee/payroll'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/employee/chat' ? 'bg-muted text-foreground' : ''}`}
+          <a
+              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/employee/payroll' ? 'bg-blue-100 text-foreground' : ''}`}
             >
               <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -175,8 +175,8 @@ export default function EmployeeSidebar() {
             </a>
           </Link>
           <Link to='/employee/leave'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/employee/leave' ? 'bg-muted text-foreground' : ''}`}
+          <a
+              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/employee/leave' ? 'bg-blue-100 text-foreground' : ''}`}
             >
               <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -200,8 +200,8 @@ export default function EmployeeSidebar() {
             </a>
           </Link>
           <Link to='/employee/profile'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/employee/profile' ? 'bg-muted text-foreground' : ''}`}
+           <a
+              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/employee/profile' ? 'bg-blue-100 text-foreground' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -223,8 +223,8 @@ export default function EmployeeSidebar() {
           </Link>
           
           <Link to='/employee/chat'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/employee/chat' ? 'bg-muted text-foreground' : ''}`}
+          <a
+              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/employee/chat' ? 'bg-blue-100 text-foreground' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -246,8 +246,8 @@ export default function EmployeeSidebar() {
             </a>
           </Link>
           <Link to='/employee/jobs'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/employee/chat' ? 'bg-muted text-foreground' : ''}`}
+          <a
+              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/employee/jobs' ? 'bg-blue-100 text-foreground' : ''}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

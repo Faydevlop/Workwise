@@ -85,9 +85,9 @@ export default function AdminSidebar() {
         </a>
         <nav className="mt-8 flex flex-col gap-4">
           <Link to='/admin/dashboard'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/admin/dashboard' ? 'bg-muted text-foreground' : ''}`}
-            >
+          <a
+  className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-muted hover:text-foreground ${currentPath === '/admin/dashboard' ? 'bg-blue-100 text-foreground' : ''}`}
+>
                <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -109,9 +109,9 @@ export default function AdminSidebar() {
             </a>
           </Link>
           <Link to='/admin/Usermanagment'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/admin/usermanagement' ? 'bg-muted text-foreground' : ''}`}
-            >
+          <a
+  className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-muted hover:text-foreground ${currentPath === '/admin/Usermanagment' ? 'bg-blue-100 text-foreground' : ''}`}
+>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -133,9 +133,9 @@ export default function AdminSidebar() {
             </a>
           </Link>
           <Link to='/admin/Leavemanagment'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/admin/leavemanagement' ? 'bg-muted text-foreground' : ''}`}
-            >
+          <a
+  className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-muted hover:text-foreground ${currentPath === '/admin/Leavemanagment' ? 'bg-blue-100 text-foreground' : ''}`}
+>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -157,9 +157,9 @@ export default function AdminSidebar() {
             </a>
           </Link>
           <Link to='/admin/Departmentmanagment'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/admin/departmentmanagement' ? 'bg-muted text-foreground' : ''}`}
-            >
+          <a
+  className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-muted hover:text-foreground ${currentPath === '/admin/Departmentmanagment' ? 'bg-blue-100 text-foreground' : ''}`}
+>
                <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -188,9 +188,9 @@ export default function AdminSidebar() {
             </a>
           </Link>
           <Link to='/admin/Payrollmanagment'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/admin/payrollmanagement' ? 'bg-muted text-foreground' : ''}`}
-            >
+          <a
+  className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-muted hover:text-foreground ${currentPath === '/admin/Payrollmanagment' ? 'bg-blue-100 text-foreground' : ''}`}
+>
                 <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -210,9 +210,9 @@ export default function AdminSidebar() {
             </a>
           </Link>
           <Link to='/admin/Projectmanagment'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/admin/projectmanagement' ? 'bg-muted text-foreground' : ''}`}
-            >
+          <a
+  className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-muted hover:text-foreground ${currentPath === '/admin/Projectmanagment' ? 'bg-blue-100 text-foreground' : ''}`}
+>
              <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -232,9 +232,9 @@ export default function AdminSidebar() {
             </a>
           </Link>
           <Link to='/admin/profile'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/admin/profile' ? 'bg-muted text-foreground' : ''}`}
-            >
+          <a
+  className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-muted hover:text-foreground ${currentPath === '/admin/profile' ? 'bg-blue-100 text-foreground' : ''}`}
+>
               <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -253,10 +253,10 @@ export default function AdminSidebar() {
               Profile
             </a>
           </Link>
-          <Link to='/admin/chat'>
-            <a
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground ${currentPath === '/admin/chat' ? 'bg-muted text-foreground' : ''}`}
-            >
+          {/* <Link to='/admin/chat'>
+          <a
+  className={`flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors duration-300 ease-in-out hover:bg-muted hover:text-foreground ${currentPath === '/admin/chat' ? 'bg-blue-100 text-foreground' : ''}`}
+>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -276,7 +276,7 @@ export default function AdminSidebar() {
               </svg>
               Chat
             </a>
-          </Link>
+          </Link> */}
         </nav>
         <button
   className="mt-auto flex items-center gap-3 rounded-md px-3 py-2 text-red-600 hover:bg-red-100"
