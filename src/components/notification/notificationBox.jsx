@@ -6,7 +6,7 @@ import { io } from 'socket.io-client';
 const NotificationBox = ({ userId }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
-  const socket = useMemo(() => io('http://localhost:4000/'), []);
+  const socket = useMemo(() => io(import.meta.env.VITE_BASE_URL), []);
 
   const toggleNotifications = () => {
     setShowNotifications(!showNotifications);

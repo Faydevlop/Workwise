@@ -7,7 +7,7 @@ import io from "socket.io-client";
 import { useSelector } from "react-redux";
 
 const HrChat = () => {
-  const socket = useMemo(() => io("http://localhost:4000/"), []);
+  const socket = useMemo(() => io(import.meta.env.VITE_BASE_URL), []);
   const navigate = useNavigate();
   const [showSidebar, setShowSidebar] = useState(false);
   const sidebarRef = useRef(null);

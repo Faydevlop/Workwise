@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const ManagerChat = () => {
-  const socket = useMemo(() => io("http://localhost:4000/"), []);
+  const socket = useMemo(() => io(import.meta.env.VITE_BASE_URL), []);
   const navigate = useNavigate();
   const [showSidebar, setShowSidebar] = useState(false);
   const sidebarRef = useRef(null);
