@@ -30,7 +30,7 @@ const ManagerChat = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await api.get(`/admin/getusers`, {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getusers`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
