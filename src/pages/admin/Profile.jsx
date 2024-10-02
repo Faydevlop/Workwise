@@ -1,19 +1,71 @@
-import React, { useState } from 'react'
-import AdminSidebar from '../../components/Sidebar/AdminSidebar'
+import React, { useState } from 'react';
+import AdminSidebar from '../../components/Sidebar/AdminSidebar';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import axios from 'axios'; // Assuming you're using axios for API calls
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Profile = () => {
   const [showPasswordSection, setShowPasswordSection] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const togglePasswordSection = () => {
     setShowPasswordSection(!showPasswordSection);
   };
 
   const { admin } = useSelector((state) => state.auth.admin);
-  console.log(admin);
-  
+
+  const handleChangePassword = async () => {
+    if (newPassword !== confirmPassword) {
+      setError('New password and confirm password do not match');
+      return;
+    }
+
+    try {
+      // Assuming you have a backend route like `/api/admin/change-password/:userId`
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/admin/changepass/${admin._id}`, {
+        oldPassword: currentPassword,
+        newPassword: newPassword,
+      });
+
+      setSuccess(response.data.message); // On success
+      setError('');
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      toast.success("Password Changed successfully!", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      
+       
+      });
+      setShowPasswordSection(false)
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to change password');
+      setSuccess('');
+      const errorMessage = err.response?.data?.message
+      toast.error(errorMessage, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
@@ -24,64 +76,19 @@ const Profile = () => {
         <AdminSidebar />
       </div>
 
-      <div className='bg-blue-50' style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
+      <div className="bg-blue-50" style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
         <div className="bg-white ml-7 rounded-lg shadow-md p-6 md:p-8">
           <div className="relative">
             <img
-              src="https://via.placeholder.com/1920x400"
+              src="https://images.pexels.com/photos/936722/pexels-photo-936722.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
               alt="Cover"
               className="rounded-t-lg w-full h-48 object-cover"
             />
-            <label htmlFor="cover-upload" className="absolute top-2 right-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2 cursor-pointer">
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
-              <input type="file" id="cover-upload" className="hidden" />
-            </label>
-            <div className="absolute top-32 left-1/2 transform -translate-x-1/2">
-              <div className="relative">
-                <img
-                  src="https://via.placeholder.com/150"
-                  alt="Profile"
-                  className="rounded-full w-32 h-32 mb-4 md:mb-0 md:mr-6 border-4 border-white"
-                />
-                <label htmlFor="photo-upload" className="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2 cursor-pointer">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                  <input type="file" id="photo-upload" className="hidden" />
-                </label>
-              </div>
-            </div>
+            {/* Profile Picture Section */}
+            
           </div>
+          <ToastContainer/>
+
           <div className="mt-20 md:flex md:justify-between">
             <div>
               <h2 className="text-3xl font-bold mb-2">{admin?.username} </h2>
@@ -90,8 +97,6 @@ const Profile = () => {
                 <div className="flex items-center mb-4">
                   <span>Email: {admin?.email}</span>
                 </div>
-                
-               
               </div>
             </div>
             <div className="mt-8 md:mt-0">
@@ -101,15 +106,14 @@ const Profile = () => {
               >
                 {showPasswordSection ? 'Hide Password Section' : 'Change Password'}
               </button>
-
-              
-              
-
             </div>
-          </div>  
+          </div>
+
           {showPasswordSection && (
             <div>
               <h3 className="text-xl font-bold mb-4">Change Password</h3>
+              {error && <p className="text-red-500">{error}</p>}
+              {success && <p className="text-green-500">{success}</p>}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="current-password" className="block mb-2">
@@ -118,6 +122,8 @@ const Profile = () => {
                   <input
                     type="password"
                     id="current-password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -128,6 +134,8 @@ const Profile = () => {
                   <input
                     type="password"
                     id="new-password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -138,11 +146,16 @@ const Profile = () => {
                   <input
                     type="password"
                     id="confirm-password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
-              <button className="flex mt-5 items-center justify-center text-white bg-blue-500 hover:bg-gray-400 focus:ring-4 focus:ring-primary-300 font-medium rounded-xl text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+              <button
+                onClick={handleChangePassword}
+                className="flex mt-5 items-center justify-center text-white bg-blue-500 hover:bg-gray-400 focus:ring-4 focus:ring-primary-300 font-medium rounded-xl text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
+              >
                 Change Password
               </button>
             </div>
@@ -150,8 +163,7 @@ const Profile = () => {
         </div>
       </div>
     </div>
-   
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

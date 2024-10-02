@@ -130,6 +130,8 @@ const ManagerDashboard = () => {
                     </td>
                   </tr>
                   ))
+                }{
+                  leaves.length === 0 ? (<p>No leaves Reqests</p>) : ''
                 }
                
               
@@ -177,6 +179,8 @@ const ManagerDashboard = () => {
                     <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">{new Date(project.endDate).toLocaleDateString()}</td>
                   </tr>
                   ))
+                }{
+                  projects.length === 0 ? (<p>No projects Assigned</p>) : ''
                 }
 
 

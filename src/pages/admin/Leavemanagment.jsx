@@ -67,6 +67,7 @@ const Leavemanagment = () => {
           leave._id === leaveId ? { ...leave, status: action } : leave
         )
       );
+      fetchdata()
     
     } catch (error) {
       toast.error('Error updating status');
@@ -76,24 +77,26 @@ const Leavemanagment = () => {
     setComment(''); // Reset the comment field
   };
 
+  const fetchdata = async()=>{
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/leave/getAllLeaves`);
+      console.log(response.data.leaves);
+      
+      setLeaves(response.data.leaves)
+
+      
+    } catch (error) {
+      
+    }
+    finally{
+      setLoading(false)
+    }
+  }
+
 
   useEffect(() => {
     setLoading(true)
-    const fetchdata = async()=>{
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/leave/getAllLeaves`);
-        console.log(response.data.leaves);
-        
-        setLeaves(response.data.leaves)
-
-        
-      } catch (error) {
-        
-      }
-      finally{
-        setLoading(false)
-      }
-    }
+   
 
     fetchdata()
 
@@ -106,6 +109,7 @@ const Leavemanagment = () => {
         setWorkingEmployees(response.data.workingEmployees)
         setPendingLeaveRequest(response.data.pendingLeaveRequest)
         setOnLeaveToday(response.data.onLeaveToday)
+     
         
       } catch (error) {
         
@@ -309,7 +313,7 @@ const Leavemanagment = () => {
     {[
       "Sick Leave",
       "Casual Leave",
-      "Maternity Leave",
+      
       "Paternity Leave",
       "Paid Leave",
       "Unpaid Leave",

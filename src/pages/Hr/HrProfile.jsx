@@ -128,9 +128,9 @@ console.log(user.profileImageUrl);
                 <div className="flex items-center mb-4">
                   <span>Address: {user.address}</span>
                 </div>
-                <div className="flex items-center mb-4">
+                {/* <div className="flex items-center mb-4">
                   <span>Department: {user.department}</span>
-                </div>
+                </div> */}
                 <div className="flex items-center mb-4">
                   <span>Position: {user.position}</span>
                 </div>

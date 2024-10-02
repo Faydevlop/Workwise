@@ -20,6 +20,8 @@ const HrDashboard = () => {
       console.log(response.data);
       setMeetings(response.data.upcomingMeetings)
       setJobs(response.data.pendingReqeusts)
+      console.log(response.data.pendingReqeusts);
+      
       setLeave(response.data.leaves)
       
      
@@ -118,7 +120,7 @@ const HrDashboard = () => {
   <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       <div className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-        <div className="flex flex-col space-y-1.5 p-6 px-7">
+        <div className="flex flex-col space-y-1.5 bg-blue-100   p-6 px-7">
           <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">
             Pending Job Vacancy Requests
           </h3>
@@ -133,7 +135,7 @@ const HrDashboard = () => {
                     Position
                   </th>
                   <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
-                    Department
+                    Contact
                   </th>
                   <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
                     Status
@@ -144,52 +146,37 @@ const HrDashboard = () => {
                 </tr>
               </thead>
               <tbody className="[&_tr:last-child]:border-0">
-                <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0 font-medium">Software Engineer</td>
-                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">Engineering</td>
-                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
-                    <div
-                      className="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground"
-                      data-v0-t="badge"
-                    >
-                      Pending
-                    </div>
-                  </td>
-                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0"></td>
-                </tr>
-                <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0 font-medium">Marketing Manager</td>
-                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">Marketing</td>
-                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
-                    <div
-                      className="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground"
-                      data-v0-t="badge"
-                    >
-                      Pending
-                    </div>
-                  </td>
-                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0"></td>
-                </tr>
-                <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0 font-medium">HR Coordinator</td>
-                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">Human Resources</td>
-                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
-                    <div
-                      className="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground"
-                      data-v0-t="badge"
-                    >
-                      Pending
-                    </div>
-                  </td>
-                  <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0"></td>
-                </tr>
+                {
+                  jobs.map((job)=>(
+                    <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0 font-medium">{job.name}</td>
+                    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">{job.email}</td>
+                    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                      <div
+                        className="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground"
+                        data-v0-t="badge"
+                      >
+                        {job.status}
+                      </div>
+                    </td>
+                    <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0"></td>
+                  </tr>
+                 
+
+                  ))
+                }
+              
+               
               </tbody>
             </table>
+            {
+                  jobs.length === 0 ? (<p className='text-center'>'No Reqestes Here'</p>) : ''
+                }
           </div>
         </div>
       </div>
       <div className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-        <div className="flex flex-col space-y-1.5 p-6 px-7">
+        <div className="flex flex-col bg-blue-100  space-y-1.5 p-6 px-7">
           <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">Upcoming Meetings</h3>
           <p className="text-sm text-muted-foreground">View and manage your upcoming meetings.</p>
         </div>
@@ -208,13 +195,20 @@ const HrDashboard = () => {
               </div>
               ))
             }
+            
            
            
           </div>
+          {
+                  meetings.length === 0 ? (<p className='text-center'>No Meetings Scheduled</p>) : ''
+                }
+          
         </div>
+
+        
       </div>
       <div className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-        <div className="flex flex-col space-y-1.5 p-6 px-7">
+        <div className="flex flex-col bg-blue-100 space-y-1.5 p-6 px-7">
           <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">
             Pending Leave Approvals
           </h3>
@@ -261,6 +255,9 @@ const HrDashboard = () => {
                 
               </tbody>
             </table>
+            {
+                  leaves.length === 0 ? (<p className='text-center'>No Leave Reqests</p>) : ''
+                }
           </div>
         </div>
       </div>

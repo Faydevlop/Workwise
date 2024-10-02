@@ -175,6 +175,9 @@ const EmployeeDashboard = () => {
                 
               ))
             }
+            {
+              tasks.length == 0 ? (<p>No tasks Assigned</p>) : ""
+            }
            
            
           </div>
@@ -201,6 +204,8 @@ const EmployeeDashboard = () => {
         </div>
         <div className="p-6">
           <div className="grid gap-2">
+           {
+            payroll[0] ? ( <>
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium">Base Salary</p>
@@ -230,7 +235,8 @@ const EmployeeDashboard = () => {
                 <p className="font-medium">₹{payroll[0]?.deductions}</p>
                 <p className="text-xs text-muted-foreground">This month</p>
               </div>
-            </div>
+            </div></>) : (<p>Payroll Data Not Available</p>)
+           }
           </div>
         </div>
       </div>
@@ -259,17 +265,27 @@ const EmployeeDashboard = () => {
               leaves.map((leave)=>(
                 <div className="flex items-center justify-between">
                 <div>
+                  
                   <p className="font-medium">{leave.leaveType}</p>
                   <p className="text-xs text-muted-foreground">{new Date(leave.startDate).toLocaleDateString()} - {new Date(leave.endDate).toLocaleDateString()}</p>
                 </div>
                 <div
-                  className="inline-flex w-fit items-center whitespace-nowrap rounded-full border font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 px-2 py-1 text-xs"
-                  data-v0-t="badge"
-                >
-                  {leave.status}
-                </div>
+  className={`inline-flex w-fit items-center whitespace-nowrap rounded-full border font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent px-2 py-1 text-xs
+  ${
+    leave.status === 'Approved'
+      ? 'bg-green-200 text-green-800'
+      : 'bg-red-200 text-red-800'
+  }`}
+  data-v0-t="badge"
+>
+  {leave.status}
+</div>
+
               </div>
               ))
+            }
+            {
+              leaves.length == 0 ? (<p>No Leave Reqests </p>) : ""
             }
            
            

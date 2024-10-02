@@ -16,6 +16,18 @@ const Usermanagment = () => {
     const [openDropdownId, setOpenDropdownId] = useState(null);
     const dropdownRef = useRef(null);
     const navigate = useNavigate()
+
+    // State for search query
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Filter the user list based on the search query
+  const filteredUsers = users.filter(user =>
+    `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.position.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (user.department ? user.department.departmentName.toLowerCase().includes(searchQuery.toLowerCase()) : false) ||
+    user.employeeStatus.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   
     const toggleDropdown = (userId) => {
       setOpenDropdownId(openDropdownId === userId ? null : userId);
@@ -139,7 +151,15 @@ const handleDelete = async (userId) =>{
                                     <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
                                 </svg>
                             </div>
-                            <input type="text" id="simple-search" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search" required="" />
+                            <input
+                type="text"
+                id="simple-search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2  dark:border-gray-600 dark:placeholder-gray-400 dark:black-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                placeholder="Search"
+                required=""
+              />
                         </div>
                     </form>
                 </div>
@@ -186,7 +206,7 @@ const handleDelete = async (userId) =>{
                         </tr>
                     </thead>
                     <tbody>
-                    {users.map(user => (
+                    {filteredUsers.map(user => (
           <tr className="border-b text-black relative" key={user._id}>
             <td className="px-4 py-3">{user.firstName} {user.lastName}</td>
             <td className="px-4 py-3">{user.email}</td>

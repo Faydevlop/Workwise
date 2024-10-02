@@ -108,7 +108,8 @@ const AddProjectPage = () => {
                 onClose: () => navigate('/admin/projectmanagment'),
             });
         } catch (error) {
-            toast.error('Error adding project', {
+            const errorMessage = error?.response?.data?.message
+            toast.error(errorMessage, {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,

@@ -35,7 +35,7 @@ const LeaveRequests = () => {
 
 
   const { hr } = useSelector((state) => state.hrAuth);
-  const userId = hr.manager._id
+  const userId = hr.hr._id
 
   const validateForm = () => {
     let formErrors = {};

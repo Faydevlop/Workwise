@@ -70,6 +70,7 @@ const LeaveManagement = () => {
     setLeaveId(leaveId);
     setOpen(true);
   };
+  const pendingLeavesCount = leaves.filter((leave) => leave.status === 'Pending' || leave.status === 'Approved'  ).length;
 
   const handleClose = async (action) => {
     if (action === 'cancel') {
@@ -217,14 +218,11 @@ const LeaveManagement = () => {
             </div>
             <div className="p-6">
               <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span>Monthly Leave Allowance</span>
-                  <span>4</span>
-                </div>
+                
                 
                 <div className="flex justify-between">
                   <span>Leave Taken This Month</span>
-                  <span>{leaves.length > 0 && leaves[0].monthlyLeaveCount ? `${leaves[0].monthlyLeaveCount}` : '0'}</span>
+                  <span>{pendingLeavesCount}</span>
                 </div>
              
 

@@ -79,7 +79,7 @@ const AdminDashBoard = () => {
   <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       <div className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-        <div className="space-y-1.5 p-6 flex flex-row items-center justify-between pb-2">
+        <div className="space-y-1.5 p-6 bg-[#2F3849]  text-white border flex flex-row items-center justify-between pb-2">
           <h3 className="whitespace-nowrap tracking-tight text-sm font-medium">Pending Leave Approvals</h3>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -139,6 +139,8 @@ const AdminDashBoard = () => {
                   </tr>
 
                   ))
+                }{
+                  leaves.length == 0 ? (<p>No Pending Leave Approvals found</p>) : ''
                 }
                
                
@@ -149,7 +151,7 @@ const AdminDashBoard = () => {
         </div>
       </div>
       <div className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-        <div className="space-y-1.5 p-6 flex flex-row items-center justify-between pb-2">
+        <div className="space-y-1.5 bg-[#2F3849]  text-white p-6 flex flex-row items-center justify-between pb-2">
           <h3 className="whitespace-nowrap tracking-tight text-sm font-medium">Department List</h3>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -198,6 +200,8 @@ const AdminDashBoard = () => {
                   </Link>
                 </tr>
                   ))
+                }{
+                  department.length == 0 ? (<p>No Department found</p>) : ''
                 }
                 
                
@@ -207,7 +211,7 @@ const AdminDashBoard = () => {
         </div>
       </div>
       <div className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-        <div className="space-y-1.5 p-6 flex flex-row items-center justify-between pb-2">
+        <div className="space-y-1.5 bg-[#2F3849]  text-white p-6 flex flex-row items-center justify-between pb-2">
           <h3 className="whitespace-nowrap tracking-tight text-sm font-medium">Payroll Details</h3>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -258,16 +262,19 @@ const AdminDashBoard = () => {
                   </tr>
                   ))
                 }
+                {
+                  payroll.length == 0 ? (<p>No Payroll Data found</p>) : ''
+                }
                
                 
               </tbody>
             </table>
           </div>
-        </div>
+        </div>2 
       </div>
     </div>
     <div className="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-      <div className="space-y-1.5 p-6 flex flex-row items-center justify-between pb-2">
+      <div className="space-y-1.5 bg-[#2F3849]  text-white p-6 flex flex-row items-center justify-between pb-2">
         <h3 className="whitespace-nowrap tracking-tight text-sm font-medium">Current Projects</h3>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -316,6 +323,8 @@ const AdminDashBoard = () => {
                   </td>
                 </tr>
                 ))
+              }{
+                projects.length == 0 ? (<p>No Projects found</p>) : ''
               }
              
              

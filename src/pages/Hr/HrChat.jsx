@@ -26,6 +26,35 @@ const HrChat = () => {
   socket.emit('register', hr.hr._id);
 }, [hr.hr._id]);
 
+useEffect(() => {
+  // Listen for last message updates
+  socket.on('update-last-message', (lastMessage) => {
+    setUsers((prevUsers) => {
+      const updatedUsers = prevUsers.map((user) => {
+        if (user._id === lastMessage.sender || user._id === lastMessage.receiver) {
+          return {
+            ...user,
+            lastMessage: lastMessage.content,
+            lastMessageTime: lastMessage.timestamp,
+          };
+        }
+        return user;
+      });
+
+      // Sort users based on lastMessageTime (most recent message at the top)
+      return updatedUsers.sort((a, b) => {
+        if (!a.lastMessageTime) return 1; // Users without lastMessageTime should be at the bottom
+        if (!b.lastMessageTime) return -1;
+        return new Date(b.lastMessageTime) - new Date(a.lastMessageTime);
+      });
+    });
+  });
+
+  return () => {
+    socket.off('update-last-message');
+  };
+}, []);
+
   useEffect(() => {
     const checkForVideoCallNotification = async () => {
       try {
@@ -90,8 +119,18 @@ const HrChat = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        setUsers(response.data.allUsers);
-        console.log(response.data.allUsers);
+        const allUsers = response.data.allUsers;
+
+        // Set the filtered users list (excluding the current sender)
+        const filteredUsers = allUsers.filter((user) => user._id !== sender);
+        setUsers(filteredUsers);
+  
+        // If there are users, select a random user as the initial chat user
+        if (filteredUsers.length > 0) {
+          const randomIndex = Math.floor(Math.random() * filteredUsers.length);
+          setCurrentUser(filteredUsers[randomIndex]);
+        }
+             
       } catch (error) {
         //
       } finally {
@@ -113,8 +152,8 @@ const HrChat = () => {
       // Update the user list to mark the user with a new message
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
-          user._id === data.sender || user._id === data.receiver
-            ? { ...user, hasNewMessage: true } // Add 'hasNewMessage' property to show notification
+          user._id === data.sender && user._id !== sender // Mark only the sender in the user list as having a new message
+            ? { ...user, hasNewMessage: true }
             : user
         )
       );
@@ -260,41 +299,7 @@ const selectedUser = async (userId) => {
             <div className="flex items-center justify-between p-3 border-b">
               <div className="font-medium text-sm">Messenger</div>
               <div className="flex items-center space-x-2">
-                <button className="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 hover:bg-gray-200 rounded-full w-8 h-8">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-4 w-4"
-                  >
-                    <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"></path>
-                    <rect x="2" y="6" width="14" height="12" rx="2"></rect>
-                  </svg>
-                  <span className="sr-only">Video Call</span>
-                </button>
-                <button className="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 hover:bg-gray-200 rounded-full w-8 h-8">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-4 w-4"
-                  >
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                  </svg>
-                  <span className="sr-only">Audio Call</span>
-                </button>
+            
               </div>
             </div>
             <div className="py-4 px-3">
@@ -308,40 +313,46 @@ const selectedUser = async (userId) => {
               </form>
             </div>
             {users
-              .filter((user) => user._id !== sender)
-              .map((user) => (
-                <div
-                  onClickCapture={() => selectedUser(user._id)}
-                  className="grid gap-2 px-3"
-                >
-                  <a class="flex items-center gap-4 p-2 rounded-lg hover:bg-muted/50 bg-muted">
-                    <span class="relative flex shrink-0 overflow-hidden rounded-full border w-10 h-10">
-                      <img
-                        class="aspect-square h-full w-full"
-                        alt="Image"
-                        src={
-                          user.profileImageUrl
-                            ? user.profileImageUrl
-                            : "https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg"
-                        }
-                      />
-                    </span>
-                    <div class="grid gap-0.5">
-                      <p class="text-sm font-medium leading-none">
-                        {user.firstName}
-                        {user.lastName}
-                      </p>
-                      <p class="text-xs text-muted-foreground">
-                        {user.position}
-                      </p>
-
-                    </div>
-                    {user.hasNewMessage && (
+  .filter((user) => user._id !== sender) // Exclude the current sender/manager from the list
+  .filter((user) =>
+    `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) // Filter users based on search input
+  )
+  .map((user) => (
+    <div key={user._id} onClickCapture={() => selectedUser(user._id)} className="grid gap-2 px-3">
+      <a className="flex items-center gap-4 p-2 rounded-lg hover:bg-muted/50 bg-muted">
+        <span className="relative flex shrink-0 overflow-hidden rounded-full border w-10 h-10">
+          <img
+            className="aspect-square h-full w-full"
+            alt="Image"
+            src={
+              user.profileImageUrl ||
+              'https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg'
+            }
+          />
+        </span>
+        <div className="grid gap-0.5">
+          <p className="text-sm font-medium leading-none">
+            {user.firstName} {user.lastName}
+          </p>
+          <div className="flex justify-between items-center">
+    {/* Display the last message */}
+    <p className="text-xs text-muted-foreground flex-1">
+      {user.lastMessage ? user.lastMessage : 'No New messages'}
+    </p>
+    
+    {/* Display the time of the last message aligned to the right */}
+    <p className="text-xs text-muted-foreground whitespace-nowrap">
+      {user.lastMessageTime && new Date(user.lastMessageTime).toLocaleTimeString()}
+    </p>
+  </div>
+        </div>
+        {user.hasNewMessage && (
         <span className="text-xs font-semibold justify-start text-red-500">⦿ New Message</span>
       )}
-                  </a>
-                </div>
-              ))}
+      </a>
+    </div>
+  ))}
+
           </div>
 
           {currentUser !== null ? (
@@ -463,10 +474,11 @@ const selectedUser = async (userId) => {
                               : "bg-blue-100"
                           }`}
                         >
-                          <p className="text-sm">{msg.content}</p>
+                          <h2 className="font-bold">{msg.content}</h2>
                           {msg.sender === sender && msg.messageStatus && (
         <span className="text-blue-500 text-xs">{msg.messageStatus}</span>
       )}
+      <p className="text-xs ">{new Date(msg.timestamp).toLocaleTimeString()}</p>
                         </div>
                         {msg.sender === sender && (
                           <div className="relative flex-shrink-0 w-8 h-8 rounded-full overflow-hidden">

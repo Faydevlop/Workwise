@@ -254,6 +254,9 @@ const AddDeparment = () => {
                   />
                 </div>
               ))}
+              {
+                employees.length === 0 ? (<p>Currently There are no Employees Without the Department</p>) : ''
+              }
             </div>
           </div>
 
