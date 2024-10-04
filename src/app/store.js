@@ -16,7 +16,7 @@ const persistConfig = {
 
 // Combine your reducers into one root reducer
 const rootReducer = combineReducers({
-    adminAuth: authadmin,
+    auth: authadmin,
     employeeAuth,
     managerAuth,
     hrAuth
