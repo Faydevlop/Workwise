@@ -65,28 +65,7 @@ const EmployeeDashboard = () => {
 </header>
         <div className="flex min-h-screen w-full flex-col bg-muted/40">
   <header className="sticky mb-5 top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-    <div className="relative ml-auto flex-1 md:grow-0">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="lucide lucide-search absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"
-      >
-        <circle cx="11" cy="11" r="8"></circle>
-        <path d="m21 21-4.3-4.3"></path>
-      </svg>
-      <input
-        className="flex h-10 border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-        placeholder="Search..."
-        type="search"
-       />
-    </div>
+    
   </header>
   <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
@@ -96,7 +75,7 @@ const EmployeeDashboard = () => {
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
-            height="24"
+            height="24" 
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"

@@ -183,7 +183,7 @@ const EmployeeTaskmanagment = () => {
                         </div>
                         </Link>
                         <div className="inline-flex w-fit items-center bg-white border font-semibold bg-secondary text-secondary-foreground rounded-full px-2 py-1 text-xs">
-                          {task.priority}
+                       {task.priority}
                         </div>
                       </div>
                       <div className="flex items-center justify-between mt-4">
@@ -193,6 +193,9 @@ const EmployeeTaskmanagment = () => {
                           </span>
                           <div className="text-sm">{task.assignedTo ? `${task.assignedTo[0].firstName}${task.assignedTo[0].lastName}` : 'Not availbale'}</div> {/* Change based on your user data */}
                         </div>
+                        <div className="inline-flex w-fit bg-white items-center border font-semibold bg-secondary text-secondary-foreground rounded-full px-2 py-1 text-xs">
+                {task.cat} 
+                </div>
                       </div>
                     </div>
                   )}
@@ -232,7 +235,7 @@ const EmployeeTaskmanagment = () => {
                 </div>
                 </Link> 
                 <div className="inline-flex w-fit bg-white items-center border font-semibold bg-secondary text-secondary-foreground rounded-full px-2 py-1 text-xs">
-                  {task.priority}
+                 {task.priority}
                 </div>
               </div>
               <div className="flex items-center justify-between mt-4">
@@ -241,6 +244,9 @@ const EmployeeTaskmanagment = () => {
                     <img className="aspect-square h-full w-full"src={ task.assignedTo[0].profileImageUrl? task.assignedTo[0].profileImageUrl : `https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg`} alt="" />
                   </span>
                   <div className="text-sm">{task.assignedTo ? `${task.assignedTo[0].firstName}${task.assignedTo[0].lastName}` : 'Not availbale'}</div>
+                </div>
+                <div className="inline-flex w-fit bg-white items-center border font-semibold bg-secondary text-secondary-foreground rounded-full px-2 py-1 text-xs">
+                {task.cat} 
                 </div>
               </div>
             </div>
@@ -281,7 +287,7 @@ const EmployeeTaskmanagment = () => {
                 </div>
                 </Link>
                 <div className="inline-flex w-fit bg-white items-center border font-semibold bg-secondary text-secondary-foreground rounded-full px-2 py-1 text-xs">
-                  {task.priority}
+                 {task.priority}
                 </div>
               </div>
               <div className="flex items-center justify-between mt-4">
@@ -292,6 +298,11 @@ const EmployeeTaskmanagment = () => {
                   <div className="text-sm">
                   {task.assignedTo ? `${task.assignedTo[0].firstName}${task.assignedTo[0].lastName}` : 'Not availbale'}
                   </div>
+                  
+                </div>
+                
+                <div className="inline-flex w-fit bg-white items-center border font-semibold bg-secondary text-secondary-foreground rounded-full px-2 py-1 text-xs">
+                {task.cat} 
                 </div>
               </div>
             </div>

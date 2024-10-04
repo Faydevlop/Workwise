@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import dayjs from 'dayjs';
@@ -15,9 +15,13 @@ const TaskDetail = () => {
   const [taskData,setTaskData] = useState([])
   const [comment,setComment] = useState('');
   const [listcomments,setListcomments] = useState([])
+  const [attach,setAttach] = useState([])
+  const fileInputRef = useRef(null);
   
   const { manager } = useSelector((state) => state.managerAuth);
   const userId = manager.manager._id;
+
+  
 
   const fetchdata = async ()=>{
     try {
@@ -29,6 +33,44 @@ const TaskDetail = () => {
       
     }
   }
+
+  const fetchattach = async()=>{
+    try {
+
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/task/attach/${taskId}`)
+      setAttach(response.data.attachments)
+      
+    } catch (error) {
+      console.error("Error fetching attachments:", error);
+    }
+  }
+
+    
+  const handleFileChange = async (event) => {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      console.log("Selected file:", selectedFile.name);
+  
+      // Create a FormData object and append the selected file
+      const formData = new FormData();
+      formData.append('attachments', selectedFile);
+  
+      // Integrate toast.promise to show upload progress
+      toast.promise(
+        axios.post(`${import.meta.env.VITE_BASE_URL}/task/attachments/${taskId}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }),
+        {
+          pending: 'Uploading file...',
+          success: 'File uploaded successfully!',
+          error: 'Error uploading file',
+        }
+      );
+    }
+    fetchattach()
+  };
 
 
   const fetchComments = async ()=>{
@@ -48,7 +90,35 @@ const TaskDetail = () => {
   useEffect(()=>{
     fetchdata()
     fetchComments()
+    fetchattach()
   },[])
+
+  const dueDate = new Date(taskData.dueDate);
+const formattedDate = dueDate instanceof Date && !isNaN(dueDate) 
+    ? dueDate.toISOString().split('T')[0] 
+    : ''; // or some default value
+
+  const handleDownload = async (fileUrl, fileName) => {
+    try {
+      const response = await fetch(fileUrl);
+      if (!response.ok) throw new Error('Network response was not ok');
+  
+      const blob = await response.blob(); // Get the file as a Blob
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob); // Create a URL for the Blob
+      link.download = fileName; // Specify the filename for download
+      document.body.appendChild(link); // Append link to body
+      link.click(); // Programmatically click the link to trigger the download
+      document.body.removeChild(link); // Remove link after download
+      window.URL.revokeObjectURL(link.href); // Free up memory
+    } catch (error) {
+      console.error('Download failed:', error);
+    }
+  };
+
+  const handleButtonClick = () => {
+    fileInputRef.current.click();
+  };
 
   const handlSubmit = async()=>{
     const commentData = {
@@ -215,11 +285,12 @@ const TaskDetail = () => {
                 Due Date
               </label>
               <input
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                id="task-due-date"
-                type="text"
-                value={new Date(taskData.dueDate).toLocaleDateString()}
-               />
+    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    id="task-due-date"
+    type="date"
+    value={formattedDate} // This will ensure the value is in YYYY-MM-DD format
+/>
+
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -274,6 +345,7 @@ const TaskDetail = () => {
                 value={new Date(taskData.createdAt).toLocaleDateString()}
                />
             </div>
+            
           </div>
         </div>
       </div>
@@ -330,7 +402,128 @@ const TaskDetail = () => {
     </div>
   </div>
 </div>
+<div className="mb-6 bg-white p-10">
+  <h2 className="text-xl font-bold mb-4">Attachments</h2>
 
+  {/* Add Attachment Button */}
+  <div className="mb-4">
+      {/* Plus icon button to trigger file upload */}
+      <button
+        type="button"
+        onClick={handleButtonClick}
+        className="inline-flex items-center justify-center rounded-full border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="h-5 w-5"
+        >
+          <path d="M12 5v14"></path>
+          <path d="M5 12h14"></path>
+        </svg>
+      </button>
+
+      {/* Hidden File Input */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
+    </div>
+ 
+
+  {/* Existing Attachment Grid */}
+  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      {/* Map through the attach array and render each attachment */}
+      {attach.length > 0 ? (
+        attach.map((attachment, index) => (
+          <div
+            key={index}
+            className="bg-muted rounded-lg p-4 flex flex-col items-center justify-center"
+          >
+            <img
+              alt={attachment.fileName}
+              width="100"
+              height="100"
+              className="mb-2 bg-blue-200"
+              src={attachment.fileUrl || "https://tailwindui.com/placeholder.svg"}
+              style={{ aspectRatio: "100 / 100", objectFit: "cover" }}
+            />
+            <p className="text-sm font-medium">{attachment.fileName || "No name"}</p>
+            <div className="flex items-center gap-2 mt-2">
+              <a target='_blank' href={attachment.fileUrl}>
+              <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-4 w-4"
+                >
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+              </a>
+              <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-4 w-4"
+                >
+                  <path d="M3 6h18"></path>
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                </svg>
+              </button>
+              <button  onClick={() => handleDownload(attachment.fileUrl, attachment.fileName)} className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="h-4 w-4"
+  >
+    <path d="M12 5v14"></path>
+    <path d="M19 12l-7 7-7-7"></path>
+    <path d="M5 19h14"></path>
+  </svg>
+</button>
+
+            </div>
+          </div>
+        ))
+      ) : (
+        <p>No attachments found.</p>
+      )}
+    </div>
+
+</div>
   </div>
 </div>
 

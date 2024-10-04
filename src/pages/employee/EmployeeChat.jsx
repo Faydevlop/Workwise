@@ -161,27 +161,23 @@ useEffect(() => {
 
 
 useEffect(() => {
-  const checkForVideoCallNotification = async () => {
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/notifications/${sender}`);
-      const notifications = response.data;
-
-      const videoCallNotification = notifications.find(notif => notif.type === 'video-call');
-      if (videoCallNotification) {
-        if (window.confirm('You have an incoming video call. Would you like to join?')) {
-          navigate(`/chat/video-call/${videoCallNotification.roomId}/${sender}`);
-        }
-      }
-    } catch (error) {
-      console.error('Failed to check for video call notifications:', error);
+  socket.on("video-call-initiate", ({ senderId, roomId }) => {
+    console.log(`Received video call notification from ${senderId}`);
+    // Notify the user about the incoming video call
+    if (
+      window.confirm(
+        `You have an incoming video call from ${senderId}. Would you like to join?`
+      )
+    ) {
+      // If the user agrees, navigate them to the video call page
+      navigate(`/chat/video-call/${roomId}/${senderId}`);
     }
+  });
+
+  return () => {
+    socket.off("video-call-initiate");
   };
-
-  // Poll every 10 seconds
-  const intervalId = setInterval(checkForVideoCallNotification, 3000);
-
-  return () => clearInterval(intervalId);
-}, [navigate]);
+}, []);
 
 const generateRoomId = () => {
   // Generate a random string of length 12
@@ -190,21 +186,22 @@ const generateRoomId = () => {
 
 
   // Handle video call button click
-  const handleVideoCall = async() => {
-    const roomId = generateRoomId();  // Unique room ID for the video call
-  try {
-    await axios.post(`${import.meta.env.VITE_BASE_URL}/notifications`, {
-      senderId: sender,
-      receiverId: currentUser._id,
-      roomId
-    });
-
-    navigate(`/chat/video-call/${roomId}/${sender}`);
-  } catch (error) {
-    console.error('Failed to initiate video call:', error);
-  }
-   
+  const handleVideoCall = async () => {
+    const roomId = generateRoomId(); // Unique room ID for the video call
+    
+    try {
+      await socket.emit('initiate-video-call', {
+        senderId: sender,
+        receiverId: currentUser._id,
+        roomId,
+      });
+  
+      navigate(`/chat/video-call/${roomId}/${sender}`);
+    } catch (error) {
+      console.error("Failed to initiate video call:", error);
+    }
   };
+  
 
 const handleChange = (event) => {
   setNewMessage(event.target.value);

@@ -15,6 +15,7 @@ const TaskForm = () => {
   const [description, setDescription] = useState('');
   const [employees, setEmployees] = useState([]);
   const [errors, setErrors] = useState({});
+  const [cat,setCat] = useState('')
   const { projectId } = useParams();
   const navigate = useNavigate();
 
@@ -27,6 +28,8 @@ const TaskForm = () => {
     if (!priority) newErrors.priority = 'Priority is required';
     if (!startDate) newErrors.startDate = 'Start date is required';
     if (!dueDate) newErrors.dueDate = 'Due date is required';
+    if (!cat) newErrors.cat = 'Classification is required';
+    
     if (!description.trim()) newErrors.description = 'Description is required';
 
     setErrors(newErrors);
@@ -63,6 +66,7 @@ const TaskForm = () => {
       startDate,
       dueDate,
       description,
+      cat
     };
 
     try {
@@ -167,6 +171,22 @@ const TaskForm = () => {
                 <option value="High">High</option>
               </select>
               {errors.priority && <p className="text-red-500 text-sm mt-1">{errors.priority}</p>}
+            </div>
+            <div className="flex flex-col">
+              <label className="text-sm font-medium mb-2">Classification</label>
+              <select
+                value={cat}
+                onChange={(e) => setCat(e.target.value)}
+                className={`border rounded-lg px-4 py-2 ${errors.cat ? 'border-red-500' : ''}`}
+              >
+                <option value="" disabled>Select Classification</option>
+                <option value="task">task</option>
+                <option value="bug">bug</option>
+                <option value="subtask">sub task</option>
+                <option value="Feature">Feature</option>
+                <option value="Improvement">Improvement</option>
+              </select>
+              {errors.cat && <p className="text-red-500 text-sm mt-1">{errors.cat}</p>}
             </div>
 
             <div className="flex flex-col">

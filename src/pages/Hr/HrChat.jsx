@@ -20,7 +20,7 @@ const HrChat = () => {
 
   const { hr } = useSelector((state) => state.hrAuth);
   const sender = hr.hr._id;
-  console.log("profile URL is here", hr.hr.profileImageUrl);
+  
 
   useEffect(() => {
   socket.emit('register', hr.hr._id);
@@ -55,38 +55,24 @@ useEffect(() => {
   };
 }, []);
 
-  useEffect(() => {
-    const checkForVideoCallNotification = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/notifications/${sender}`
-        );
-        const notifications = response.data;
+useEffect(() => {
+  socket.on("video-call-initiate", ({ senderId, roomId }) => {
+    console.log(`Received video call notification from ${senderId}`);
+    // Notify the user about the incoming video call
+    if (
+      window.confirm(
+        `You have an incoming video call from ${senderId}. Would you like to join?`
+      )
+    ) {
+      // If the user agrees, navigate them to the video call page
+      navigate(`/chat/video-call/${roomId}/${senderId}`);
+    }
+  });
 
-        const videoCallNotification = notifications.find(
-          (notif) => notif.type === "video-call"
-        );
-        if (videoCallNotification) {
-          if (
-            window.confirm(
-              "You have an incoming video call. Would you like to join?"
-            )
-          ) {
-            navigate(
-              `/chat/video-call/${videoCallNotification.roomId}/${sender}`
-            );
-          }
-        }
-      } catch (error) {
-        console.error("Failed to check for video call notifications:", error);
-      }
-    };
-
-    // Poll every 10 seconds
-    const intervalId = setInterval(checkForVideoCallNotification, 3000);
-
-    return () => clearInterval(intervalId);
-  }, [navigate]);
+  return () => {
+    socket.off("video-call-initiate");
+  };
+}, []);
 
 
 
@@ -98,13 +84,14 @@ useEffect(() => {
   // Handle video call button click
   const handleVideoCall = async () => {
     const roomId = generateRoomId(); // Unique room ID for the video call
+    
     try {
-      await axios.post(`${import.meta.env.VITE_BASE_URL}/notifications`, {
+      await socket.emit('initiate-video-call', {
         senderId: sender,
         receiverId: currentUser._id,
         roomId,
       });
-
+  
       navigate(`/chat/video-call/${roomId}/${sender}`);
     } catch (error) {
       console.error("Failed to initiate video call:", error);

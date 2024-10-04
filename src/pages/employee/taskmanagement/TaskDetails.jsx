@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import EmployeeSidebar from '../../../components/Sidebar/EmployeeSidebar'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
@@ -6,12 +6,18 @@ import axios from 'axios'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import dayjs from 'dayjs'
+import relativeTime from "dayjs/plugin/relativeTime";
+
+  
+
+dayjs.extend(relativeTime);
 
 const TaskDetails = () => {
     const {taskId} = useParams()
     const [taskData,setTaskData] = useState([])
     const [comment,setComment] = useState('');
     const [listcomments,setListcomments] = useState([])
+    const [attach,setAttach] = useState([])
     
     const { employee } = useSelector((state) => state.employeeAuth);
  
@@ -25,7 +31,18 @@ const TaskDetails = () => {
    
   
       } catch (error) {
+       
+      }
+    }
+
+    const fetchattach = async()=>{
+      try {
+
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/task/attach/${taskId}`)
+        setAttach(response.data.attachments)
         
+      } catch (error) {
+        console.error("Error fetching attachments:", error);
       }
     }
   
@@ -47,7 +64,69 @@ const TaskDetails = () => {
     useEffect(()=>{
       fetchdata()
       fetchComments()
+      fetchattach()
     },[])
+
+    // photo upload detatails - code 
+    const fileInputRef = useRef(null);
+
+    // Function to trigger the hidden file input when the plus icon is clicked
+    const handleButtonClick = () => {
+      fileInputRef.current.click();
+    };
+  
+    // Function to handle the file change event
+
+    const handleDownload = async (fileUrl, fileName) => {
+      try {
+        const response = await fetch(fileUrl);
+        if (!response.ok) throw new Error('Network response was not ok');
+    
+        const blob = await response.blob(); // Get the file as a Blob
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob); // Create a URL for the Blob
+        link.download = fileName; // Specify the filename for download
+        document.body.appendChild(link); // Append link to body
+        link.click(); // Programmatically click the link to trigger the download
+        document.body.removeChild(link); // Remove link after download
+        window.URL.revokeObjectURL(link.href); // Free up memory
+      } catch (error) {
+        console.error('Download failed:', error);
+      }
+    };
+    
+  
+    
+    
+    
+    
+    const handleFileChange = async (event) => {
+      const selectedFile = event.target.files[0];
+      if (selectedFile) {
+        console.log("Selected file:", selectedFile.name);
+    
+        // Create a FormData object and append the selected file
+        const formData = new FormData();
+        formData.append('attachments', selectedFile);
+    
+        // Integrate toast.promise to show upload progress
+        toast.promise(
+          axios.post(`${import.meta.env.VITE_BASE_URL}/task/attachments/${taskId}`, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }),
+          {
+            pending: 'Uploading file...',
+            success: 'File uploaded successfully!',
+            error: 'Error uploading file',
+          }
+        );
+      }
+      fetchattach()
+    };
+    
+    // phot upload code - end
   
     const handlSubmit = async()=>{
       const commentData = {
@@ -62,7 +141,7 @@ const TaskDetails = () => {
       try {
         const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/comment/addcomment/${taskId}`,commentData)
         toast.success("Comment added successfully!", {
-          position: "top-right",
+          position: "top-center",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -108,7 +187,7 @@ const TaskDetails = () => {
           <h1 className="text-2xl font-bold">{taskData.name}</h1>
           <div className="flex items-center gap-2">
             <span className="px-2 py-1 rounded-md bg-primary text-primary-foreground text-sm font-medium">{taskData.priority}</span>
-            <span className="px-2 py-1 rounded-md bg-muted text-muted-foreground text-sm font-medium">Bug</span>
+            <span className="px-2 py-1 rounded-md bg-muted text-muted-foreground text-sm font-medium">{taskData.cat}</span>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4 mb-6">
@@ -118,250 +197,162 @@ const TaskDetails = () => {
           </div>
           <div>
             <p className="text-muted-foreground text-sm mb-1">Assigned To</p>
-            <div className="flex items-center gap-2">
+            
+            
+            {taskData?.assignedTo?.map((user)=>(
+              <>
+              <div className="flex items-center gap-2">
               <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
-                <img className="aspect-square h-full w-full" alt="@username" src="https://tailwindui.com/placeholder-user.jpg"  />
+                <img className="aspect-square h-full w-full" alt="@username" src={user.profileImageUrl || 'https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg'}  />
               </span>
-              <p className="text-base font-medium">John Doe</p>
-            </div>
+
+                 <span style={{pointerEvents: "none"}}>{user.firstName}{user.lastName}</span>
+                 
+                 </div>
+              </>
+
+              
+                 
+              ))}
+             
+              
+            
           </div>
           <div>
             <p className="text-muted-foreground text-sm mb-1">Status</p>
-            <p className="text-base font-medium">In Progress</p>
+            <p className="text-base font-medium">{taskData.status}</p>
           </div>
           <div>
             <p className="text-muted-foreground text-sm mb-1">Priority</p>
-            <p className="text-base font-medium">High</p>
+            <p className="text-base font-medium">{taskData.priority}</p>
           </div>
         </div>
         <div data-orientation="horizontal" role="none" className="shrink-0 bg-border h-[1px] w-full my-6"></div>
         <div className="mb-6">
-          <h2 className="text-xl font-bold mb-4">Attachments</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div className="bg-muted rounded-lg p-4 flex flex-col items-center justify-center">
-              <img
-              
-                alt="Attachment"
-                width="100"
-                height="100"
-                className="mb-2 bg-blue-200"
-                src="https://tailwindui.com/placeholder.svg"
-                style={{aspectRatio: "100 / 100", objectFit: "cover"}}
-               />
-              <p className="text-sm font-medium">design.sketch</p>
-              <div className="flex items-center gap-2 mt-2">
-                <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-4 w-4"
-                  >
-                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                  </svg>
-                </button>
-                <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-4 w-4"
-                  >
-                    <path d="M3 6h18"></path>
-                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                  </svg>
-                </button>
-              </div>
-            </div>
-            <div className="bg-muted rounded-lg p-4 flex flex-col items-center justify-center">
-              <img
-                alt="Attachment"
-                width="100"
-                height="100"
-                className="mb-2 bg-blue-200"
-                src="https://tailwindui.com/placeholder.svg"
-                style={{aspectRatio: "100 / 100", objectFit: "cover"}}
-               />
-              <p className="text-sm font-medium">requirements.pdf</p>
-              <div className="flex items-center gap-2 mt-2">
-                <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-4 w-4"
-                  >
-                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                  </svg>
-                </button>
-                <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-4 w-4"
-                  >
-                    <path d="M3 6h18"></path>
-                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                  </svg>
-                </button>
-              </div>
-            </div>
-            <div className="bg-muted rounded-lg p-4 flex flex-col items-center justify-center">
-              <img
-                alt="Attachment"
-                width="100"
-                height="100"
-                className="mb-2 bg-blue-200"
-                src="https://tailwindui.com/placeholder.svg"
-                style={{aspectRatio: "100 / 100", objectFit: "cover"}}
-               />
-              <p className="text-sm font-medium">wireframes.fig</p>
-              <div className="flex items-center gap-2 mt-2">
-                <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-4 w-4"
-                  >
-                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                  </svg>
-                </button>
-                <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-4 w-4"
-                  >
-                    <path d="M3 6h18"></path>
-                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                  </svg>
-                </button>
-              </div>
+  <h2 className="text-xl font-bold mb-4">Attachments</h2>
+
+  {/* Add Attachment Button */}
+  <div className="mb-4">
+      {/* Plus icon button to trigger file upload */}
+      <button
+        type="button"
+        onClick={handleButtonClick}
+        className="inline-flex items-center justify-center rounded-full border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="h-5 w-5"
+        >
+          <path d="M12 5v14"></path>
+          <path d="M5 12h14"></path>
+        </svg>
+      </button>
+
+      {/* Hidden File Input */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
+    </div>
+ 
+
+  {/* Existing Attachment Grid */}
+  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      {/* Map through the attach array and render each attachment */}
+      {attach.length > 0 ? (
+        attach.map((attachment, index) => (
+          <div
+            key={index}
+            className="bg-muted rounded-lg p-4 flex flex-col items-center justify-center"
+          >
+            <img
+              alt={attachment.fileName}
+              width="100"
+              height="100"
+              className="mb-2 bg-blue-200"
+              src={attachment.fileUrl || "https://tailwindui.com/placeholder.svg"}
+              style={{ aspectRatio: "100 / 100", objectFit: "cover" }}
+            />
+            <p className="text-sm font-medium">{attachment.fileName || "No name"}</p>
+            <div className="flex items-center gap-2 mt-2">
+              <a target='_blank' href={attachment.fileUrl}>
+              <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-4 w-4"
+                >
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+              </a>
+              <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-4 w-4"
+                >
+                  <path d="M3 6h18"></path>
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                </svg>
+              </button>
+              <button  onClick={() => handleDownload(attachment.fileUrl, attachment.fileName)} className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="h-4 w-4"
+  >
+    <path d="M12 5v14"></path>
+    <path d="M19 12l-7 7-7-7"></path>
+    <path d="M5 19h14"></path>
+  </svg>
+</button>
+
             </div>
           </div>
-        </div>
+        ))
+      ) : (
+        <p>No attachments found.</p>
+      )}
+    </div>
+
+</div>
+
         <div data-orientation="horizontal" role="none" className="shrink-0 bg-border h-[1px] w-full my-6"></div>
-        <div>
-          <h2 className="text-xl font-bold mb-4">Task History</h2>
-          <div className="space-y-4">
-            <div className="flex items-start gap-4">
-              <div className="bg-muted rounded-full w-8 h-8 flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-4 w-4 text-muted-foreground"
-                >
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-              </div>
-              <div>
-                <p className="text-sm font-medium">Task created by John Doe on 2023-05-15</p>
-                <p className="text-muted-foreground text-sm">Initial task setup and requirements gathering.</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <div className="bg-muted rounded-full w-8 h-8 flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-4 w-4 text-muted-foreground"
-                >
-                  <path d="M12 22h6a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v10"></path>
-                  <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
-                  <path d="M10.4 12.6a2 2 0 1 1 3 3L8 21l-4 1 1-4Z"></path>
-                </svg>
-              </div>
-              <div>
-                <p className="text-sm font-medium">Task updated by Jane Smith on 2023-05-20</p>
-                <p className="text-muted-foreground text-sm">Adjusted priority to High and assigned to John Doe.</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <div className="bg-muted rounded-full w-8 h-8 flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-4 w-4 text-muted-foreground"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="17 8 12 3 7 8"></polyline>
-                  <line x1="12" x2="12" y1="3" y2="15"></line>
-                </svg>
-              </div>
-              <div>
-                <p className="text-sm font-medium">Attachment added by John Doe on 2023-05-25</p>
-                <p className="text-muted-foreground text-sm">Uploaded design.sketch file.</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        
       </div>
       <div className="bg-card rounded-lg shadow-md p-6">
         <h2 className="text-xl font-bold mb-4">Task Details</h2>
@@ -513,55 +504,20 @@ const TaskDetails = () => {
               
             ></textarea>
           </div>
-          <div className="flex justify-end">
-            <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 mr-2">
-              Save
-            </button>
-          </div>
+         
         </div>
       </div>
     </div>
+    
+    
+    <ToastContainer position="top-center"/>
   </div>
   <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
   <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
   <div className="col-span-2 flex flex-col space-y-6">
 
-  <div className="bg-white rounded-lg shadow-md p-6">
-    <h1 className="text-2xl font-bold mb-4">{taskData.name}</h1>
-    <p className="text-gray-600 mb-6">{taskData.description}</p>
-    <div className="grid grid-cols-2 gap-4 mb-6">
-      <div>
-        <h3 className="text-lg font-medium mb-2">Due Date</h3>
-        <p className="text-gray-600">{(new Date(taskData.dueDate).toLocaleDateString())}</p>
-      </div>
-      <div>
-        <h3 className="text-lg font-medium mb-2">Assigned To</h3>
-        <div className="flex items-center space-x-2">
-          <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
-            <img className="aspect-square h-full w-full" alt="John Doe" src={ taskData.assignedTo ? taskData.assignedTo[0].profileImageUrl : `https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg`} />
-          </span>
-          <p className="text-gray-600">{taskData.assignedTo ? `${taskData.assignedTo[0].firstName}${taskData.assignedTo[0].lastName}` : 'Not available'}</p>
-        </div>
-      </div>
-      <div>
-        <h3 className="text-lg font-medium mb-2">Status</h3>
-        <div
-          className="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-yellow-100 text-yellow-600"
-        >
-          {taskData.status}
-        </div>
-      </div>
-      <div>
-        <h3 className="text-lg font-medium mb-2">Priority</h3>
-        <div
-          className="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-red-100 text-red-600"
-        >
-         {taskData.priority}
-        </div>
-      </div>
-    </div>
-  </div>
-  <ToastContainer/>
+ 
+  
 
   
   <div className="bg-white rounded-lg shadow-md p-6">
@@ -623,9 +579,21 @@ const TaskDetails = () => {
             </div>
             <div>
               <h3 className="text-lg font-medium mb-2">Assigned To</h3>
+              {taskData?.assignedTo?.map((user)=>(
+              <>
+              <div className="flex items-center gap-2">
               <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
-            <img className="aspect-square h-full w-full" alt="John Doe" src={ taskData.assignedTo ? taskData.assignedTo[0].profileImageUrl : `https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg`} />
-          </span>
+                <img className="aspect-square h-full w-full" alt="@username" src={user.profileImageUrl || 'https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg'}  />
+              </span>
+
+                 <span style={{pointerEvents: "none"}}>{user.firstName}{user.lastName}</span>
+                 
+                 </div>
+              </>
+
+              
+                 
+              ))}
             </div>
           </div>
         </div>

@@ -4,6 +4,9 @@ import ManagerSidebar from '../../components/Sidebar/ManagerSidebar'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 import Backdrop from '@mui/material/Backdrop';
@@ -49,27 +52,58 @@ const TasktManagement = () => {
     setIsStatusDropdownOpen(false);
   };
 
-  const projectItems = ['Project 1', 'Project 2', 'Project 3'];
-  const statusItems = ['Status 1', 'Status 2', 'Status 3'];
+  const fetchdata = async()=>{
+    try {
+      
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/projectlist/${userId}`);
+        setProjectData(response.data.projectDetails);
+        setTasks(response.data.tasks); 
+        console.log(response.data.tasks);
+
+      
+    } catch (error) {
+      
+    }finally{
+      setLoading(false)
+    }
+  }
+
+  const handleDelete = async (id) => {
+    console.log('Deleting task with ID:', id);
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/task/deletetask/${id}`);
+      console.log('Delete response:', response);
+      toast.success('Task Deleted successfully', {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      fetchdata();
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      toast.error('Error deleting task', {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
+  
+
+  
 
   useEffect(()=>{
 
     setLoading(true)
-    const fetchdata = async()=>{
-      try {
-        
-          const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/projectlist/${userId}`);
-          setProjectData(response.data.projectDetails);
-          setTasks(response.data.tasks); 
-          console.log(response.data.tasks);
-
-        
-      } catch (error) {
-        
-      }finally{
-        setLoading(false)
-      }
-    }
+    
     
 
     fetchdata()
@@ -87,6 +121,7 @@ const TasktManagement = () => {
         <ManagerSidebar />
       </div>
 
+      <ToastContainer/>
         <div className='bg-blue-10' style={{ flex: 1, padding: '20px', overflow: 'auto', marginLeft: '0' }}>
      
       
@@ -122,6 +157,7 @@ const TasktManagement = () => {
 </Backdrop>
       <main className="flex-1 p-4 md:p-6">
         <section>
+        
           <h2 className="mb-4 text-lg font-semibold">Projects</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {projectData.map((project, index) => (
@@ -175,28 +211,7 @@ const TasktManagement = () => {
             <div className="flex items-center gap-2">
       {/* Project Button */}
 <div className="relative hidden md:block"> {/* Hide on small screens */}
-  <button
-    type="button"
-    className="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-[150px]"
-    onClick={toggleProjectDropdown}
-  >
-    <span>{selectedProject}</span>
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="lucide lucide-chevron-down h-4 w-4 opacity-50"
-      aria-hidden="true"
-    >
-      <path d="m6 9 6 6 6-6"></path>
-    </svg>
-  </button>
+  
   {isProjectDropdownOpen && (
     <div className="absolute z-10 mt-1 w-full rounded-md border bg-white border-input bg-background shadow-lg">
       <ul className="py-1 text-sm text-muted-foreground">
@@ -216,28 +231,7 @@ const TasktManagement = () => {
 
 {/* Status Button */}
 <div className="relative hidden md:block"> {/* Hide on small screens */}
-  <button
-    type="button"
-    className="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-[150px]"
-    onClick={toggleStatusDropdown}
-  >
-    <span>{selectedStatus}</span>
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="lucide lucide-chevron-down h-4 w-4 opacity-50"
-      aria-hidden="true"
-    >
-      <path d="m6 9 6 6 6-6"></path>
-    </svg>
-  </button>
+ 
   {isStatusDropdownOpen && (
     <div className="absolute z-10 mt-1 w-full rounded-md bg-white border border-input bg-background shadow-lg">
       <ul className="py-1 text-sm text-muted-foreground">
@@ -317,8 +311,8 @@ const TasktManagement = () => {
       <Link to={`/manager/tasksmanagement/detailpage/${row._id}`}>
       <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">View</a>
       </Link>
-      <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Edit</a>
-      <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Delete</a>
+
+      <button onClick={()=>handleDelete(row._id)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Delete</button>
     </div>
   </div>
 )}
