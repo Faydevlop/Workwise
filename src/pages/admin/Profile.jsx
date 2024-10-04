@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import AdminSidebar from '../../components/Sidebar/AdminSidebar';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import axios from 'axios'; // Assuming you're using axios for API calls
+import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 
 const Profile = () => {
   const [showPasswordSection, setShowPasswordSection] = useState(false);
@@ -19,7 +18,13 @@ const Profile = () => {
     setShowPasswordSection(!showPasswordSection);
   };
 
-  const { admin } = useSelector((state) => state.auth.admin);
+  // Ensure safe access to state
+  const { admin } = useSelector((state) => state.auth.admin || {});
+
+  // Check if 'admin' exists before rendering its properties
+  if (!admin) {
+    return <div>Loading...</div>;
+  }
 
   const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
@@ -28,13 +33,12 @@ const Profile = () => {
     }
 
     try {
-      // Assuming you have a backend route like `/api/admin/change-password/:userId`
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/admin/changepass/${admin._id}`, {
         oldPassword: currentPassword,
         newPassword: newPassword,
       });
 
-      setSuccess(response.data.message); // On success
+      setSuccess(response.data.message);
       setError('');
       setCurrentPassword('');
       setNewPassword('');
@@ -47,14 +51,12 @@ const Profile = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-      
-       
       });
-      setShowPasswordSection(false)
+      setShowPasswordSection(false);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to change password');
       setSuccess('');
-      const errorMessage = err.response?.data?.message
+      const errorMessage = err.response?.data?.message;
       toast.error(errorMessage, {
         position: "top-center",
         autoClose: 3000,
@@ -84,18 +86,16 @@ const Profile = () => {
               alt="Cover"
               className="rounded-t-lg w-full h-48 object-cover"
             />
-            {/* Profile Picture Section */}
-            
           </div>
-          <ToastContainer/>
+          <ToastContainer />
 
           <div className="mt-20 md:flex md:justify-between">
             <div>
-              <h2 className="text-3xl font-bold mb-2">{admin?.username} </h2>
+              <h2 className="text-3xl font-bold mb-2">{admin.username}</h2>
               <p className="text-gray-600 font-bold text-1xl mb-4">Admin</p>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center mb-4">
-                  <span>Email: {admin?.email}</span>
+                  <span>Email: {admin.email}</span>
                 </div>
               </div>
             </div>
