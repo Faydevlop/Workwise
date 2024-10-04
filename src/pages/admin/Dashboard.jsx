@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react'
 import AdminSidebar from '../../components/Sidebar/AdminSidebar'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const AdminDashBoard = () => {
   const [leaves,setLeaves] = useState([])
   const [department,setDepartment] = useState([]);
   const [payroll,setPayroll] = useState([])
   const [projects,setProjects] = useState([])
+  const { admin } = useSelector((state) => state.auth.admin || {});
+  console.log(admin);
+  
 
   const fetchData = async()=>{
     try {
