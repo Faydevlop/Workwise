@@ -19,7 +19,7 @@ const TasktManagement = () => {
   const [projectData,setProjectData] = useState([])
   const [tasks, setTasks] = useState([]);
   const { manager } = useSelector((state) => state.managerAuth);
-  const userId = manager.manager._id
+  const userId = manager?.manager?._id;
 
   const [loading ,setLoading] = useState(false)
 

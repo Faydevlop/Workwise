@@ -11,7 +11,10 @@ const ManagerDashboard = () => {
   const [leaves,setLeaves] = useState([])
 
   const { manager } = useSelector((state) => state.managerAuth);
-  const userId = manager.manager._id;
+  const userId = manager?.manager?._id;
+
+  console.log('manager data',manager);
+  
 
   const fetchData = async()=>{
     try {

@@ -35,7 +35,7 @@ const ApplyLeave = () => {
 
 
   const { manager } = useSelector((state) => state.managerAuth);
-  const userId = manager.manager._id
+  const userId = manager?.manager?._id;
 
   const validateForm = () => {
     let formErrors = {};

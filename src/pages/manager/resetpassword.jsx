@@ -26,7 +26,7 @@ const ResetPass = () => {
 
   
   const { manager } = useSelector((state) => state.managerAuth);
-  const userId = manager.manager._id;
+  const userId = manager?.manager?._id;
   console.log();
   
   const handleSubmit = async (e) => {

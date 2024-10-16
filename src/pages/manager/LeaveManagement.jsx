@@ -22,7 +22,7 @@ const LeaveManagement = () => {
   const [leaves, setLeaves] = useState([]);
   const [data,setData] = useState([])
   const { manager } = useSelector((state) => state.managerAuth);
-  const userId = manager.manager._id;
+  const userId = manager?.manager?._id;
   const [loading ,setLoading] = useState(false)
 
 

@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import React, { Suspense, lazy } from 'react';
+import LoadingSpinner from '../components/Loaders/LoadingSpinner';
 
 // Lazy-loaded components
 const HrLogin = lazy(() => import('../pages/Hr/Hrlogin'));
@@ -27,7 +28,7 @@ const HrRoutes = () => {
   const isHrAuth = useSelector((state) => state.hrAuth.isAuthenticated);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingSpinner/>}>
       <Routes>
         <Route path="login" element={isHrAuth ? <Navigate to="/hr/dashboard" /> : <HrLogin />} />
         <Route path="dashboard" element={isHrAuth ? <HrDashboard /> : <Navigate to="/hr/login" />} />

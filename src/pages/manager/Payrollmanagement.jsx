@@ -11,7 +11,7 @@ import NotificationBox from '../../components/notification/notificationBox';
 const Payrollmanagement = () => {
     const [data,setData] = useState([])
     const { manager } = useSelector((state) => state.managerAuth);
-    const userId = manager.manager._id;
+    const userId = manager?.manager?._id;
 
     const [loading ,setLoading] = useState(false)
     const [listData,setListData] = useState([])

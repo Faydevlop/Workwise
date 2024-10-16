@@ -35,7 +35,7 @@ const Meetings = () => {
   };
 
   const { manager } = useSelector((state) => state.managerAuth);
-  const userId = manager.manager._id;
+  const userId = manager?.manager?._id;
 
   const fetchdata = async()=>{
     setLoading(true)

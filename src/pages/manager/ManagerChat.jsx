@@ -20,7 +20,7 @@ const ManagerChat = () => {
 
 
   const { manager } = useSelector((state) => state.managerAuth);
-  const sender = manager.manager._id;
+  const sender = manager?.manager?._id;
 
   useEffect(() => {
     socket.emit("register", manager.manager._id); // Register the manager's user ID with the socket

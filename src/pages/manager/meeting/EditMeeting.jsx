@@ -24,7 +24,7 @@ const EditMeeting = () => {
   const navigate = useNavigate();
 
   const { manager } = useSelector((state) => state.managerAuth);
-  const userId = manager.manager._id;
+  const userId = manager?.manager?._id;
 
   // Validation function
   const validateForm = () => {
