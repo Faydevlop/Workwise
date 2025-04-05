@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import AdminSidebar from '../../components/Sidebar/AdminSidebar';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { toast,ToastContainer } from 'react-toastify';
+import axiosInstance from '../../config/axiosConfig';
 
 const Showuser = () => {
     const [user, setUser] = useState(null);
@@ -15,7 +16,7 @@ const Showuser = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getuser/${userId}`,{
+                const response = await axiosInstance.get(`/admin/getuser/${userId}`,{
                   headers:{
                     Authorization:`Bearer ${localStorage.getItem('token')}`,
                   }
@@ -33,7 +34,7 @@ const Showuser = () => {
 
     const handleDelete = async () =>{
       try {
-          await axios.delete(`${import.meta.env.VITE_BASE_URL}/admin/deleteuser/${userId}`,{
+          await axiosInstance.delete(`/admin/deleteuser/${userId}`,{
             headers:{
               Authorization:`Bearer ${localStorage.getItem('token')}`,
             }

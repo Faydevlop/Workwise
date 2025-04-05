@@ -29,7 +29,7 @@ const AddPayroll = lazy(() => import('../pages/admin/payroll/AddPayroll'));
 const EditPayroll = lazy(() => import('../pages/admin/payroll/Editpayoll'));
 const PaySlipPage = lazy(() => import('../pages/admin/payroll/PaySlipPage'));
 
-function AdminRoutes() {
+function  AdminRoutes() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   return (

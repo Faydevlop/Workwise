@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import AdminSidebar from '../../../components/Sidebar/AdminSidebar'
-import axios from 'axios'
 import { Link, useParams } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify'
+import axiosInstance from '../../../config/axiosConfig'
 
 const Departdetails = () => {
   const [department,setDepartment] = useState({
@@ -15,7 +15,7 @@ const Departdetails = () => {
   useEffect(()=>{
     const fetchData = async()=>{
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/department/details/${departmentId}`);
+        const response = await axiosInstance.get(`/department/details/${departmentId}`);
         setDepartment(response.data.department);
         setProjects(response.data.projects)
         console.log(response.department.department);
@@ -34,7 +34,7 @@ const Departdetails = () => {
     alert(teamMemberIds)
     try {
 
-        const response = await axios.delete(`${import.meta.env.VITE_BASE_URL}/department/delete/${departmentId}`,{data: { teamMemberIds }})
+        const response = await axiosInstance.delete(`/department/delete/${departmentId}`,{data: { teamMemberIds }})
           toast.success("User Deleted successfully!", {
             position: "top-right",
             autoClose: 2000,

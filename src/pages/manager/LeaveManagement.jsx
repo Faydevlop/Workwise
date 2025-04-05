@@ -7,7 +7,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
 import { TextField } from '@mui/material';
 import { useSelector } from 'react-redux';
 import ManagerSidebar from '../../components/Sidebar/ManagerSidebar';
@@ -17,6 +16,7 @@ import { Link } from 'react-router-dom';
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import NotificationBox from '../../components/notification/notificationBox';
+import axiosInstance from '../../config/axiosConfig';
 
 const LeaveManagement = () => {
   const [leaves, setLeaves] = useState([]);
@@ -32,7 +32,7 @@ const LeaveManagement = () => {
     
     const fetchLeaves = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/leave/getleaves/${userId}`);
+        const response = await axiosInstance.get(`/leave/getleaves/${userId}`);
         setLeaves(response.data.leaves);
       } catch (error) {
         console.log(error);
@@ -42,7 +42,7 @@ const LeaveManagement = () => {
 
     const fetchRequests = async()=>{
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/leave/managerleaveget/${userId}`);
+        const response = await axiosInstance.get(`/leave/managerleaveget/${userId}`);
         setData(response.data.leaves)
         console.log(response.data.leaves);
         
@@ -87,7 +87,7 @@ const LeaveManagement = () => {
     
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/leave/status/${leaveId}`, userData);
+      const response = await axiosInstance.post(`/leave/status/${leaveId}`, userData);
       toast.success('Status updated successfully!',{
         autoClose: 1500,
       });

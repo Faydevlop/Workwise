@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import AdminSidebar from '../../../components/Sidebar/AdminSidebar';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams } from 'react-router-dom';
+import axiosInstance from '../../../config/axiosConfig';
 
 const EditPayroll = () => {
   const [users, setUsers] = useState([]);
@@ -23,7 +23,7 @@ const EditPayroll = () => {
 
   const fetchPayrollDetails = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/payroll/listdetails/${payrollId}`);
+      const response = await axiosInstance.get(`/payroll/listdetails/${payrollId}`);
       const payrollData = response.data.employee;
       
       const formattedPayPeriodStart = payrollData.payPeriodStart.slice(0, 10);
@@ -66,7 +66,7 @@ const EditPayroll = () => {
     
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/payroll/updatepayroll/${payrollId}`, formData);
+      const response = await axiosInstance.post(`/payroll/updatepayroll/${payrollId}`, formData);
 
       toast.success(response.data.message, {
         position: "top-right",

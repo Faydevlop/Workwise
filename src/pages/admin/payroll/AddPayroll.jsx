@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import AdminSidebar from '../../../components/Sidebar/AdminSidebar';
 
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../../config/axiosConfig';
 
 const AddPayroll = () => {
   const [users,setUsers] = useState([])
@@ -31,7 +31,7 @@ const AddPayroll = () => {
 
   const fetchUsers = async()=>{
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/payroll/listEmpo`);
+      const response = await axiosInstance.get(`/payroll/listEmpo`);
       setUsers(response.data.users)
       
     } catch (error) {
@@ -54,7 +54,7 @@ const AddPayroll = () => {
     }
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/payroll/addpayroll`, formData);
+      const response = await axiosInstance.post(`/payroll/addpayroll`, formData);
 
       toast.success(response.data.message, {
         position: "top-right",

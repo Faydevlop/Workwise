@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { toast,ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import axiosInstance from '../../config/axiosConfig';
 
 const ResetPass = () => {
 
@@ -47,7 +47,7 @@ const ResetPass = () => {
     setLoading(true);  
   
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/employee/reqest-reset-password/${userId}`, { email },{
+      const response = await axiosInstance.post(`/employee/reqest-reset-password/${userId}`, { email },{
         
       });
       setIsModalOpen(true); // Show the modal on success

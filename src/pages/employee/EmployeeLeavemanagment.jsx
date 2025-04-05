@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import NotificationBox from '../../components/notification/notificationBox';
+import axiosInstance from '../../config/axiosConfig';
 
 const EmployeeLeavemanagment = () => {
   const [leaves, setLeaves] = useState([]);
@@ -18,7 +19,7 @@ const EmployeeLeavemanagment = () => {
     setLoading(true)
     const fetchLeaves = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/leave/getleaves/${userId}`);
+        const response = await axiosInstance.get(`/leave/getleaves/${userId}`);
         setLeaves(response.data.leaves);
       } catch (error) {
         console.log(error);

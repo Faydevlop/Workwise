@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import AdminSidebar from '../../../components/Sidebar/AdminSidebar'
-import axios from 'axios'
+
 import { useParams } from 'react-router-dom'
 import logo from '../../../assets/Screenshot 2024-08-04 184513.png'
+import axiosInstance from '../../../config/axiosConfig'
 
 const PaySlipPage = () => {
     const {payrollId} = useParams()
@@ -10,7 +10,7 @@ const PaySlipPage = () => {
   
     const fetchdetails = async()=>{
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/payroll/listdetails/${payrollId}`)
+        const response = await axiosInstance.get(`/payroll/listdetails/${payrollId}`)
         setData(response.data.employee)
         console.log(response.data.employee);
         

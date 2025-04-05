@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react'
 import HrSidebar from '../../components/Sidebar/HrSidebar'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
 
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import NotificationBox from '../../components/notification/notificationBox'
+import axiosInstance from '../../config/axiosConfig';
 
 const HrProfile   = () => {
   const [user,setUser] = useState('')
@@ -27,7 +27,7 @@ const HrProfile   = () => {
   useEffect(() => {
     const fetchUser = async () => {
         try {
-            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getuser/${userId}`,{
+            const response = await axiosInstance.get(`/admin/getuser/${userId}`,{
               headers:{
                 Authorization:`Bearer ${localStorage.getItem('token')}`,
               }

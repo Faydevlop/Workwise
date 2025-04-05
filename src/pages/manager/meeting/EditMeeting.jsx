@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import ManagerSidebar from '../../../components/Sidebar/ManagerSidebar';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from '../../../config/axiosConfig';
 
 const EditMeeting = () => {
   const { meetingId } = useParams();
@@ -61,7 +62,7 @@ const EditMeeting = () => {
       }
   
       // Make an API request to update the meeting details
-      const response = await axios.put(`${import.meta.env.VITE_BASE_URL}/meeting/update/${meetingId}`, dataToUpdate);
+      const response = await axiosInstance.put(`/meeting/update/${meetingId}`, dataToUpdate);
   
       toast.success("Meeting updated successfully!", {
         position: "top-right",
@@ -93,7 +94,7 @@ const EditMeeting = () => {
   useEffect(() => {
     const fetchMeetingData = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/meeting/listmeeiting/${meetingId}/list`);
+        const response = await axiosInstance.get(`/meeting/listmeeiting/${meetingId}/list`);
         const meetingData = response.data.meetingData ;
         console.log(response.data.meetingData);
         
@@ -115,7 +116,7 @@ const EditMeeting = () => {
 
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/meeting/listuser/${userId}`);
+        const response = await axiosInstance.get(`/meeting/listuser/${userId}`);
         setListingUser(response.data.users);
         console.log(response.data.users);
       } catch (error) {

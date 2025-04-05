@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import EmployeeSidebar from '../../components/Sidebar/EmployeeSidebar'
-import axios from "axios";
+
 import api from "../../features/auth/axiosInstance";
 import io from 'socket.io-client';
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../config/axiosConfig";
 
 
 
@@ -69,7 +70,7 @@ const EmployeeChat = () => {
   useEffect(()=>{
     const fetchUser = async () =>{
         try {
-            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getusers`,{
+            const response = await axiosInstance.get(`/admin/getusers`,{
               headers:{
                 Authorization:`Bearer ${localStorage.getItem('token')}`,
               }
@@ -106,7 +107,7 @@ useEffect(() => {
       try {
         // Clear messages when changing user
         setMessages([]);
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/chat/messages/${sender}/${currentUser._id}`);
+        const response = await axiosInstance.get(`/chat/messages/${sender}/${currentUser._id}`);
         setMessages(response.data);
       } catch (error) {
         console.error('Failed to fetch messages:', error);
@@ -245,7 +246,7 @@ const selectedUser = async (userId) => {
 
     // Fetch messages and mark as seen
     try {
-      await axios.post(`${import.meta.env.VITE_BASE_URL}/chat/mark-as-seen`, {
+      await axiosInstance.post(`/chat/mark-as-seen`, {
         senderId: userId,
         receiverId: sender,
       });

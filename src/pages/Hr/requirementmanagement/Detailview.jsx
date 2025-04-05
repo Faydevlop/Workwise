@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import HrSidebar from '../../../components/Sidebar/HrSidebar'
 import { useParams } from 'react-router-dom'
-import axios from 'axios'
 import {ScaleLoader  } from 'react-spinners'
+import axiosInstance from '../../../config/axiosConfig'
 
 const Detailview = () => {
   const {reqId} = useParams()
@@ -10,7 +10,7 @@ const Detailview = () => {
 
   useEffect(()=>{
     const fetchdata = async()=>{
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/jobs/listDetails/${reqId}`);
+      const response = await axiosInstance.get(`/jobs/listDetails/${reqId}`);
       setList(response.data.listDetail)
       console.log(response.data.listDetail);
       

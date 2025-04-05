@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import NotificationBox from '../../components/notification/notificationBox';
+import axiosInstance from '../../config/axiosConfig';
 
 const EmployeePayroll = () => {
   const [data,setDate] = useState('');
@@ -21,7 +22,7 @@ const EmployeePayroll = () => {
 
     const fetchdata = async()=>{
       try {
-        const useDate = await axios.get(`${import.meta.env.VITE_BASE_URL}/payroll/userlist/${userId}`);
+        const useDate = await axiosInstance.get(`/payroll/userlist/${userId}`);
         setDate(useDate.data.payroll)
         console.log(useDate.data.payroll);
         

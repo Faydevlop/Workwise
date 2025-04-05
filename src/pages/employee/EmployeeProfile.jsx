@@ -6,6 +6,7 @@ import axios from 'axios';
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import NotificationBox from '../../components/notification/notificationBox';
+import axiosInstance from '../../config/axiosConfig';
 
 const EmployeeProfile = () => {
   const [user,setUser] = useState('')
@@ -25,10 +26,8 @@ const EmployeeProfile = () => {
     setLoading(true)
     const fetchUser = async () => {
         try {
-            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getuser/${userId}`,{
-              headers:{
-                Authorization:`Bearer ${localStorage.getItem('token')}`,
-              }
+            const response = await axiosInstance.get(`/admin/getuser/${userId}`,{
+            
             });
             setUser(response.data);
         } catch (error) {

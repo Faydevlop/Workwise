@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import HrSidebar from '../../components/Sidebar/HrSidebar'
-import axios from 'axios'
 import { Link } from 'react-router-dom'
 
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import NotificationBox from '../../components/notification/notificationBox';
 import { useSelector } from 'react-redux';
+import axiosInstance from '../../config/axiosConfig';
 
 const PayrollManagement = () => {
 
@@ -25,7 +25,7 @@ const PayrollManagement = () => {
         
 
         try {
-            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/payroll/hrlist`)
+            const response = await axiosInstance.get(`/payroll/hrlist`)
             setData(response.data.payroll)
             console.log(response.data.payroll);
 
@@ -40,7 +40,7 @@ const PayrollManagement = () => {
      const fetchViewData = async()=>{
       setLoading(true)
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/payroll/viewlist`)
+        const response = await axiosInstance.get(`/payroll/viewlist`)
         setListData(response.data.listView)
         
       } catch (error) {

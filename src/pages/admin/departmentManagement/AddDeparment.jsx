@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import AdminSidebar from '../../../components/Sidebar/AdminSidebar';
-import axios from 'axios';
-
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../../config/axiosConfig';
 
 const AddDeparment = () => {
   const [departmentName, setDepartmentName] = useState('');
@@ -21,7 +20,7 @@ const AddDeparment = () => {
   useEffect(() => {
     const fetchManager = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/department/listmanager`, {
+        const response = await axiosInstance.get(`/department/listmanager`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
@@ -34,7 +33,7 @@ const AddDeparment = () => {
 
     const fetchEmployees = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/department/getUsers`, {
+        const response = await axiosInstance.get(`/department/getUsers`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
@@ -94,7 +93,7 @@ const AddDeparment = () => {
     };
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/department/add`, departmentData, {
+      const response = await axiosInstance.post(`/department/add`, departmentData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },

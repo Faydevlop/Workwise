@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import AdminSidebar from '../../components/Sidebar/AdminSidebar'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
-
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import api from '../../features/auth/axiosInstance';
+import axiosInstance from '../../config/axiosConfig';
 
 const Usermanagment = () => {
 
@@ -50,7 +49,7 @@ const Usermanagment = () => {
     
 const handleDelete = async (userId) =>{
     try {
-        await axios.delete(`${import.meta.env.VITE_BASE_URL}/admin/deleteuser/${userId}`,{
+        await axiosInstance.delete(`/admin/deleteuser/${userId}`,{
           headers:{
             Authorization:`Bearer ${localStorage.getItem('token')}`,
           }
@@ -85,7 +84,7 @@ const handleDelete = async (userId) =>{
     useEffect(()=>{
         const fetchUser = async () =>{
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getusers`,{
+                const response = await axiosInstance.get(`/admin/getusers`,{
                   headers:{
                     Authorization:`Bearer ${localStorage.getItem('token')}`,
                   }

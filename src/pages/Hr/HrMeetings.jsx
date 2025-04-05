@@ -1,8 +1,6 @@
 import React, { useState,useEffect } from 'react'
 import HrSidebar from '../../components/Sidebar/HrSidebar'
 import { Link } from 'react-router-dom';
-
-import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import NotificationBox from '../../components/notification/notificationBox';
+import axiosInstance from '../../config/axiosConfig';
 
 const HrMeetings = () => {
   
@@ -44,7 +43,7 @@ const HrMeetings = () => {
   const fetchdata = async()=>{
     setLoading(true)
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/meeting/listmeeting/${userId}`)
+      const response = await axiosInstance.get(`/meeting/listmeeting/${userId}`)
       setListdata(response.data.listData)
       // console.log(response.data.listData);
       
@@ -57,7 +56,7 @@ const HrMeetings = () => {
   const fetchnext = async()=>{
     setLoading(true)
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/meeting/nextmeet`)
+      const response = await axiosInstance.get(`/meeting/nextmeet`)
       setListnext(response.data.upcomingMeetings)
       console.log(response.data);
       
@@ -79,7 +78,7 @@ const HrMeetings = () => {
   const handledelete = async(meetingId)=>{
     try {
 
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/meeting/deletemeeting/${meetingId}`)
+      const response = await axiosInstance.post(`/meeting/deletemeeting/${meetingId}`)
       toast.success("Meeting deleted successfully!", {
         position: "top-right",
         autoClose: 2000,

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import AdminSidebar from '../../components/Sidebar/AdminSidebar'
-import axios from 'axios'
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -13,6 +12,7 @@ import { Link } from 'react-router-dom';
 import { TextField } from '@mui/material';
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
+import axiosInstance from '../../config/axiosConfig';
 
 const Leavemanagment = () => {
   const [leaves,setLeaves] = useState([])
@@ -51,7 +51,7 @@ const Leavemanagment = () => {
     }
   
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/leave/status/${leaveId}`, userData);
+      const response = await axiosInstance.post(`/leave/status/${leaveId}`, userData);
       toast.success('Status updated successfully!', {
         position: 'top-right',
         autoClose: 1500,
@@ -79,7 +79,7 @@ const Leavemanagment = () => {
 
   const fetchdata = async()=>{
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/leave/getAllLeaves`);
+      const response = await axiosInstance.get(`/leave/getAllLeaves`);
       console.log(response.data.leaves);
       
       setLeaves(response.data.leaves)
@@ -102,7 +102,7 @@ const Leavemanagment = () => {
 
     const fetchlistDatas = async()=>{
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/leave/listdata`);
+        const response = await axiosInstance.get(`/leave/listdata`);
         console.log(response);
         
         setNoOfemplo(response.data.totalEmployees)

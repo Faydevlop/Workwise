@@ -7,6 +7,7 @@ import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import NotificationBox from '../../components/notification/notificationBox';
 import { useSelector } from 'react-redux';
+import axiosInstance from '../../config/axiosConfig';
 
 const Jobsection = () => {
   const [listData, setListData] = useState([]);
@@ -20,7 +21,7 @@ const Jobsection = () => {
   const fetchdata = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/jobs/listitems`);
+      const response = await axiosInstance.get(`/jobs/listitems`);
       setListData(response.data.listingData);
       console.log(response.data.listingData);
     } catch (error) {

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import AdminSidebar from '../../../components/Sidebar/AdminSidebar';
-import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../../config/axiosConfig';
 
 const AddProjectPage = () => {
     const [managerError, setManagerError] = useState('');
@@ -61,7 +61,7 @@ const AddProjectPage = () => {
     useEffect(() => {
         const fetchDepartments = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/department/list`);
+                const response = await axiosInstance.get(`/department/list`);
                 setDepartment(response.data);
                 console.log('department details', response.data);
             } catch (error) {
@@ -92,7 +92,7 @@ const AddProjectPage = () => {
             return;
         }
         try {
-            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/admin/addNewProject`, userData, {
+            const response = await axiosInstance.post(`/admin/addNewProject`, userData, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },

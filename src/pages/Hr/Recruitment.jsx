@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import HrSidebar from '../../components/Sidebar/HrSidebar'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
-
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import NotificationBox from '../../components/notification/notificationBox';
 import { useSelector } from 'react-redux';
+import axiosInstance from '../../config/axiosConfig';
 
 const Recruitment = () => {
   const [listData,setListData] = useState([])
@@ -21,7 +20,7 @@ const Recruitment = () => {
   const fetchdata = async()=>{
     setLoading(true)
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/jobs/listitems`)
+      const response = await axiosInstance.get(`/jobs/listitems`)
       setListData(response.data.listingData);
        
     } catch (error) {
@@ -34,7 +33,7 @@ const Recruitment = () => {
   const fetchlist = async()=>{
     setLoading(true)
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/jobs/listJob`)
+      const response = await axiosInstance.get(`/jobs/listJob`)
       setshowData(response.data.listData);
       console.log(response.data.listData);
       
@@ -55,7 +54,7 @@ const Recruitment = () => {
     try {
       console.log(listId);
       
-      const response = await axios.delete(`${import.meta.env.VITE_BASE_URL}/jobs/deleteitem/${listId}`)
+      const response = await axiosInstance.delete(`/jobs/deleteitem/${listId}`)
       toast.success("Job lisiting deleted successfully!", {
         position: "top-right",
         autoClose: 2000,
@@ -87,7 +86,7 @@ const Recruitment = () => {
   const handleClick = async(appId)=>{
     try {
 
-      const response = await axios.delete(`${import.meta.env.VITE_BASE_URL}/jobs/deleteapplication/${appId}`)
+      const response = await axiosInstance.delete(`/jobs/deleteapplication/${appId}`)
       toast.success("application deleted successfully!", {
         position: "top-right",
         autoClose: 2000,

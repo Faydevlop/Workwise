@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import AdminSidebar from '../../../components/Sidebar/AdminSidebar';
-import axios from 'axios';
 
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams } from 'react-router-dom';
+import axiosInstance from '../../../config/axiosConfig';
 
 const EditDepartment = () => {
   const [departmentName, setDepartmentName] = useState('');
@@ -23,7 +23,7 @@ const EditDepartment = () => {
 
     const fetchDetails = async ()=>{
         try {
-            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/department/details/${departmentId}`);
+            const response = await axiosInstance.get(`/department/details/${departmentId}`);
             setDepartmentName(response.data.department.departmentName)
             setHeadOfDepartment(response.data.department.headOfDepartMent)
             setDescription(response.data.department.description)
@@ -41,7 +41,7 @@ const EditDepartment = () => {
 
     const fetchManager = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/department/listmanager`, {
+        const response = await axiosInstance.get(`/department/listmanager`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
@@ -54,7 +54,7 @@ const EditDepartment = () => {
 
     const fetchEmployees = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/department/getUsers`, {
+        const response = await axiosInstance.get(`/department/getUsers`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
@@ -114,7 +114,7 @@ const EditDepartment = () => {
     };
 
     try {
-      const response = await axios.put(`${import.meta.env.VITE_BASE_URL}/department/edit/${departmentId}`, departmentData, {
+      const response = await axiosInstance.put(`/department/edit/${departmentId}`, departmentData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },

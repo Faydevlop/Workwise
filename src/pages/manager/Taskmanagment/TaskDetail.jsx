@@ -6,9 +6,10 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
 import ManagerSidebar from '../../../components/Sidebar/ManagerSidebar'
-import axios from 'axios';
+
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import axiosInstance from '../../../config/axiosConfig';
 
 const TaskDetail = () => {
   const {taskId} = useParams()
@@ -25,7 +26,7 @@ const TaskDetail = () => {
 
   const fetchdata = async ()=>{
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/task/taskdetails/${taskId}`);
+      const response = await axiosInstance.get(`/task/taskdetails/${taskId}`);
       setTaskData(response.data.task)
   // console.log(response.data.task);
 
@@ -37,7 +38,7 @@ const TaskDetail = () => {
   const fetchattach = async()=>{
     try {
 
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/task/attach/${taskId}`)
+      const response = await axiosInstance.get(`/task/attach/${taskId}`)
       setAttach(response.data.attachments)
       
     } catch (error) {
@@ -57,7 +58,7 @@ const TaskDetail = () => {
   
       // Integrate toast.promise to show upload progress
       toast.promise(
-        axios.post(`${import.meta.env.VITE_BASE_URL}/task/attachments/${taskId}`, formData, {
+        axiosInstance.post(`/task/attachments/${taskId}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -76,7 +77,7 @@ const TaskDetail = () => {
   const fetchComments = async ()=>{
     try {
 
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/comment/listcomments/${taskId}`);
+      const response = await axiosInstance.get(`/comment/listcomments/${taskId}`);
 
       setListcomments(response.data.comments)
       console.log(response.data.comments);
@@ -131,7 +132,7 @@ const formattedDate = dueDate instanceof Date && !isNaN(dueDate)
 
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/comment/addcomment/${taskId}`,commentData)
+      const response = await axiosInstance.post(`${import.meta.env.VITE_BASE_URL}/comment/addcomment/${taskId}`,commentData)
       toast.success("Comment added successfully!", {
         position: "top-right",
         autoClose: 2000,

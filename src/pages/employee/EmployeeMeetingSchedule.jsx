@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import NotificationBox from '../../components/notification/notificationBox';
+import axiosInstance from '../../config/axiosConfig';
 
 const EmployeeMeetingSchedule = () => {
   const [listData,setListData] = useState([])
@@ -17,7 +18,7 @@ const EmployeeMeetingSchedule = () => {
   const fetchdata = async()=>{
     setLoading(true)
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/meeting/listmeeting/${userId}/employee`);
+      const response = await axiosInstance.get(`/meeting/listmeeting/${userId}/employee`);
       setListData(response.data.data)
       console.log(response.data.data)
 

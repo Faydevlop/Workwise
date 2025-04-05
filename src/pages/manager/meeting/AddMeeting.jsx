@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import ManagerSidebar from '../../../components/Sidebar/ManagerSidebar';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from '../../../config/axiosConfig';
 
 const AddMeeting = () => {
   // State variables for each input field
@@ -50,7 +50,7 @@ const AddMeeting = () => {
       console.log(meetingName, date, participants, meetingLink, topic);
 
       // Make an API request to save the meeting details
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/meeting/addmeeting/${userId}`, {
+      const response = await axiosInstance.post(`/meeting/addmeeting/${userId}`, {
         meetingName,
         date,
         participants,
@@ -92,7 +92,7 @@ const AddMeeting = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/meeting/listuser/${userId}`);
+        const response = await axiosInstance.get(`/meeting/listuser/${userId}`);
         setListingUser(response.data.users);
         console.log(response.data.users);
       } catch (error) {

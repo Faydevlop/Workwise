@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 
 import ManagerSidebar from '../../../components/Sidebar/ManagerSidebar'
-import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from '../../../config/axiosConfig';
 
 const Editpage = () => {
     const [data,setData] = useState(null)
@@ -19,7 +19,7 @@ const Editpage = () => {
        
 
         try {
-            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/payroll/showdata/${userId}`)
+            const response = await axiosInstance.get(`/payroll/showdata/${userId}`)
             setData(response.data.user)
             
           
@@ -52,7 +52,7 @@ const Editpage = () => {
                 bonuses
             }
 
-            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/payroll/addpay/${data.payroll._id}`,payrolldata);
+            const response = await axiosInstance.post(`/payroll/addpay/${data.payroll._id}`,payrolldata);
             toast.success("payroll added successfully!", {
                 position: "top-right",
                 autoClose: 1500,

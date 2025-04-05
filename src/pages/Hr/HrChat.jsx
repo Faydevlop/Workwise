@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import ManagerSidebar from "../../components/Sidebar/HrSidebar";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import api from "../../features/auth/axiosInstance";
 import io from "socket.io-client";
 import { useSelector } from "react-redux";
+import axiosInstance from "../../config/axiosConfig";
 
 const HrChat = () => {
   const socket = useMemo(() => io(import.meta.env.VITE_BASE_URL), []);
@@ -101,7 +100,7 @@ useEffect(() => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getusers`, {
+        const response = await axiosInstance.get(`/admin/getusers`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -160,8 +159,8 @@ useEffect(() => {
 
         try {
           setMessages([]);
-          const response = await axios.get(
-            `${import.meta.env.VITE_BASE_URL}/chat/messages/${sender}/${
+          const response = await axiosInstance.get(
+            `/chat/messages/${sender}/${
               currentUser._id
             }`
           );
@@ -238,7 +237,7 @@ const selectedUser = async (userId) => {
 
     // Fetch messages and mark as seen
     try {
-      await axios.post(`${import.meta.env.VITE_BASE_URL}/chat/mark-as-seen`, {
+      await axiosInstance.post(`/chat/mark-as-seen`, {
         senderId: userId,
         receiverId: sender,
       });

@@ -35,7 +35,7 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
       return;
     }
     try {
-      await axios.post(`${import.meta.env.VITE_BASE_URL}/employee/reset-password`, { token, password });
+      await axiosInstance.post(`/employee/reset-password`, { token, password });
       
       toast.success('Password has been reset', {
         position: "top-right",

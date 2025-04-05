@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import AdminSidebar from '../../../components/Sidebar/AdminSidebar';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
 import { toast ,ToastContainer} from 'react-toastify';
+import axiosInstance from '../../../config/axiosConfig';
 
 const ProjectDetailspage = () => {
   const [project, setProject] = useState(null);
@@ -13,7 +13,7 @@ const ProjectDetailspage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/project/${projectId}`,{
+        const response = await axiosInstance.get(`/admin/project/${projectId}`,{
           headers:{
             Authorization:`Bearer ${localStorage.getItem('token')}`,
           }
@@ -28,7 +28,7 @@ const ProjectDetailspage = () => {
     const fetchTask = async()=>{
       try {
 
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/listtask/${projectId}`)
+        const response = await axiosInstance.get(`/admin/listtask/${projectId}`)
         setTasks(response.data.tasks)
         console.log(response.data.tasks);
         
@@ -49,7 +49,7 @@ const ProjectDetailspage = () => {
   const Deleteproject =async()=>{
     console.log(projectId)
     try {
-        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/admin/deleteproject/${projectId}`,{
+        const response = await axiosInstance.post(`/admin/deleteproject/${projectId}`,{
           headers:{
             Authorization:`Bearer ${localStorage.getItem('token')}`,
           }

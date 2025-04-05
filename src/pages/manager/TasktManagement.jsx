@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 
 import ManagerSidebar from '../../components/Sidebar/ManagerSidebar'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import NotificationBox from '../../components/notification/notificationBox'
+import axiosInstance from '../../config/axiosConfig'
 
 
 
@@ -55,7 +55,7 @@ const TasktManagement = () => {
   const fetchdata = async()=>{
     try {
       
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/projectlist/${userId}`);
+        const response = await axiosInstance.get(`/admin/projectlist/${userId}`);
         setProjectData(response.data.projectDetails);
         setTasks(response.data.tasks); 
         console.log(response.data.tasks);
@@ -71,7 +71,7 @@ const TasktManagement = () => {
   const handleDelete = async (id) => {
     console.log('Deleting task with ID:', id);
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/task/deletetask/${id}`);
+      const response = await axiosInstance.post(`/task/deletetask/${id}`);
       console.log('Delete response:', response);
       toast.success('Task Deleted successfully', {
         position: "top-center",

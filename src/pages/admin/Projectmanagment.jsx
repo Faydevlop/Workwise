@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import AdminSidebar from '../../components/Sidebar/AdminSidebar';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
+import axiosInstance from '../../config/axiosConfig';
 
 
 const Projectmanagment = () => {
@@ -13,7 +13,7 @@ const Projectmanagment = () => {
     const fetchData = async()=>{
       setLoading(true)
      try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getprojects`,{
+      const response = await axiosInstance.get(`/admin/getprojects`,{
         headers:{
           Authorization:`Bearer ${localStorage.getItem('token')}`,
         }

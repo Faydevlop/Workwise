@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import AdminSidebar from '../../components/Sidebar/AdminSidebar';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
-
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from '../../config/axiosConfig';
 
 const EditUser = () => {
     const [loading, setLoading] = useState(true);
@@ -29,7 +28,7 @@ const EditUser = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getuser/${userId}`,{
+                const response = await axiosInstance.get(`/admin/getuser/${userId}`,{
                     headers:{
                         Authorization:`Bearer ${localStorage.getItem('token')}`,
                       }
@@ -75,7 +74,7 @@ const EditUser = () => {
                 // salary,
                 employeeStatus,
             };
-            await axios.put(`${import.meta.env.VITE_BASE_URL}/admin/updateuser/${userId}`, updatedUser,{
+            await axiosInstance.put(`/admin/updateuser/${userId}`, updatedUser,{
                 headers:{
                     Authorization:`Bearer ${localStorage.getItem('token')}`,
                   }

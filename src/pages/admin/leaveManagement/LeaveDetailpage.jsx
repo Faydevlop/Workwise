@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AdminSidebar from '../../../components/Sidebar/AdminSidebar';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../../../config/axiosConfig';
 
 const LeaveDetailpage = () => {
   const [leave, setLeave] = useState(null);
@@ -10,7 +10,7 @@ const LeaveDetailpage = () => {
   useEffect(() => {
     const fetchdata = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/leave/getdetails/${leaveId}`);
+        const response = await axiosInstance.get(`/leave/getdetails/${leaveId}`);
         console.log(response.data); // This will show the structure of the received data
         setLeave(response.data.leave); // Update this line to access the leave object correctly
       } catch (error) {

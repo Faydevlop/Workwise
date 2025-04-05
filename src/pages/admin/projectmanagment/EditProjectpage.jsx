@@ -3,7 +3,8 @@ import AdminSidebar from '../../../components/Sidebar/AdminSidebar';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { toast ,ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
+import axiosInstance from '../../../config/axiosConfig';
+
 
 const EditProjectpage = () => {
     const [name, setName] = useState('');
@@ -28,7 +29,7 @@ const EditProjectpage = () => {
     useEffect(() => {
         const fetchProjectData = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/project/${projectId}`,{
+                const response = await axiosInstance.get(`/admin/project/${projectId}`,{
                     headers:{
                         Authorization:`Bearer ${localStorage.getItem('token')}`,
                       }
@@ -50,7 +51,7 @@ const EditProjectpage = () => {
         };
         const fetchDepartments = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/department/list`);
+                const response = await axiosInstance.get(`/department/list`);
                 setDepartment(response.data);
                 console.log('department details', response.data);
             } catch (error) {
@@ -80,7 +81,7 @@ const EditProjectpage = () => {
         };
         
         try {
-            await axios.post(`${import.meta.env.VITE_BASE_URL}/admin/editproject/${projectId}`, projectData,{
+            await axiosInstance.post(`/admin/editproject/${projectId}`, projectData,{
                 headers:{
                     Authorization:`Bearer ${localStorage.getItem('token')}`,
                   }

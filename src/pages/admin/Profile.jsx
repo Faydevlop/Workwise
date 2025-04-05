@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import AdminSidebar from '../../components/Sidebar/AdminSidebar';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from '../../config/axiosConfig';
 
 const Profile = () => {
   const [showPasswordSection, setShowPasswordSection] = useState(false);
@@ -33,7 +32,7 @@ const Profile = () => {
     }
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/admin/changepass/${admin._id}`, {
+      const response = await axiosInstance.post(`/admin/changepass/${admin._id}`, {
         oldPassword: currentPassword,
         newPassword: newPassword,
       });

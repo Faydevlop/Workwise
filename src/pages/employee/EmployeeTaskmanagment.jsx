@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import NotificationBox from '../../components/notification/notificationBox';
+import axiosInstance from '../../config/axiosConfig';
 
 const EmployeeTaskmanagment = () => {
 
@@ -26,9 +27,9 @@ const EmployeeTaskmanagment = () => {
     setLoading(true)
     const fetchtasks = async()=>{
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/task/listtasks/${userId}`)
+        const response = await axiosInstance.get(`/task/listtasks/${userId}`)
         const fetchedTasks = response.data;
-        // console.log(response.data);
+        console.log(response.data);
         
 
         if (!fetchedTasks) {
@@ -96,7 +97,7 @@ const EmployeeTaskmanagment = () => {
   
     // Update task status in the backend
     try {
-      await axios.put(`${import.meta.env.VITE_BASE_URL}/comment/updatestatus/${movedTask._id}`, {
+      await axiosInstance.put(`/comment/updatestatus/${movedTask._id}`, {
         status: mapDroppableIdToStatus(destination.droppableId),
       });
     } catch (error) {

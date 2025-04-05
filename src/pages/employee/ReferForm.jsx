@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate, useParams } from 'react-router-dom';
+import axiosInstance from '../../config/axiosConfig';
 
 const ReferForm = () => {
 
@@ -77,7 +78,7 @@ const ReferForm = () => {
 
     try {
       // Send the form data to the server using Axios
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/jobs/referjob`, formData, {
+      const response = await axiosInstance.post(`/jobs/referjob`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

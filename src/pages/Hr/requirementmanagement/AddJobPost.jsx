@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import HrSidebar from '../../../components/Sidebar/HrSidebar';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from '../../../config/axiosConfig';
 
 const AddJobPost = () => {
   const [jobTitle, setJobTitle] = useState('');
@@ -72,7 +71,7 @@ const AddJobPost = () => {
     };
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/jobs/createpost`, jobData);
+      const response = await axiosInstance.post(`/jobs/createpost`, jobData);
       console.log('Job posted successfully:', response.data);
       toast.success("User added successfully!", {
         position: "top-right",

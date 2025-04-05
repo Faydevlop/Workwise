@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import EmployeeSidebar from '../../../components/Sidebar/EmployeeSidebar';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import axiosInstance from '../../../config/axiosConfig';
 
 
 
@@ -14,7 +14,7 @@ const LeaveDetailpage = () => {
     useEffect(()=>{
         const leaveDetails = async()=>{
             try {
-                const response =  await axios.get(`${import.meta.env.VITE_BASE_URL}/leave/getdetails/${leaveId}`)
+                const response =  await axiosInstance.get(`/leave/getdetails/${leaveId}`)
                 setData(response.data.leave)
                 console.log(response.data);
                 

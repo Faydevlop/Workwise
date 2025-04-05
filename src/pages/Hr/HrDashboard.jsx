@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import HrSidebar from '../../components/Sidebar/HrSidebar'
 import { useSelector } from 'react-redux'
-import axios from 'axios'
-import { Link } from 'react-router-dom'
 import NotificationBox from '../../components/notification/notificationBox'
+import axiosInstance from '../../config/axiosConfig'
 
 const HrDashboard = () => {
   const [meetings,setMeetings]= useState([])
@@ -16,7 +15,7 @@ const HrDashboard = () => {
 
   const fetchData = async()=>{
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/hr/dashboard/${userId}`);
+      const response = await axiosInstance.get(`/hr/dashboard/${userId}`);
       console.log(response.data);
       setMeetings(response.data.upcomingMeetings)
       setJobs(response.data.pendingReqeusts)

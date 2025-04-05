@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import HrSidebar from '../../components/Sidebar/HrSidebar';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { useSelector } from 'react-redux';
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import NotificationBox from '../../components/notification/notificationBox';
+import axiosInstance from '../../config/axiosConfig';
 
 const Leaves = () => {
   const [leaves, setLeaves] = useState([]);
@@ -17,7 +17,7 @@ const Leaves = () => {
     const fetchLeaves = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/leave/getleaves/${userId}`);
+        const response = await axiosInstance.get(`/leave/getleaves/${userId}`);
         setLeaves(response.data.leaves);
       } catch (error) {
         console.log(error);

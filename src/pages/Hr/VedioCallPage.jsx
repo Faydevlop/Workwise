@@ -1,11 +1,11 @@
 // src/pages/VideoCallPage.jsx
 import {  ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
-import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
+import axiosInstance from '../../config/axiosConfig';
 
 
 
@@ -18,7 +18,7 @@ const VideoCallPage = () => {
 
   const fetchData = async()=>{
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/employee/userdata/${userId}`)
+      const response = await axiosInstance.get(`/employee/userdata/${userId}`)
       setUser(response.data.userdata)
       console.log(response.data.userdata);
       

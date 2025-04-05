@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import AdminSidebar from '../../components/Sidebar/AdminSidebar'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
+import axiosInstance from '../../config/axiosConfig';
 
 const Departmentmanagment = () => {
   const [data,setData] = useState([])
@@ -15,7 +15,7 @@ const Departmentmanagment = () => {
     setLoading(true)
     const fetchdata = async()=>{
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/department/list`)
+        const response = await axiosInstance.get(`/department/list`)
         
         setData( response.data);
         console.log(response.data);
@@ -33,7 +33,7 @@ const Departmentmanagment = () => {
 
   const deleteDepartment = async(departmentId)=>{
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/department/delete/${departmentId}`);
+      const response = await axiosInstance.post(`/department/delete/${departmentId}`);
       toast.success("Department deleted successfully!", {
         position: "top-right",
         autoClose: 2000,

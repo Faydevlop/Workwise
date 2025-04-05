@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import EmployeeSidebar from '../../../components/Sidebar/EmployeeSidebar';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { useSelector } from 'react-redux';
 
@@ -9,6 +8,7 @@ import { useSelector } from 'react-redux';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Swal from 'sweetalert2'
+import axiosInstance from '../../../config/axiosConfig';
 
 
 const ApplyLeave = () => {
@@ -84,14 +84,10 @@ const ApplyLeave = () => {
       setLoading(false)
 
       try {
-        const response = await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/leave/applyLeave`,
+        const response = await axiosInstance.post(
+          `/leave/applyLeave`,
           leaveData,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
-          }
+          
         );
 
         

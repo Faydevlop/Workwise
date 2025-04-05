@@ -3,6 +3,7 @@ import EmployeeSidebar from '../../components/Sidebar/EmployeeSidebar'
 import axios from 'axios'
 import { useSelector } from 'react-redux';
 import NotificationBox from '../../components/notification/notificationBox';
+import axiosInstance from '../../config/axiosConfig';
 
 const EmployeeDashboard = () => {
 
@@ -16,7 +17,7 @@ const EmployeeDashboard = () => {
 
   const fetchData = async()=>{
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/employee/dashboard/${userId}`);
+      const response = await axiosInstance.get(`/employee/dashboard`);
       console.log(response.data);
       setMeetings(response.data.upcomingMeetings)
       setTasks(response.data.tasks)

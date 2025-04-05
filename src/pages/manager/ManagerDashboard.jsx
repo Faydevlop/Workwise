@@ -4,6 +4,7 @@ import ManagerSidebar from '../../components/Sidebar/ManagerSidebar'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import NotificationBox from '../../components/notification/notificationBox'
+import axiosInstance from '../../config/axiosConfig'
 
 const ManagerDashboard = () => {
   const [meetings,setMeetings] = useState([])
@@ -18,7 +19,7 @@ const ManagerDashboard = () => {
 
   const fetchData = async()=>{
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/manager/dashboard/${userId}`);
+      const response = await axiosInstance.get(`/manager/dashboard/${userId}`);
       console.log(response.data);
       setMeetings(response.data.upcomingMeetings)
       setprojects(response.data.projects)

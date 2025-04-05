@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import HrSidebar from '../../components/Sidebar/HrSidebar';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
-
-
 // new code 4
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -17,6 +14,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { ScaleLoader } from 'react-spinners';
+import axiosInstance from '../../config/axiosConfig';
 
 
 const EditProfile = () => {
@@ -50,7 +48,7 @@ const EditProfile = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/getuser/${userId}`,{
+                const response = await axiosInstance.get(`/admin/getuser/${userId}`,{
                     headers:{
                         Authorization:`Bearer ${localStorage.getItem('token')}`,
                       }
@@ -100,7 +98,7 @@ const EditProfile = () => {
         }
 
         try {
-            await axios.put(`${import.meta.env.VITE_BASE_URL}/employee/editprofile/${userId}`, formData, {
+            await axiosInstance.put(`/employee/editprofile/${userId}`, formData, {
                 headers:{
                     Authorization:`Bearer ${localStorage.getItem('token')}`,
                   }
@@ -148,7 +146,7 @@ const EditProfile = () => {
             setOtpError(false); // Clear error if OTP is correct
             setErrorMessage('');
 
-            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/employee/updateEmail/${userId}`,{newEmail:newEmail})
+            const response = await axiosInstance.post(`/employee/updateEmail/${userId}`,{newEmail:newEmail})
             try {
                 toast.success('Email updated successfully', {
                     position: "top-right",
@@ -197,7 +195,7 @@ const EditProfile = () => {
     
             try {
                 // Make the request inside the try block
-                const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/employee/resetEmail/${userId}`, { newEmail });
+                const response = await axiosInstance.post(`/employee/resetEmail/${userId}`, { newEmail });
                 setNewOtp(response.data.otp);
     
                 // Show success toast

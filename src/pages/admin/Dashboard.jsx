@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import AdminSidebar from '../../components/Sidebar/AdminSidebar'
-import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import axiosInstance from '../../config/axiosConfig'
 
 const AdminDashBoard = () => {
   const [leaves,setLeaves] = useState([])
@@ -16,7 +16,7 @@ const AdminDashBoard = () => {
   const fetchData = async()=>{
     try {
 
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/admin/dashboard`)
+      const response = await axiosInstance.get(`/admin/dashboard`)
 
       console.log(response.data);
       
