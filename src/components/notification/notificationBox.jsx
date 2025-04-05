@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
 import { FaBell } from 'react-icons/fa';
 import { io } from 'socket.io-client';
+import axiosInstance from '../../config/axiosConfig';
 
 const NotificationBox = ({ userId }) => {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -14,7 +14,7 @@ const NotificationBox = ({ userId }) => {
 
   const fetchNotifications = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/notifications/getnotify/${userId}`);
+      const response = await axiosInstance.get(`/notifications/getnotify/${userId}`);
       setNotifications(response.data.notifications);
       console.log('res',response.data);
       

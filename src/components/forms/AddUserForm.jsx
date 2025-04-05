@@ -1,4 +1,4 @@
-import axios from 'axios';
+
 import React, { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../config/axiosConfig';
 
 
 
@@ -73,7 +74,7 @@ const AddUserForm = () => {
     }
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/admin/adduser`,UserData,{
+      const response = await axiosInstance.post(`/admin/adduser`,UserData,{
         headers:{
           Authorization:`Bearer ${localStorage.getItem('token')}`,
         }
