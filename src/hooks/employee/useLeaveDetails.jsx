@@ -18,7 +18,7 @@ const useLeaveDetails = (leaveId) => {
         setLoading(false);
       }
     };
-
+   
     if (leaveId) {
       fetchLeaveDetails();
     }
