@@ -20,6 +20,7 @@ const Profile = () => {
   // Ensure safe access to state
   const { admin } = useSelector((state) => state.auth.admin || {});
 
+
   // Check if 'admin' exists before rendering its properties
   if (!admin) {
     return <div>Loading...</div>;
