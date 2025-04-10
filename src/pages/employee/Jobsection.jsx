@@ -1,38 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import EmployeeSidebar from '../../components/Sidebar/EmployeeSidebar';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { FaBell } from 'react-icons/fa'; // Import notification icon
 import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import NotificationBox from '../../components/notification/notificationBox';
 import { useSelector } from 'react-redux';
-import axiosInstance from '../../config/axiosConfig';
+
+import useJobList from '../../hooks/employee/useJobList';
 
 const Jobsection = () => {
-  const [listData, setListData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false); // State to show/hide notification box
+  const { listData, loading } = useJobList();
+  const [showNotifications, setShowNotifications] = useState(false);
 
   const { employee } = useSelector((state) => state.employeeAuth);
-  
-  const userId = employee.user._id
+  const userId = employee.user._id;
 
-  const fetchdata = async () => {
-    setLoading(true);
-    try {
-      const response = await axiosInstance.get(`/jobs/listitems`);
-      setListData(response.data.listingData);
-      console.log(response.data.listingData);
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchdata();
-  }, []);
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
