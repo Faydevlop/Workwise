@@ -12,19 +12,23 @@ import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import NotificationBox from '../../components/notification/notificationBox'
 import axiosInstance from '../../config/axiosConfig'
+import useTaskManager from '../../hooks/manager/useTaskManager';
 
 
 
 const TasktManagement = () => {
-  const [projectData,setProjectData] = useState([])
-  const [tasks, setTasks] = useState([]);
   const { manager } = useSelector((state) => state.managerAuth);
   const userId = manager?.manager?._id;
 
-  const [loading ,setLoading] = useState(false)
+  const {
+    projectData,
+    tasks,
+    loading,
+    fetchProjectAndTasks,
+    deleteTask
+  } = useTaskManager(userId); // 👈 use hook
 
   const [openDropdown, setOpenDropdown] = useState(null);
-
   const toggleDropdown = (index) => {
     setOpenDropdown(openDropdown === index ? null : index);
   };
@@ -34,13 +38,8 @@ const TasktManagement = () => {
   const [selectedProject, setSelectedProject] = useState('All Projects');
   const [selectedStatus, setSelectedStatus] = useState('All Statuses');
 
-  const toggleProjectDropdown = () => {
-    setIsProjectDropdownOpen((prev) => !prev);
-  };
-
-  const toggleStatusDropdown = () => {
-    setIsStatusDropdownOpen((prev) => !prev);
-  };
+  const toggleProjectDropdown = () => setIsProjectDropdownOpen((prev) => !prev);
+  const toggleStatusDropdown = () => setIsStatusDropdownOpen((prev) => !prev);
 
   const handleProjectSelect = (project) => {
     setSelectedProject(project);
@@ -52,64 +51,13 @@ const TasktManagement = () => {
     setIsStatusDropdownOpen(false);
   };
 
-  const fetchdata = async()=>{
-    try {
-      
-        const response = await axiosInstance.get(`/admin/projectlist/${userId}`);
-        setProjectData(response.data.projectDetails);
-        setTasks(response.data.tasks); 
-        console.log(response.data.tasks);
+  useEffect(() => {
+    fetchProjectAndTasks();
+  }, [fetchProjectAndTasks]);
 
-      
-    } catch (error) {
-      
-    }finally{
-      setLoading(false)
-    }
-  }
-
-  const handleDelete = async (id) => {
-    console.log('Deleting task with ID:', id);
-    try {
-      const response = await axiosInstance.post(`/task/deletetask/${id}`);
-      console.log('Delete response:', response);
-      toast.success('Task Deleted successfully', {
-        position: "top-center",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      fetchdata();
-    } catch (error) {
-      console.error('Error deleting task:', error);
-      toast.error('Error deleting task', {
-        position: "top-center",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    }
+  const handleDelete = (id) => {
+    deleteTask(id);
   };
-  
-
-  
-
-  useEffect(()=>{
-
-    setLoading(true)
-    
-    
-
-    fetchdata()
-
-  },[])
-
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
