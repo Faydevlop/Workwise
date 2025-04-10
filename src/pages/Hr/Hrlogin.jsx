@@ -1,57 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { loginAuth } from '../../features/hrAuthSlice';
-import { useNavigate } from 'react-router-dom';
-import logo from '../../assets/logo.png'
-
+import React from 'react';
+import useLogin from '../../hooks/hr/useLogin'; // Adjust the path based on your file structure
+import logo from '../../assets/logo.png';
 
 const Hrlogin = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { error, loading } = useSelector((state) => state.hrAuth);
-  const [errors, setErrors] = useState({});
-  const [errorVisible, setErrorVisible] = useState(false);
-
-  useEffect(() => {
-    if (error) {
-      setErrorVisible(true);
-      const timer = setTimeout(() => {
-        setErrorVisible(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [error]);
-
-  const validate = () => {
-    const errors = {};
-    if (!email) errors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(email)) errors.email = 'Email is invalid';
-    if (!password) errors.password = 'Password is required';
-    else if (password.length < 6) errors.password = 'Password must be at least 6 characters';
-    return errors;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const errors = validate();
-    if (Object.keys(errors).length === 0) {
-      dispatch(loginAuth({ email, password }))
-        .unwrap()
-        .then(() => {
-          navigate('/hr/dashboard');
-        });
-    } else {
-      setErrors(errors); // Show errors
-    }
-  };
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    errors,
+    handleSubmit,
+    error,
+    errorVisible,
+  } = useLogin();
 
   return (
     <main className="w-full h-screen flex flex-col items-center justify-center px-4">
       <div className="max-w-sm w-full text-gray-600">
         <div className="text-center">
-          <img src={logo} width={150} className="mx-auto  bg-blue-700  rounded-3xl " alt="logo" />
+          <img src={logo} width={150} className="mx-auto bg-blue-700 rounded-3xl" alt="logo" />
           <div className="mt-5 space-y-2">
             <h3 className="text-gray-800 text-2xl font-bold sm:text-3xl">Log in to your account</h3>
           </div>
@@ -92,14 +59,6 @@ const Hrlogin = () => {
             Sign in
           </button>
           {error && <div className="mt-4 text-red-600">{error}</div>}
-          <div className="text-center">
-            {/* <Link to={'/employee/request-reset-password'}>
-            <a href="javascript:void(0)" className="hover:text-indigo-600">
-              Forgot password?
-            </a>
-            </Link> */}
-            
-          </div>
         </form>
       </div>
     </main>
