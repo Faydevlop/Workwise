@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const TaskCard = ({ task }) => {
+    console.log(task);
+    
   return (
     <div
       className={`border text-card-foreground shadow-sm bg-muted rounded-lg p-4 cursor-grab mt-4 ${task.priority === 'Low' ? 'bg-green-200' :
