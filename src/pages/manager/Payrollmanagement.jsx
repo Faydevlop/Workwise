@@ -7,50 +7,44 @@ import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import NotificationBox from '../../components/notification/notificationBox';
 import axiosInstance from '../../config/axiosConfig';
+import { getDepartmentWisePayroll, getPayrollViewList } from '../../hooks/manager/payrollAPI';
 
 const Payrollmanagement = () => {
-    const [data,setData] = useState([])
-    const { manager } = useSelector((state) => state.managerAuth);
-    const userId = manager?.manager?._id;
+  const [data, setData] = useState([]);
+  const { manager } = useSelector((state) => state.managerAuth);
+  const userId = manager?.manager?._id;
 
-    const [loading ,setLoading] = useState(false)
-    const [listData,setListData] = useState([])
+  const [loading, setLoading] = useState(false);
+  const [listData, setListData] = useState([]);
 
-
-  
-  
-
-     const fetchdata = async()=>{
-        
-      setLoading(true)
-        try {
-            const response = await axiosInstance.get(`/payroll/listdepartmentwise/${userId}`)
-            setData(response.data.users)
-            console.log(response.data.users);
-        } catch (error) {
-            
-        }finally{
-          setLoading(false)
-        }
-     }
-
-     const fetchViewData = async()=>{
-      setLoading(true)
+  const fetchdata = async () => {
+      setLoading(true);
       try {
-        const response = await axiosInstance.get(`/payroll/viewlist`)
-        setListData(response.data.listView)
-        
+          const users = await getDepartmentWisePayroll(userId);
+          setData(users);
       } catch (error) {
-        
-      }finally{
-        setLoading(false)
+          console.error("Error fetching department-wise payroll", error);
+      } finally {
+          setLoading(false);
       }
-     }
+  };
 
-     useEffect(()=>{
-      fetchViewData()
-        fetchdata()
-     },[])
+  const fetchViewData = async () => {
+      setLoading(true);
+      try {
+          const viewData = await getPayrollViewList();
+          setListData(viewData);
+      } catch (error) {
+          console.error("Error fetching payroll view list", error);
+      } finally {
+          setLoading(false);
+      }
+  };
+
+  useEffect(() => {
+      fetchViewData();
+      fetchdata();
+  }, []);
 
   return (
 

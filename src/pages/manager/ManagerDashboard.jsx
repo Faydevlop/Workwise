@@ -5,40 +5,16 @@ import { useSelector } from 'react-redux'
 import axios from 'axios'
 import NotificationBox from '../../components/notification/notificationBox'
 import axiosInstance from '../../config/axiosConfig'
+import useManagerDashboardData from '../../hooks/manager/useManagerDashboardData'
 
 const ManagerDashboard = () => {
-  const [meetings,setMeetings] = useState([])
-  const [projects,setprojects] = useState([])
-  const [leaves,setLeaves] = useState([])
+  const { manager } = useSelector((state) => state.managerAuth)
+  const userId = manager?.manager?._id
 
-  const { manager } = useSelector((state) => state.managerAuth);
-  const userId = manager?.manager?._id;
+  const { meetings, projects, leaves, loading, error } = useManagerDashboardData(userId)
 
-  console.log('manager data',manager);
-  
-
-  const fetchData = async()=>{
-    try {
-      const response = await axiosInstance.get(`/manager/dashboard/${userId}`);
-      console.log(response.data);
-      setMeetings(response.data.upcomingMeetings)
-      setprojects(response.data.projects)
-      setLeaves(response.data.leaves)
-
-      
-
-
-    } catch (error) {
-      console.log(error);
-      
-      
-    }
-  }
-
-  useEffect(()=>{
-    fetchData()
-  },[])
-
+  if (loading) return <p className="p-5">Loading dashboard...</p>
+  if (error) return <p className="p-5 text-red-500">Failed to load dashboard data.</p>
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>

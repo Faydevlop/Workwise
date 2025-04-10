@@ -9,40 +9,19 @@ import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import NotificationBox from '../../components/notification/notificationBox'
 import axiosInstance from '../../config/axiosConfig'
+import useManagerProfile from '../../hooks/manager/useManagerProfile'
 
 const ManagerProfile   = () => {
-  const [user,setUser] = useState('')
+  const { manager } = useSelector((state) => state.managerAuth);
+  const userId = manager?.manager?._id;
 
-  const [loading,setLoading] = useState(true)
-  const [showPasswordSection, setShowPasswordSection] = useState(false);
+  const { user, loading } = useManagerProfile(userId);
+
+  const [showPasswordSection, setShowPasswordSection] = React.useState(false);
 
   const togglePasswordSection = () => {
     setShowPasswordSection(!showPasswordSection);
   };
-
-  const { manager } = useSelector((state) => state.managerAuth);
-  const userId = manager?.manager?._id;
- 
-
-  useEffect(() => {
-    const fetchUser = async () => {
-        try {
-            const response = await axiosInstance.get(`/admin/getuser/${userId}`,{
-     
-            });
-            setUser(response.data);
-            console.log(response.data);
-            
-        } catch (error) {
-            console.error("Error fetching user data:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    fetchUser();
-}, [userId]);
-console.log(user.profileImageUrl);
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>

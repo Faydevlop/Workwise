@@ -7,66 +7,47 @@ import 'react-toastify/dist/ReactToastify.css';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import axiosInstance from '../../config/axiosConfig';
+import useResetPasswordRequest from '../../hooks/manager/useResetPasswordRequest';
 
 const ResetPass = () => {
 
-  const [email,setEmail] = useState('')
+  const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
-  const [loading,setLoading] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showModal, setShowModal] = useState(false);
 
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
-
-  const handleContinue = () => {
-    setShowModal(false); // Close the modal
-    navigate('/manager/profile'); // Redirect to profile page
-  };
-
-  
   const { manager } = useSelector((state) => state.managerAuth);
   const userId = manager?.manager?._id;
-  console.log();
-  
+
+  const {
+    loading,
+    successModalOpen: isModalOpen,
+    setSuccessModalOpen: setIsModalOpen,
+    requestResetPassword
+  } = useResetPasswordRequest();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!email) {
       setEmailError('Email is required');
       return;
     }
-  
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setEmailError('Please enter a valid email address');
       return;
     }
-  
+
     setEmailError('');
-    setLoading(true);  
-  
-    try {
-      const response = await axiosInstance.post(`/employee/reqest-reset-password/${userId}`, { email },{
-        
-      });
-      setIsModalOpen(true); // Show the modal on success
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || "An error occurred while sending the reset link.";
-      toast.error(errorMessage, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    } finally {
-      setLoading(false);
-    }
+    await requestResetPassword(userId, email);
   };
-  
+
+  const handleContinue = () => {
+    setIsModalOpen(false);
+    navigate('/manager/profile');
+  };
 
 
   return (

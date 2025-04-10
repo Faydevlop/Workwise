@@ -24,7 +24,11 @@ const LeaveManagement = () => {
   const { manager } = useSelector((state) => state.managerAuth);
   const userId = manager?.manager?._id;
   const [loading ,setLoading] = useState(false)
-
+  
+  
+    const [open, setOpen] = useState(false);
+    const [leaveId, setLeaveId] = useState(null);
+    const [comment, setComment] = useState('');
 
   useEffect(() => {
 
@@ -61,10 +65,6 @@ const LeaveManagement = () => {
 
     return () => clearInterval(interval);
   }, []);
-
-  const [open, setOpen] = useState(false);
-  const [leaveId, setLeaveId] = useState(null);
-  const [comment, setComment] = useState('');
 
   const handleClickOpen = (leaveId) => {
     setLeaveId(leaveId);

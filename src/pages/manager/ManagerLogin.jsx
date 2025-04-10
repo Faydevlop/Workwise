@@ -3,13 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { loginAuth } from '../../features/managerAuth';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.png'
+import useManagerLogin from '../../hooks/manager/useManagerLogin';
 
 
 const ManagerLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const { login } = useManagerLogin();
   const { error, loading } = useSelector((state) => state.managerAuth);
   const [errors, setErrors] = useState({});
   const [errorVisible, setErrorVisible] = useState(false);
@@ -17,9 +17,7 @@ const ManagerLogin = () => {
   useEffect(() => {
     if (error) {
       setErrorVisible(true);
-      const timer = setTimeout(() => {
-        setErrorVisible(false);
-      }, 3000);
+      const timer = setTimeout(() => setErrorVisible(false), 3000);
       return () => clearTimeout(timer);
     }
   }, [error]);
@@ -33,20 +31,19 @@ const ManagerLogin = () => {
     return errors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const errors = validate();
-    if (Object.keys(errors).length === 0) {
-      dispatch(loginAuth({ email, password }))
-        .unwrap()
-        .then(() => {
-          navigate('/manager/dashboard');
-        });
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length === 0) {
+      try {
+        await login({ email, password });
+      } catch (err) {
+        // error is already handled by redux state
+      }
     } else {
-      setErrors(errors); // Show errors
+      setErrors(validationErrors);
     }
   };
-
   return (
     <main className="w-full h-screen flex flex-col items-center justify-center px-4">
       <div className="max-w-sm w-full text-gray-600">
