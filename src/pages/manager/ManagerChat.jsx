@@ -59,7 +59,7 @@ const ManagerChat = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`/admin/getusers`, {
+        const response = await axiosInstance.get(`/admin/getusers`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -189,7 +189,7 @@ const ManagerChat = () => {
 
         try {
           setMessages([]);
-          const response = await axios.get(
+          const response = await axiosInstance.get(
             `/chat/messages/${sender}/${
               currentUser._id
             }`
