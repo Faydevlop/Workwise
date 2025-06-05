@@ -34,6 +34,8 @@ export default function ManagerSidebar() {
    
     persistor.purge();
     dispatch(logout())
+    
+
   }
 
   return (

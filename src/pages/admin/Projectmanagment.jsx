@@ -130,7 +130,7 @@ const Projectmanagment = () => {
         <h2 className="text-xl font-bold">Current Projects</h2>
         <br />
         <div className="grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 gap-6">
-          {projects.map(project => (
+          {projects.slice().reverse().map(project => (
             <Link to={`/admin/Projectmanagment/${project._id}`}>
             <div key={project._id} className="border bg-white bg-card text-card-foreground shadow-lg rounded-xl overflow-hidden" data-v0-t="card">
               <div className="p-6">

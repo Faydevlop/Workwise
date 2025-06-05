@@ -402,48 +402,66 @@ const selectedUser = async (userId) => {
               </div>
             </div>
     
-            <div className="flex-1 overflow-y-auto p-3">
-                <div className="flex flex-col gap-4">
-                  {messages.map((msg, index) => (
-                    <div
-                      className={`flex items-start ${
-                        msg.sender === sender ? 'justify-end' : 'justify-start'
-                      } space-x-2`}
-                      key={index}
-                    >
-                      {msg.sender !== sender && (
-                        <div className="relative flex-shrink-0 w-8 h-8 rounded-full overflow-hidden">
-                          <img
-                            src={currentUser.profileImageUrl ? currentUser.profileImageUrl : 'https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg' }
-                            alt="User"
-                            className="object-cover w-full h-full"
-                          />
-                        </div>
-                      )}
-                      <div
-                        className={`p-2 rounded-lg max-w-xs ${
-                          msg.sender === sender ? 'bg-gray-100' : 'bg-blue-100'
-                        }`}
-                      >
-                        <p className="font-bold">{msg.content}</p>
-                        {msg.sender === sender && msg.messageStatus && (
-        <span className="text-blue-500 text-xs">{msg.messageStatus}</span>
-      )}
-      <p className="text-xs ">{new Date(msg.timestamp).toLocaleTimeString()}</p>
-                      </div>
-                      {msg.sender === sender && (
-                        <div className="relative flex-shrink-0 w-8 h-8 rounded-full overflow-hidden">
-                          <img
-                            src={ employee.user.profileImageUrl ?  employee.user.profileImageUrl : 'https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg' }
-                            alt="User"
-                            className="object-cover w-full h-full"
-                          />
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
+      
+
+<div className="flex-1 overflow-y-auto p-3">
+  <div className="flex flex-col gap-4">
+    {messages.map((msg, index) => {
+      // >>>>>>> START OF CHANGE <<<<<<<
+      const messageDate = new Date(msg.timestamp);
+      // Check if the date is invalid (e.g., msg.timestamp was null, undefined, or malformed)
+      const isInvalidDate = isNaN(messageDate.getTime());
+
+      // Determine the time to display
+      const displayTime = isInvalidDate
+        ? new Date().toLocaleTimeString() // Display current time for invalid timestamps
+        : messageDate.toLocaleTimeString(); // Display the actual message timestamp
+      // >>>>>>> END OF CHANGE <<<<<<<
+
+      return (
+        <div
+          className={`flex items-start ${
+            msg.sender === sender ? 'justify-end' : 'justify-start'
+          } space-x-2`}
+          key={index}
+        >
+          {msg.sender !== sender && (
+            <div className="relative flex-shrink-0 w-8 h-8 rounded-full overflow-hidden">
+              <img
+                src={currentUser.profileImageUrl ? currentUser.profileImageUrl : 'https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg'}
+                alt="User"
+                className="object-cover w-full h-full"
+              />
+            </div>
+          )}
+          <div
+            className={`p-2 rounded-lg max-w-xs ${
+              msg.sender === sender ? 'bg-gray-100' : 'bg-blue-100'
+            }`}
+          >
+            <p className="font-bold">{msg.content}</p>
+            {msg.sender === sender && msg.messageStatus && (
+              <span className="text-blue-500 text-xs">{msg.messageStatus}</span>
+            )}
+            {/* >>>>>>> UPDATE THIS LINE <<<<<<< */}
+            <p className="text-xs ">{displayTime}</p>
+          </div>
+          {msg.sender === sender && (
+            <div className="relative flex-shrink-0 w-8 h-8 rounded-full overflow-hidden">
+              <img
+                src={ employee.user.profileImageUrl ? employee.user.profileImageUrl : 'https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg' }
+                alt="User"
+                className="object-cover w-full h-full"
+              />
+            </div>
+          )}
+        </div>
+      );
+    })}
+  </div>
+</div>
+
+
     
             <div className="border-t p-3">
               <form className="flex items-center space-x-2" onSubmit={sendMessage}>

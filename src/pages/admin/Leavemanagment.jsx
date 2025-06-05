@@ -26,6 +26,9 @@ const Leavemanagment = () => {
   const [onLeaveToday,setOnLeaveToday] = useState([])
   const [comment, setComment] = useState('');
   const [loading ,setLoading] = useState(false)
+  const [searchText, setSearchText] = useState('');
+const [filterDate, setFilterDate] = useState('');
+
 
   
   
@@ -143,6 +146,28 @@ const Leavemanagment = () => {
     setShowLeaveMenu(showLeaveMenu === index ? null : index)
   }
 
+  const filteredLeaves = leaves.filter(leave => {
+  // search by employee name or email
+  const fullName = leave.userId ? `${leave.userId.firstName}${leave.userId.lastName}`.toLowerCase() : '';
+  const email = leave.userId ? leave.userId.email.toLowerCase() : '';
+  const searchLower = searchText.toLowerCase();
+
+  // Check search text
+  const matchesSearch = fullName.includes(searchLower) || email.includes(searchLower);
+
+  // Check date filter: filterDate should be between startDate and endDate
+  const filterDateObj = filterDate ? new Date(filterDate) : null;
+  const startDate = new Date(leave.startDate);
+  const endDate = new Date(leave.endDate);
+
+  const matchesDate = filterDateObj
+    ? (filterDateObj >= startDate && filterDateObj <= endDate)
+    : true;
+
+  return matchesSearch && matchesDate;
+});
+
+
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
@@ -186,10 +211,10 @@ const Leavemanagment = () => {
             <div className="bg-white rounded-lg p-4 shadow">
               <h2 className="text-lg font-semibold mb-2">Total Employees</h2>
               <p className="text-4xl font-bold">{noOfemplo}</p>
-              <div className="mt-4">
+              {/* <div className="mt-4">
                 <p className="text-sm text-gray-500">No of working employees</p>
                 <p className="text-2xl font-semibold">{workingEmployees}</p>
-              </div>
+              </div> */}
               <div className="mt-4">
                 <p className="text-sm text-gray-500">Pending Approval</p>
                 <p className="text-2xl font-semibold">{pendingLeaveRequest}</p>
@@ -209,8 +234,28 @@ const Leavemanagment = () => {
 
           <div className="lg:col-span-3 space-y-4 sm:space-y-6">
             <div className="bg-white rounded-lg shadow overflow-x-auto">
+             
+
               <div className="flex justify-between items-center p-4 border-b">
-                <h2 className="text-lg font-semibold">Leave Lists</h2>
+                 <div className="flex gap-4 mb-4">
+  <TextField
+    label="Search by Employee"
+    variant="outlined"
+    size="small"
+    value={searchText}
+    onChange={(e) => setSearchText(e.target.value)}
+  />
+  <TextField
+    label="Filter by Date"
+    type="date"
+    variant="outlined"
+    size="small"
+    value={filterDate}
+    onChange={(e) => setFilterDate(e.target.value)}
+    InputLabelProps={{ shrink: true }}
+  />
+</div>
+                {/* <h2 className="text-lg font-semibold">Leave Lists</h2> */}
                 <button className="text-gray-500">•••</button>
               </div>
               <table className="w-full">
@@ -228,7 +273,7 @@ const Leavemanagment = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                 {
-                      leaves.map((leave,index)=>(
+                      filteredLeaves.slice().reverse().map((leave,index)=>(
                         <tr key={index} >
                         
                         <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{leave.userId ? `${leave.userId.firstName}${leave.userId.lastName}` : 'N/a'}</td>
@@ -275,7 +320,7 @@ const Leavemanagment = () => {
                   <button className="text-gray-500 dropdown-menu" onClick={() => toggleLeaveMenu(1)}>•••</button>
                 </div>
                 <div className="p-4 space-y-4">
-                  {onLeaveToday.map((user, index) => (
+                  {onLeaveToday.slice().reverse().map((user, index) => (
                     <div key={index} className="flex items-center justify-between">
                       <div className="flex items-center">
                         <div className="w-10 h-10 bg-gray-300 rounded-full mr-3"></div>

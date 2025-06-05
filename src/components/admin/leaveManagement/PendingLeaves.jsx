@@ -15,7 +15,7 @@ const PendingLeaves = ({ leaves }) => (
           </tr>
         </thead>
         <tbody>
-          {leaves.map((leave) => (
+          {leaves.slice().reverse().map((leave) => (
             <tr key={leave._id} className="border-b">
               <td className="px-4 py-2">{leave?.userId?.firstName} {leave?.userId?.lastName}</td>
               <td className="px-4 py-2">

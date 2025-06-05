@@ -14,7 +14,7 @@ const DepartmentList = ({ departments }) => (
           </tr>
         </thead>
         <tbody>
-          {departments.map((d) => (
+          {departments.slice().reverse().map((d) => (
             <tr key={d._id} className="border-b">
               <td className="px-4 py-2">{d.departmentName}</td>
               <td className="px-4 py-2">

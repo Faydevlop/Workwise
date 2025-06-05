@@ -22,6 +22,8 @@ const ReferForm = () => {
     resume: null,
   });
   const [errors, setErrors] = useState({});
+  const [successMsg, setSuccessMsg] = useState('');
+
   const { employee } = useSelector((state) => state.employeeAuth);
   const userId = employee?.user?._id || '';
   const { jobId } = useParams();
@@ -62,21 +64,21 @@ const ReferForm = () => {
 
     const result = await referCandidate(formData);
     if (result.success) {
-      toast.success("Referral submitted!", {
-        onClose: () => navigate('/employee/jobs')
-      });
-      setForm({
-        name: '',
-        email: '',
-        phone: '',
-        address: '',
-        qualifications: '',
-        portfolio: '',
-        resume: null,
-      });
-    } else {
-      toast.error(result.error);
-    }
+  setSuccessMsg('Form submitted');
+  setTimeout(() => navigate('/employee/jobs'), 2000);
+  setForm({
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    qualifications: '',
+    portfolio: '',
+    resume: null,
+  });
+} else {
+  toast.error(result.error);
+}
+
   };
 
   return (
@@ -96,6 +98,12 @@ const ReferForm = () => {
             <h1 className="text-3xl font-bold">Refer a New Employee</h1>
             <p className="text-muted-foreground">Help us find the perfect candidate.</p>
           </div>
+          {successMsg && (
+  <div className="text-green-600 font-semibold mt-4 text-center">
+    {successMsg}
+  </div>
+)}
+
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="grid sm:grid-cols-2 gap-4">
               <InputField label="Name" id="name" value={form.name} onChange={(e) => handleChange('name', e.target.value)} error={errors.name} placeholder="Candidate's name" />
