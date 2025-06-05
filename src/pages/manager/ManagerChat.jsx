@@ -453,62 +453,76 @@ useEffect(() => {
                   </div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-3">
-                  <div className="flex flex-col gap-4">
-                    {messages.map((msg, index) => (
-                      <div
-                        className={`flex items-start ${
-                          msg.sender === sender
-                            ? "justify-end"
-                            : "justify-start"
-                        } space-x-2`}
-                        key={index}
-                      >
-                        {msg.sender !== sender && (
-                          <div className="relative flex-shrink-0 w-8 h-8 rounded-full overflow-hidden">
-                            <img
-                              src={
-                                currentUser.profileImageUrl
-                                  ? currentUser.profileImageUrl
-                                  : "https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg"
-                              }
-                              alt="User"
-                              className="object-cover w-full h-full"
-                            />
-                          </div>
-                        )}
-                        <div
-                          className={`p-2 rounded-lg max-w-xs ${
-                            msg.sender === sender
-                              ? "bg-gray-100"
-                              : "bg-blue-100"
-                          }`}
-                        >
-                          
-                          <p className="font-bold">{msg.content}</p>
-                          {msg.sender === sender && msg.messageStatus && (
-        <span className="text-blue-500  text-xs">{msg.messageStatus}</span>
+             <div className="flex-1 overflow-y-auto p-3">
+  <div className="flex flex-col gap-4">
+    {messages.map((msg, index) => {
+      // --- START OF MODIFICATION ---
+      const messageDate = new Date(msg.timestamp);
+      const isValidDate = !isNaN(messageDate.getTime()); // Check if the date is valid
 
-      )}
-      <p className="text-xs ">{new Date(msg.timestamp).toLocaleTimeString()}</p>
-                        </div>
-                        {msg.sender === sender && (
-                          <div className="relative flex-shrink-0 w-8 h-8 rounded-full overflow-hidden">
-                            <img
-                              src={
-                                sender.profileImageUrl
-                                  ? currentUser.sender
-                                  : "https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg"
-                              }
-                              alt="User"
-                              className="object-cover w-full h-full"
-                            />
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
+      // Get the current date and time to use as a fixed fallback
+      const now = new Date();
+
+      // Determine the time to display (e.g., 7:51 PM)
+      const displayTime = isValidDate
+        ? messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        : now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Fallback to current time
+      // --- END OF MODIFICATION ---
+
+      return (
+        <div
+          className={`flex items-start ${
+            msg.sender === sender
+              ? "justify-end"
+              : "justify-start"
+          } space-x-2`}
+          key={index}
+        >
+          {msg.sender !== sender && (
+            <div className="relative flex-shrink-0 w-8 h-8 rounded-full overflow-hidden">
+              <img
+                src={
+                  currentUser.profileImageUrl
+                    ? currentUser.profileImageUrl
+                    : "https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg"
+                }
+                alt="User"
+                className="object-cover w-full h-full"
+              />
+            </div>
+          )}
+          <div
+            className={`p-2 rounded-lg max-w-xs ${
+              msg.sender === sender
+                ? "bg-gray-100"
+                : "bg-blue-100"
+            }`}
+          >
+            <p className="font-bold">{msg.content}</p>
+            {msg.sender === sender && msg.messageStatus && (
+              <span className="text-blue-500 text-xs">{msg.messageStatus}</span>
+            )}
+            {/* --- THIS LINE IS UPDATED TO SHOW ONLY 'displayTime' --- */}
+            <p className="text-xs ">{displayTime}</p>
+          </div>
+          {msg.sender === sender && (
+            <div className="relative flex-shrink-0 w-8 h-8 rounded-full overflow-hidden">
+              <img
+                src={
+                  sender.profileImageUrl // Assuming `sender` here is an object with `profileImageUrl`
+                    ? sender.profileImageUrl
+                    : "https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg"
+                }
+                alt="User"
+                className="object-cover w-full h-full"
+              />
+            </div>
+          )}
+        </div>
+      );
+    })}
+  </div>
+</div>
 
                 <div className="border-t p-3">
                   <form
