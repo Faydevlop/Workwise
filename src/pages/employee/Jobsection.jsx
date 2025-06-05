@@ -53,7 +53,7 @@ const Jobsection = () => {
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {listData.length === 0 ? <p>No Job Listings...</p> : ''}
-              {listData.map((data) => (
+              {listData.slice().reverse().map((data) => (
                 <div key={data._id} className="rounded-lg border bg-card text-card-foreground shadow-sm">
                   <div className="p-6 grid gap-4">
                     <div>
