@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -16,6 +16,38 @@ const Recruitment = () => {
 
   const { listData, loading: listLoading } = useJobListings();
   const { showData, loading: appLoading, fetchList } = useJobApplications();
+
+  const [searchApp, setSearchApp] = useState('');
+  const [searchJob, setSearchJob] = useState('');
+  const [appPage, setAppPage] = useState(1);
+  const [jobPage, setJobPage] = useState(1);
+  const itemsPerPage = 5;
+
+  const filteredApplications = useMemo(() => {
+    return showData.filter(item =>
+      item.name.toLowerCase().includes(searchApp.toLowerCase()) ||
+      item.phone.includes(searchApp) ||
+      item.jobId?.jobTitle?.toLowerCase().includes(searchApp.toLowerCase())
+    );
+  }, [showData, searchApp]);
+
+  const paginatedApplications = useMemo(() => {
+    const start = (appPage - 1) * itemsPerPage;
+    return filteredApplications.slice(start, start + itemsPerPage);
+  }, [filteredApplications, appPage]);
+
+  const filteredJobs = useMemo(() => {
+    return listData.filter(job =>
+      job.jobTitle.toLowerCase().includes(searchJob.toLowerCase()) ||
+      job.department.toLowerCase().includes(searchJob.toLowerCase()) ||
+      job.location.toLowerCase().includes(searchJob.toLowerCase())
+    );
+  }, [listData, searchJob]);
+
+  const paginatedJobs = useMemo(() => {
+    const start = (jobPage - 1) * itemsPerPage;
+    return filteredJobs.slice(start, start + itemsPerPage);
+  }, [filteredJobs, jobPage]);
 
   const handleDeleteJob = async (listId) => {
     try {
@@ -75,52 +107,63 @@ const Recruitment = () => {
           </Backdrop>
 
           <main className="flex-1 bg-white rounded-md gap-2 p-4 md:p-6">
-            {/* Job Stats Section */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+
+            {/* Stats */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-4">
               <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
                 <div className="flex flex-col space-y-1.5 p-4 lg:p-2 items-center justify-between">
-                  <h3 className="whitespace-nowrap text-xl md:text-2xl font-semibold leading-none tracking-tight">Pending Application</h3>
+                  <h3 className="text-xl font-semibold">Pending Application</h3>
                   <div className="text-2xl font-bold">{showData.length}</div>
                 </div>
               </div>
               <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
                 <div className="flex flex-col space-y-1.5 p-4 lg:p-2 items-center justify-between">
-                  <h3 className="whitespace-nowrap text-xl md:text-2xl font-semibold leading-none tracking-tight">Job Listings</h3>
+                  <h3 className="text-xl font-semibold">Job Listings</h3>
                   <div className="text-2xl font-bold">{listData.length}</div>
                 </div>
               </div>
             </div>
 
-            {/* Toast Container */}
+            {/* Toast */}
             <ToastContainer />
-            <h3 className="whitespace-nowrap text-xl md:text-2xl font-semibold leading-none ml-5 tracking-tight">Applications</h3>
 
-            {/* Applications Table */}
-            <div className="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden mt-2">
+            {/* Applications */}
+            <h3 className="text-xl md:text-2xl font-semibold ml-2">Applications</h3>
+            <input
+              type="text"
+              placeholder="Search applications..."
+              className="border p-2 rounded my-2 w-full"
+              value={searchApp}
+              onChange={(e) => {
+                setSearchApp(e.target.value);
+                setAppPage(1);
+              }}
+            />
+            <div className="rounded-lg border bg-card shadow-sm overflow-hidden">
               <table className="min-w-full text-sm">
                 <thead className="bg-gray-100">
                   <tr className="border-b">
-                    <th className="h-12 px-4 text-left align-middle font-medium text-gray-600">Applicant</th>
-                    <th className="h-12 px-4 text-left align-middle font-medium text-gray-600">Position</th>
-                    <th className="h-12 px-4 text-left align-middle font-medium text-gray-600">Contact No.</th>
-                    <th className="h-12 px-4 text-left align-middle font-medium text-gray-600">Referred By</th>
-                    <th className="h-12 px-4 text-left align-middle font-medium text-gray-600">Job</th>
-                    <th className="h-12 px-4 text-right align-middle font-medium text-gray-600">Actions</th>
+                    <th className="h-12 px-4 text-left font-medium text-gray-600">Applicant</th>
+                    <th className="h-12 px-4 text-left font-medium text-gray-600">Updated</th>
+                    <th className="h-12 px-4 text-left font-medium text-gray-600">Contact No.</th>
+                    <th className="h-12 px-4 text-left font-medium text-gray-600">Referred By</th>
+                    <th className="h-12 px-4 text-left font-medium text-gray-600">Job</th>
+                    <th className="h-12 px-4 text-right font-medium text-gray-600">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {showData.length > 0 ? showData.map((item, index) => (
+                  {paginatedApplications.length > 0 ? paginatedApplications.map((item, index) => (
                     <tr key={index} className="border-b hover:bg-gray-50">
-                      <td className="p-4 align-middle">{item.name}</td>
-                      <td className="p-4 align-middle">{new Date(item.updatedAt).toLocaleDateString()}</td>
-                      <td className="p-4 align-middle">{item.phone}</td>
-                      <td className="p-4 align-middle">{item.referer ? `${item.referer.firstName} ${item.referer.lastName}` : 'Not Found'}</td>
-                      <td className="p-4 align-middle">{item.jobId ? item.jobId.jobTitle : 'Not Found'}</td>
-                      <td className="p-4 align-middle text-right">
+                      <td className="p-4">{item.name}</td>
+                      <td className="p-4">{new Date(item.updatedAt).toLocaleDateString()}</td>
+                      <td className="p-4">{item.phone}</td>
+                      <td className="p-4">{item.referer ? `${item.referer.firstName} ${item.referer.lastName}` : 'Not Found'}</td>
+                      <td className="p-4">{item.jobId ? item.jobId.jobTitle : 'Not Found'}</td>
+                      <td className="p-4 text-right">
                         <Link to={`/hr/recruitment/view/${item._id}`}>
-                          <button className="mr-2 inline-flex items-center justify-center text-sm font-medium border bg-gray-100 hover:bg-gray-200 h-9 rounded-md px-3">View</button>
+                          <button className="mr-2 text-sm font-medium border bg-gray-100 hover:bg-gray-200 h-9 rounded-md px-3">View</button>
                         </Link>
-                        <button onClick={() => handleDeleteApplication(item._id)} className="inline-flex items-center justify-center text-sm font-medium border bg-gray-100 hover:bg-gray-200 h-9 rounded-md px-3 text-red-500">Delete</button>
+                        <button onClick={() => handleDeleteApplication(item._id)} className="text-sm font-medium border bg-gray-100 hover:bg-gray-200 h-9 rounded-md px-3 text-red-500">Delete</button>
                       </td>
                     </tr>
                   )) : (
@@ -130,35 +173,47 @@ const Recruitment = () => {
                   )}
                 </tbody>
               </table>
+              <div className="flex justify-center items-center gap-2 p-3">
+                <button disabled={appPage === 1} onClick={() => setAppPage(appPage - 1)}>Previous</button>
+                <span>Page {appPage}</span>
+                <button disabled={appPage * itemsPerPage >= filteredApplications.length} onClick={() => setAppPage(appPage + 1)}>Next</button>
+              </div>
             </div>
 
-            <br />
-
-            <h3 className="whitespace-nowrap text-xl md:text-2xl font-semibold leading-none ml-5 tracking-tight">Job Listings</h3>
-
-            {/* Job Listings Table */}
-            <div className="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden mt-2">
+            {/* Job Listings */}
+            <h3 className="text-xl md:text-2xl font-semibold mt-6 ml-2">Job Listings</h3>
+            <input
+              type="text"
+              placeholder="Search job listings..."
+              className="border p-2 rounded my-2 w-full"
+              value={searchJob}
+              onChange={(e) => {
+                setSearchJob(e.target.value);
+                setJobPage(1);
+              }}
+            />
+            <div className="rounded-lg border bg-card shadow-sm overflow-hidden">
               <table className="min-w-full text-sm">
                 <thead className="bg-gray-100">
                   <tr className="border-b">
-                    <th className="h-12 px-4 text-left align-middle font-medium text-gray-600">Job Title</th>
-                    <th className="h-12 px-4 text-left align-middle font-medium text-gray-600">Department</th>
-                    <th className="h-12 px-4 text-left align-middle font-medium text-gray-600">Location</th>
-                    <th className="h-12 px-4 text-left align-middle font-medium text-gray-600">Date Posted</th>
-                    <th className="h-12 px-4 text-left align-middle font-medium text-gray-600">Application Deadline</th>
-                    <th className="h-12 px-4 text-right align-middle font-medium text-gray-600">Actions</th>
+                    <th className="h-12 px-4 text-left font-medium text-gray-600">Job Title</th>
+                    <th className="h-12 px-4 text-left font-medium text-gray-600">Department</th>
+                    <th className="h-12 px-4 text-left font-medium text-gray-600">Location</th>
+                    <th className="h-12 px-4 text-left font-medium text-gray-600">Date Posted</th>
+                    <th className="h-12 px-4 text-left font-medium text-gray-600">Application Deadline</th>
+                    <th className="h-12 px-4 text-right font-medium text-gray-600">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {listData.length > 0 ? listData.map((job, index) => (
+                  {paginatedJobs.length > 0 ? paginatedJobs.map((job, index) => (
                     <tr key={index} className="border-b hover:bg-gray-50">
-                      <td className="p-4 align-middle">{job.jobTitle}</td>
-                      <td className="p-4 align-middle">{job.department}</td>
-                      <td className="p-4 align-middle">{job.location}</td>
-                      <td className="p-4 align-middle">{new Date(job.createdAt).toLocaleDateString()}</td>
-                      <td className="p-4 align-middle">{new Date(job.deadline).toLocaleDateString()}</td>
-                      <td className="p-4 align-middle text-right">
-                        <button onClick={() => handleDeleteJob(job._id)} className="inline-flex items-center justify-center text-sm font-medium border bg-gray-100 hover:bg-gray-200 h-9 rounded-md px-3 text-red-500">Delete</button>
+                      <td className="p-4">{job.jobTitle}</td>
+                      <td className="p-4">{job.department}</td>
+                      <td className="p-4">{job.location}</td>
+                      <td className="p-4">{new Date(job.createdAt).toLocaleDateString()}</td>
+                      <td className="p-4">{new Date(job.applicationDeadline).toLocaleDateString()}</td>
+                      <td className="p-4 text-right">
+                        <button onClick={() => handleDeleteJob(job._id)} className="text-sm font-medium border bg-gray-100 hover:bg-gray-200 h-9 rounded-md px-3 text-red-500">Delete</button>
                       </td>
                     </tr>
                   )) : (
@@ -168,6 +223,11 @@ const Recruitment = () => {
                   )}
                 </tbody>
               </table>
+              <div className="flex justify-center items-center gap-2 p-3">
+                <button disabled={jobPage === 1} onClick={() => setJobPage(jobPage - 1)}>Previous</button>
+                <span>Page {jobPage}</span>
+                <button disabled={jobPage * itemsPerPage >= filteredJobs.length} onClick={() => setJobPage(jobPage + 1)}>Next</button>
+              </div>
             </div>
           </main>
         </div>

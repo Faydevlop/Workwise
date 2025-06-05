@@ -282,7 +282,7 @@ const HrMeetings = () => {
       </div>
       {listnext.length === 0 ? (<p>No Meeting Scheduled</p>) : ''}
 
-      {sortedMeetings.slice(0, visibleCount).map((meeting) => (
+      {sortedMeetings.slice(0, visibleCount).reverse().map((meeting) => (
         <div key={meeting._id} className="mb-6">
           <div className="flex items-center gap-4">
             <div className="bg-primary text-primary-foreground rounded-md px-2 py-1 text-xs font-medium">

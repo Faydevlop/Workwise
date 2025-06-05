@@ -69,7 +69,7 @@ const HrDashboard = () => {
                       </thead>
                       <tbody>
                         {jobs.length > 0 ? (
-                          jobs.map((job) => (
+                          jobs.slice().reverse().map((job) => (
                             <tr key={job._id} className="border-b transition-colors hover:bg-muted/50">
                               <td className="p-4 align-middle font-medium">{job.name}</td>
                               <td className="p-4 align-middle">{job.email}</td>
@@ -98,7 +98,7 @@ const HrDashboard = () => {
                 <div className="p-6">
                   <div className="grid gap-4">
                     {meetings.length > 0 ? (
-                      meetings.map((meet, index) => (
+                      meetings.slice().reverse().map((meet, index) => (
                         <div key={index} className="flex items-center justify-between">
                           <div className="grid gap-1">
                             <p className="text-sm font-medium">{meet.meetingName}</p>
@@ -136,7 +136,7 @@ const HrDashboard = () => {
                       </thead>
                       <tbody>
                         {leaves.length > 0 ? (
-                          leaves.map((leave, index) => (
+                          leaves.slice().reverse().map((leave, index) => (
                             <tr key={index} className="border-b transition-colors hover:bg-muted/50">
                               <td className="p-4 align-middle font-medium">
                                 {leave.userId?.firstName} {leave.userId?.lastName}

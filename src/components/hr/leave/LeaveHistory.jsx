@@ -14,7 +14,7 @@ const LeaveHistory = ({ leaves }) => {
           </tr>
         </thead>
         <tbody>
-          {leaves.map((leave, index) => (
+          {leaves.slice().reverse().map((leave, index) => (
             <tr key={index} className="hover:bg-gray-50">
               <td className="p-2 border-b">{leave.leaveType}</td>
               <td className="p-2 border-b">{new Date(leave.startDate).toLocaleDateString()}</td>
