@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import ManagerSidebar from "../../components/Sidebar/HrSidebar";
+import ManagerSidebar from "../../components/Sidebar/HrSidebar"; // Assuming HrSidebar is your ManagerSidebar
 import { useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import { useSelector } from "react-redux";
@@ -16,64 +16,64 @@ const HrChat = () => {
   const [newMessage, setNewMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
+  // --- NEW STATE FOR TYPING INDICATOR ---
+  const [isTyping, setIsTyping] = useState(false);
+  const typingTimeoutRef = useRef(null); // Ref to store the typing timeout
 
   const { hr } = useSelector((state) => state.hrAuth);
   const sender = hr.hr._id;
-  
 
   useEffect(() => {
-  socket.emit('register', hr.hr._id);
-}, [hr.hr._id]);
+    socket.emit('register', hr.hr._id);
+  }, [hr.hr._id]);
 
-useEffect(() => {
-  // Listen for last message updates
-  socket.on('update-last-message', (lastMessage) => {
-    setUsers((prevUsers) => {
-      const updatedUsers = prevUsers.map((user) => {
-        if (user._id === lastMessage.sender || user._id === lastMessage.receiver) {
-          return {
-            ...user,
-            lastMessage: lastMessage.content,
-            lastMessageTime: lastMessage.timestamp,
-          };
-        }
-        return user;
-      });
+  useEffect(() => {
+    // Listen for last message updates
+    socket.on('update-last-message', (lastMessage) => {
+      setUsers((prevUsers) => {
+        const updatedUsers = prevUsers.map((user) => {
+          if (user._id === lastMessage.sender || user._id === lastMessage.receiver) {
+            return {
+              ...user,
+              lastMessage: lastMessage.content,
+              lastMessageTime: lastMessage.timestamp,
+            };
+          }
+          return user;
+        });
 
-      // Sort users based on lastMessageTime (most recent message at the top)
-      return updatedUsers.sort((a, b) => {
-        if (!a.lastMessageTime) return 1; // Users without lastMessageTime should be at the bottom
-        if (!b.lastMessageTime) return -1;
-        return new Date(b.lastMessageTime) - new Date(a.lastMessageTime);
+        // Sort users based on lastMessageTime (most recent message at the top)
+        return updatedUsers.sort((a, b) => {
+          if (!a.lastMessageTime) return 1; // Users without lastMessageTime should be at the bottom
+          if (!b.lastMessageTime) return -1;
+          return new Date(b.lastMessageTime) - new Date(a.lastMessageTime);
+        });
       });
     });
-  });
 
-  return () => {
-    socket.off('update-last-message');
-  };
-}, []);
+    return () => {
+      socket.off('update-last-message');
+    };
+  }, []);
 
-useEffect(() => {
-  socket.on("video-call-initiate", ({ senderId, roomId }) => {
-    console.log(`Received video call notification from ${senderId}`);
-    // Notify the user about the incoming video call
-    if (
-      window.confirm(
-        `You have an incoming video call from ${senderId}. Would you like to join?`
-      )
-    ) {
-      // If the user agrees, navigate them to the video call page
-      navigate(`/chat/video-call/${roomId}/${senderId}`);
-    }
-  });
+  useEffect(() => {
+    socket.on("video-call-initiate", ({ senderId, roomId }) => {
+      console.log(`Received video call notification from ${senderId}`);
+      // Notify the user about the incoming video call
+      if (
+        window.confirm(
+          `You have an incoming video call from ${senderId}. Would you like to join?`
+        )
+      ) {
+        // If the user agrees, navigate them to the video call page
+        navigate(`/chat/video-call/${roomId}/${senderId}`);
+      }
+    });
 
-  return () => {
-    socket.off("video-call-initiate");
-  };
-}, []);
-
-
+    return () => {
+      socket.off("video-call-initiate");
+    };
+  }, []);
 
   const generateRoomId = () => {
     // Generate a random string of length 12
@@ -83,14 +83,14 @@ useEffect(() => {
   // Handle video call button click
   const handleVideoCall = async () => {
     const roomId = generateRoomId(); // Unique room ID for the video call
-    
+
     try {
       await socket.emit('initiate-video-call', {
         senderId: sender,
         receiverId: currentUser._id,
         roomId,
       });
-  
+
       navigate(`/chat/video-call/${roomId}/${sender}`);
     } catch (error) {
       console.error("Failed to initiate video call:", error);
@@ -110,17 +110,15 @@ useEffect(() => {
         // Set the filtered users list (excluding the current sender)
         const filteredUsers = allUsers.filter((user) => user._id !== sender);
         setUsers(filteredUsers);
-  
+
         // If there are users, select a random user as the initial chat user
         if (filteredUsers.length > 0) {
           const randomIndex = Math.floor(Math.random() * filteredUsers.length);
           setCurrentUser(filteredUsers[randomIndex]);
         }
-             
+
       } catch (error) {
-        //
-      } finally {
-        // setLoading(false)
+        console.error("Failed to fetch users:", error);
       }
     };
 
@@ -134,7 +132,7 @@ useEffect(() => {
       if (data.sender === currentUser._id || data.receiver === currentUser._id) {
         setMessages((prevMessages) => [...prevMessages, data]);
       }
-  
+
       // Update the user list to mark the user with a new message
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
@@ -144,13 +142,30 @@ useEffect(() => {
         )
       );
     });
-  
+
+    // --- NEW SOCKET LISTENERS FOR TYPING INDICATOR ---
+    socket.on('typing', ({ senderId }) => {
+      if (currentUser && senderId === currentUser._id) {
+        setIsTyping(true);
+      }
+    });
+
+    socket.on('stopped-typing', ({ senderId }) => {
+      if (currentUser && senderId === currentUser._id) {
+        setIsTyping(false);
+      }
+    });
+    // --- END NEW SOCKET LISTENERS ---
+
     return () => {
       socket.off("message");
+      // --- CLEANUP TYPING LISTENERS ---
+      socket.off("typing");
+      socket.off("stopped-typing");
+      // --- END CLEANUP ---
     };
   }, [currentUser]);
-  
-  
+
 
   useEffect(() => {
     if (currentUser) {
@@ -161,7 +176,7 @@ useEffect(() => {
           setMessages([]);
           const response = await axiosInstance.get(
             `/chat/messages/${sender}/${
-              currentUser._id
+            currentUser._id
             }`
           );
           console.log(response.data); // Ensure the correct data is fetched
@@ -183,71 +198,92 @@ useEffect(() => {
         sender,
         receiver: currentUser._id,
         content: newMessage,
-        messageStatus:"delivered"
+        messageStatus: "delivered"
       };
 
       socket.emit("message", message);
       setNewMessage("");
+
+      // Immediately clear typing indicator for self after sending message
+      clearTimeout(typingTimeoutRef.current);
+      socket.emit('stopped-typing', { senderId: sender, receiverId: currentUser._id });
     }
   };
 
 
-useEffect(() => {
-  if (currentUser) {
-    socket.emit('message-seen', {
-      senderId: currentUser._id,  // The user whose messages are being read
-      receiverId: sender,         // The logged-in user (receiver of the messages)
+  useEffect(() => {
+    if (currentUser) {
+      socket.emit('message-seen', {
+        senderId: currentUser._id,  // The user whose messages are being read
+        receiverId: sender,         // The logged-in user (receiver of the messages)
+      });
+    }
+  }, [messages, currentUser]);
+
+
+
+  useEffect(() => {
+    // Listen for the 'messages-seen' event and update the local message state
+    socket.on('messages-seen', ({ senderId }) => {
+      setMessages(prevMessages =>
+        prevMessages.map(msg =>
+          msg.sender === senderId ? { ...msg, messageStatus: 'seen' } : msg
+        )
+      );
     });
-  }
-}, [messages,currentUser]);
 
-
-
-useEffect(() => {
-  // Listen for the 'messages-seen' event and update the local message state
-  socket.on('messages-seen', ({ senderId }) => {
-    setMessages(prevMessages =>
-      prevMessages.map(msg =>
-        msg.sender === senderId ? { ...msg, messageStatus: 'seen' } : msg
-      )
-    );
-  });
-
-  return () => {
-    socket.off('messages-seen');
-  };
-}, []);
+    return () => {
+      socket.off('messages-seen');
+    };
+  }, []);
 
   const handleChange = (event) => {
     setNewMessage(event.target.value);
-  };
-//  new code 2
-const selectedUser = async (userId) => {
-  const user = users.find((user) => user._id === userId);
 
-  if (user) {
-    setCurrentUser(user);
+    // --- TYPING INDICATOR LOGIC (FRONTEND) ---
+    if (currentUser) {
+      // Emit 'typing' event
+      socket.emit('typing', { senderId: sender, receiverId: currentUser._id });
 
-    // Mark this user as having no new messages
-    setUsers((prevUsers) =>
-      prevUsers.map((u) =>
-        u._id === userId ? { ...u, hasNewMessage: false } : u
-      )
-    );
+      // Clear any existing timeout
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
 
-    // Fetch messages and mark as seen
-    try {
-      await axiosInstance.post(`/chat/mark-as-seen`, {
-        senderId: userId,
-        receiverId: sender,
-      });
-    } catch (error) {
-      console.error('Failed to mark messages as seen:', error);
+      // Set a new timeout to emit 'stopped-typing' after a delay (e.g., 2 seconds)
+      typingTimeoutRef.current = setTimeout(() => {
+        socket.emit('stopped-typing', { senderId: sender, receiverId: currentUser._id });
+      }, 2000); // Adjust delay as needed (e.g., 2000ms = 2 seconds)
     }
-  }
-};
+    // --- END TYPING INDICATOR LOGIC ---
+  };
 
-  
+  //  new code 2
+  const selectedUser = async (userId) => {
+    const user = users.find((user) => user._id === userId);
+
+    if (user) {
+      setCurrentUser(user);
+
+      // Mark this user as having no new messages
+      setUsers((prevUsers) =>
+        prevUsers.map((u) =>
+          u._id === userId ? { ...u, hasNewMessage: false } : u
+        )
+      );
+
+      // Fetch messages and mark as seen
+      try {
+        await axiosInstance.post(`/chat/mark-as-seen`, {
+          senderId: userId,
+          receiverId: sender,
+        });
+      } catch (error) {
+        console.error('Failed to mark messages as seen:', error);
+      }
+    }
+  };
+
 
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
@@ -263,6 +299,7 @@ const selectedUser = async (userId) => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
   return (
     <div style={{ display: "flex", height: "100vh" }}>
       <div className="hidden lg:block" style={{ width: "250px" }}>
@@ -285,7 +322,7 @@ const selectedUser = async (userId) => {
             <div className="flex items-center justify-between p-3 border-b">
               <div className="font-medium text-sm">Messenger</div>
               <div className="flex items-center space-x-2">
-            
+
               </div>
             </div>
             <div className="py-4 px-3">
@@ -294,50 +331,50 @@ const selectedUser = async (userId) => {
                   className="w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm placeholder-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   placeholder="Search"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)} 
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </form>
             </div>
             {users
-  .filter((user) => user._id !== sender) // Exclude the current sender/manager from the list
-  .filter((user) =>
-    `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) // Filter users based on search input
-  )
-  .map((user) => (
-    <div key={user._id} onClickCapture={() => selectedUser(user._id)} className="grid gap-2 px-3">
-      <a className="flex items-center gap-4 p-2 rounded-lg hover:bg-muted/50 bg-muted">
-        <span className="relative flex shrink-0 overflow-hidden rounded-full border w-10 h-10">
-          <img
-            className="aspect-square h-full w-full"
-            alt="Image"
-            src={
-              user.profileImageUrl ||
-              'https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg'
-            }
-          />
-        </span>
-        <div className="grid gap-0.5">
-          <p className="text-sm font-medium leading-none">
-            {user.firstName} {user.lastName}
-          </p>
-          <div className="flex justify-between items-center">
-    {/* Display the last message */}
-    <p className="text-xs text-muted-foreground flex-1">
-      {user.lastMessage ? user.lastMessage : 'No New messages'}
-    </p>
-    
-    {/* Display the time of the last message aligned to the right */}
-    <p className="text-xs text-muted-foreground whitespace-nowrap">
-      {user.lastMessageTime && new Date(user.lastMessageTime).toLocaleTimeString()}
-    </p>
-  </div>
-        </div>
-        {user.hasNewMessage && (
-        <span className="text-xs font-semibold justify-start text-red-500">⦿ New Message</span>
-      )}
-      </a>
-    </div>
-  ))}
+              .filter((user) => user._id !== sender) // Exclude the current sender/manager from the list
+              .filter((user) =>
+                `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) // Filter users based on search input
+              )
+              .map((user) => (
+                <div key={user._id} onClickCapture={() => selectedUser(user._id)} className="grid gap-2 px-3">
+                  <a className="flex items-center gap-4 p-2 rounded-lg hover:bg-muted/50 bg-muted">
+                    <span className="relative flex shrink-0 overflow-hidden rounded-full border w-10 h-10">
+                      <img
+                        className="aspect-square h-full w-full"
+                        alt="Image"
+                        src={
+                          user.profileImageUrl ||
+                          'https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg'
+                        }
+                      />
+                    </span>
+                    <div className="grid gap-0.5">
+                      <p className="text-sm font-medium leading-none">
+                        {user.firstName} {user.lastName}
+                      </p>
+                      <div className="flex justify-between items-center">
+                        {/* Display the last message */}
+                        <p className="text-xs text-muted-foreground flex-1">
+                          {user.lastMessage ? user.lastMessage : 'No New messages'}
+                        </p>
+
+                        {/* Display the time of the last message aligned to the right */}
+                        <p className="text-xs text-muted-foreground whitespace-nowrap">
+                          {user.lastMessageTime && new Date(user.lastMessageTime).toLocaleTimeString()}
+                        </p>
+                      </div>
+                    </div>
+                    {user.hasNewMessage && (
+                      <span className="text-xs font-semibold justify-start text-red-500">⦿ New Message</span>
+                    )}
+                  </a>
+                </div>
+              ))}
 
           </div>
 
@@ -364,7 +401,9 @@ const selectedUser = async (userId) => {
                         {currentUser.firstName}
                         {currentUser.lastName}
                       </p>
-                      {/* <p className="text-xs text-gray-500">Active 2h ago</p> */}
+                      {/* --- TYPING INDICATOR DISPLAY --- */}
+                      {isTyping && <p className="text-xs text-gray-500">Typing...</p>}
+                      {/* --- END TYPING INDICATOR DISPLAY --- */}
                     </div>
                   </div>
                   <div className="flex items-center gap-1 ml-auto">
@@ -430,71 +469,66 @@ const selectedUser = async (userId) => {
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-3">
-  <div className="flex flex-col gap-4">
-    {messages.map((msg, index) => {
-      // >>>>>>> START OF MODIFICATION <<<<<<<
-      const messageDate = new Date(msg.timestamp);
-      const isValidDate = !isNaN(messageDate.getTime()); // Check if the date is valid
+                  <div className="flex flex-col gap-4">
+                    {messages.map((msg, index) => {
+                      const messageDate = new Date(msg.timestamp);
+                      const isValidDate = !isNaN(messageDate.getTime()); // Check if the date is valid
 
-      // Format for time (e.g., 7:30 PM)
-      // Use the actual message timestamp if valid, otherwise a fixed string like 'Just now'
-      const displayTime = isValidDate
-        ? messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        : 'Just now'; // Or 'N/A', 'Unknown Time' as a fixed fallback
-      // >>>>>>> END OF MODIFICATION <<<<<<<
+                      const displayTime = isValidDate
+                        ? messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                        : 'Just now'; // Or 'N/A', 'Unknown Time' as a fixed fallback
 
-      return (
-        <div
-          className={`flex items-start ${
-            msg.sender === sender ? "justify-end" : "justify-start"
-          } space-x-2`}
-          key={index}
-        >
-          {msg.sender !== sender && (
-            <div className="relative flex-shrink-0 w-8 h-8 rounded-full overflow-hidden">
-              <img
-                src={
-                  currentUser.profileImageUrl
-                    ? currentUser.profileImageUrl
-                    : "https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg"
-                }
-                alt="User"
-                className="object-cover w-full h-full"
-              />
-            </div>
-          )}
-          <div
-            className={`p-2 rounded-lg max-w-xs ${
-              msg.sender === sender
-                ? "bg-blue-100"
-                : "bg-blue-100"
-            }`}
-          >
-            <h2 className="font-bold">{msg.content}</h2>
-            {msg.sender === sender && msg.messageStatus && (
-              <span className="text-blue-500 text-xs">{msg.messageStatus}</span>
-            )}
-            {/* >>>>>>> UPDATE THIS LINE TO SHOW ONLY TIME <<<<<<< */}
-            <p className="text-xs ">{displayTime}</p>
-          </div>
-          {msg.sender === sender && (
-            <div className="relative flex-shrink-0 w-8 h-8 rounded-full overflow-hidden">
-              <img
-                src={
-                  hr.hr.profileImageUrl
-                    ? hr.hr.profileImageUrl
-                    : "https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg"
-                }
-                alt="User"
-                className="object-cover w-full h-full"
-              />
-            </div>
-          )}
-        </div>
-      );
-    })}
-  </div>
-</div>
+                      return (
+                        <div
+                          className={`flex items-start ${
+                            msg.sender === sender ? "justify-end" : "justify-start"
+                          } space-x-2`}
+                          key={index}
+                        >
+                          {msg.sender !== sender && (
+                            <div className="relative flex-shrink-0 w-8 h-8 rounded-full overflow-hidden">
+                              <img
+                                src={
+                                  currentUser.profileImageUrl
+                                    ? currentUser.profileImageUrl
+                                    : "https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg"
+                                }
+                                alt="User"
+                                className="object-cover w-full h-full"
+                              />
+                            </div>
+                          )}
+                          <div
+                            className={`p-2 rounded-lg max-w-xs ${
+                              msg.sender === sender
+                                ? "bg-gray-100" // Changed to gray-100 for sender messages for better distinction
+                                : "bg-blue-100"
+                            }`}
+                          >
+                            <h2 className="font-bold">{msg.content}</h2>
+                            {msg.sender === sender && msg.messageStatus && (
+                              <span className="text-blue-500 text-xs">{msg.messageStatus}</span>
+                            )}
+                            <p className="text-xs ">{displayTime}</p>
+                          </div>
+                          {msg.sender === sender && (
+                            <div className="relative flex-shrink-0 w-8 h-8 rounded-full overflow-hidden">
+                              <img
+                                src={
+                                  hr.hr.profileImageUrl
+                                    ? hr.hr.profileImageUrl
+                                    : "https://i.pinimg.com/564x/00/80/ee/0080eeaeaa2f2fba77af3e1efeade565.jpg"
+                                }
+                                alt="User"
+                                className="object-cover w-full h-full"
+                              />
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
 
                 <div className="border-t p-3">
                   <form
