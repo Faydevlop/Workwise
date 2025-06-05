@@ -108,7 +108,7 @@ const TasktManagement = () => {
         
           <h2 className="mb-4 text-lg font-semibold">Projects</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {projectData.map((project, index) => (
+          {projectData.slice().reverse().map((project, index) => (
   <div key={index} className="rounded-lg border bg-card text-card-foreground shadow-sm flex flex-col h-full" data-v0-t="card">
     <div className="flex flex-col flex-grow p-6">
       <Link to={'/manager/tasksmanagement/projectdetailpage'}>
@@ -223,7 +223,7 @@ const TasktManagement = () => {
                 </tr>
               </thead>
               <tbody className="[&_tr:last-child]:border-0">
-                {tasks.map((row, index) => (
+                {tasks.slice().reverse().map((row, index) => (
                   <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                     <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
                       <div className="font-medium">{row.name}</div>

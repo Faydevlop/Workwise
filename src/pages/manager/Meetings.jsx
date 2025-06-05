@@ -18,6 +18,7 @@ const Meetings = () => {
   const [listnext,setListnext] = useState([])
   const [visibleCount, setVisibleCount] = useState(3);
   const [loading ,setLoading] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('');
 
   const toggleDropdown = (index) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
@@ -177,9 +178,16 @@ const Meetings = () => {
          <h1 className="text-2xl font-bold">Upcoming Meetings</h1>
          <p className="text-muted-foreground">View and manage your upcoming meetings.</p>
        </div>
-       
+       <input
+  type="text"
+  placeholder="Search meetings..."
+  className="mb-4 p-2 border border-gray-300 rounded w-full"
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+/>
        <div className="border rounded-lg shadow-sm overflow-hidden">
          <div className="relative w-full overflow-auto">
+          
          <table className="w-full caption-bottom text-sm">
       <thead className="[&_tr]:border-b">
         <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
@@ -203,7 +211,7 @@ const Meetings = () => {
       <ToastContainer/>
       <tbody className="[&_tr:last-child]:border-0">
         
-        {listdata.map((meeting, index) => (
+        {listdata.slice().reverse().map((meeting, index) => (
           <tr
             key={index}
             className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
@@ -286,7 +294,13 @@ const Meetings = () => {
       </div>
       {listnext.length === 0 ? (<p>No Meeting Scheduled</p>) : ''}
 
-      {sortedMeetings.slice(0, visibleCount).map((meeting) => (
+      {sortedMeetings
+  .filter((meeting) =>
+    meeting.meetingName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    meeting.topic.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+  .slice(0, visibleCount)
+  .map((meeting) => (
         <div key={meeting._id} className="mb-6">
           <div className="flex items-center gap-4">
             <div className="bg-primary text-primary-foreground rounded-md px-2 py-1 text-xs font-medium">

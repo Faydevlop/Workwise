@@ -96,7 +96,7 @@ const ManagerDashboard = () => {
               <tbody className="[&_tr:last-child]:border-0">
 
                 {
-                  leaves.map((leave,index)=>(
+                  leaves.slice().reverse().map((leave,index)=>(
                     <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                     <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">{leave?.userId?.firstName}{leave?.userId?.lastName}</td>
                     <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">{new Date(leave.startDate).toLocaleDateString()}</td>
@@ -144,7 +144,7 @@ const ManagerDashboard = () => {
               </thead>
               <tbody className="[&_tr:last-child]:border-0">
                 {
-                  projects.map((project)=>(
+                  projects.slice().reverse().map((project)=>(
                     <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                     <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">{project?.name}</td>
                     <td className="p-4 align-middle [&:has([role=checkbox])]:pr-0">
@@ -181,7 +181,7 @@ const ManagerDashboard = () => {
         <div className="p-6">
         <div className="grid gap-4">
           {
-            meetings.map((meet)=>(
+            meetings.slice().reverse().map((meet)=>(
               <div className="flex items-center justify-between">
               <div className="grid gap-1">
                 <p className="text-sm font-medium">{meet.meetingName}</p>
