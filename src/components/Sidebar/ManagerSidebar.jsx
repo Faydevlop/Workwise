@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/Screenshot 2024-08-04 184513.png';
 import { persistor } from "../../app/store";
 import { logout } from "../../features/adminAuthSlice";
@@ -10,6 +10,7 @@ export default function ManagerSidebar() {
   const location = useLocation();
   const currentPath = location.pathname;
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
 
   // Ref to the sidebar element
@@ -34,7 +35,7 @@ export default function ManagerSidebar() {
    
     persistor.purge();
     dispatch(logout())
-    
+    navigate('/manager/login')
 
   }
 
