@@ -9,45 +9,115 @@ import { useJobListings } from '../../hooks/hr/useJobListings';
 import { useJobApplications } from '../../hooks/hr/useJobApplications';
 import HrSidebar from '../../components/Sidebar/HrSidebar';
 import axiosInstance from '../../config/axiosConfig';
+import { TextField, Pagination } from '@mui/material'; // Import TextField and Pagination for improved UI
 
 const Recruitment = () => {
   const { hr } = useSelector((state) => state.hrAuth);
   const userId = hr.hr._id;
 
-  const { listData, loading: listLoading } = useJobListings();
+  const { listData, loading: listLoading, fetchJobListings } = useJobListings(); // Added fetchJobListings
   const { showData, loading: appLoading, fetchList } = useJobApplications();
 
+  // Search terms
   const [searchApp, setSearchApp] = useState('');
   const [searchJob, setSearchJob] = useState('');
+
+  // Date filters
+  const [appStartDateFilter, setAppStartDateFilter] = useState('');
+  const [appEndDateFilter, setAppEndDateFilter] = useState('');
+  const [jobStartDateFilter, setJobStartDateFilter] = useState('');
+  const [jobEndDateFilter, setJobEndDateFilter] = useState('');
+
+  // Sorting orders
+  const [appSortOrder, setAppSortOrder] = useState('latest'); // 'latest' or 'oldest'
+  const [jobSortOrder, setJobSortOrder] = useState('latest'); // 'latest' or 'oldest'
+
+  // Pagination states
   const [appPage, setAppPage] = useState(1);
   const [jobPage, setJobPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 5; // 5 listings per page as requested previously
 
-  const filteredApplications = useMemo(() => {
-    return showData.filter(item =>
-      item.name.toLowerCase().includes(searchApp.toLowerCase()) ||
-      item.phone.includes(searchApp) ||
-      item.jobId?.jobTitle?.toLowerCase().includes(searchApp.toLowerCase())
-    );
-  }, [showData, searchApp]);
+  // --- Filtering, Sorting, and Pagination for Applications ---
+  const filteredAndSortedApplications = useMemo(() => {
+    let currentApplications = showData.filter(item => {
+      // Search filter
+      const matchesSearch =
+        item.name.toLowerCase().includes(searchApp.toLowerCase()) ||
+        item.phone.includes(searchApp) ||
+        item.jobId?.jobTitle?.toLowerCase().includes(searchApp.toLowerCase());
 
+      // Date filter
+      const applicationDate = new Date(item.updatedAt);
+      const matchesStartDate = appStartDateFilter
+        ? applicationDate >= new Date(appStartDateFilter)
+        : true;
+      const matchesEndDate = appEndDateFilter
+        ? applicationDate <= new Date(appEndDateFilter)
+        : true;
+
+      return matchesSearch && matchesStartDate && matchesEndDate;
+    });
+
+    // Sort applications
+    currentApplications.sort((a, b) => {
+      const dateA = new Date(a.updatedAt);
+      const dateB = new Date(b.updatedAt);
+      return appSortOrder === 'latest' ? dateB - dateA : dateA - dateB;
+    });
+
+    return currentApplications;
+  }, [showData, searchApp, appStartDateFilter, appEndDateFilter, appSortOrder]);
+
+  const totalAppPages = Math.ceil(filteredAndSortedApplications.length / itemsPerPage);
   const paginatedApplications = useMemo(() => {
     const start = (appPage - 1) * itemsPerPage;
-    return filteredApplications.slice(start, start + itemsPerPage);
-  }, [filteredApplications, appPage]);
+    return filteredAndSortedApplications.slice(start, start + itemsPerPage);
+  }, [filteredAndSortedApplications, appPage, itemsPerPage]);
 
-  const filteredJobs = useMemo(() => {
-    return listData.filter(job =>
-      job.jobTitle.toLowerCase().includes(searchJob.toLowerCase()) ||
-      job.department.toLowerCase().includes(searchJob.toLowerCase()) ||
-      job.location.toLowerCase().includes(searchJob.toLowerCase())
-    );
-  }, [listData, searchJob]);
+  const handleAppPageChange = (event, value) => {
+    setAppPage(value);
+  };
 
+  // --- Filtering, Sorting, and Pagination for Job Listings ---
+  const filteredAndSortedJobs = useMemo(() => {
+    let currentJobs = listData.filter(job => {
+      // Search filter
+      const matchesSearch =
+        job.jobTitle.toLowerCase().includes(searchJob.toLowerCase()) ||
+        job.department.toLowerCase().includes(searchJob.toLowerCase()) ||
+        job.location.toLowerCase().includes(searchJob.toLowerCase());
+
+      // Date filter (using createdAt for job listings)
+      const jobPostedDate = new Date(job.createdAt);
+      const matchesStartDate = jobStartDateFilter
+        ? jobPostedDate >= new Date(jobStartDateFilter)
+        : true;
+      const matchesEndDate = jobEndDateFilter
+        ? jobPostedDate <= new Date(jobEndDateFilter)
+        : true;
+
+      return matchesSearch && matchesStartDate && matchesEndDate;
+    });
+
+    // Sort job listings
+    currentJobs.sort((a, b) => {
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
+      return jobSortOrder === 'latest' ? dateB - dateA : dateA - dateB;
+    });
+
+    return currentJobs;
+  }, [listData, searchJob, jobStartDateFilter, jobEndDateFilter, jobSortOrder]);
+
+  const totalJobPages = Math.ceil(filteredAndSortedJobs.length / itemsPerPage);
   const paginatedJobs = useMemo(() => {
     const start = (jobPage - 1) * itemsPerPage;
-    return filteredJobs.slice(start, start + itemsPerPage);
-  }, [filteredJobs, jobPage]);
+    return filteredAndSortedJobs.slice(start, start + itemsPerPage);
+  }, [filteredAndSortedJobs, jobPage, itemsPerPage]);
+
+  const handleJobPageChange = (event, value) => {
+    setJobPage(value);
+  };
 
   const handleDeleteJob = async (listId) => {
     try {
@@ -56,6 +126,7 @@ const Recruitment = () => {
         position: "top-right",
         autoClose: 2000,
       });
+      fetchJobListings(); // Re-fetch job listings after deletion
     } catch (error) {
       const errorMessage = error.response?.data?.message || "Error deleting the job listing.";
       toast.error(errorMessage, {
@@ -72,7 +143,7 @@ const Recruitment = () => {
         position: "top-right",
         autoClose: 2000,
       });
-      fetchList();
+      fetchList(); // Re-fetch applications after deletion
     } catch (error) {
       const errorMessage = error.response?.data?.message || "Error deleting the application.";
       toast.error(errorMessage, {
@@ -127,18 +198,62 @@ const Recruitment = () => {
             {/* Toast */}
             <ToastContainer />
 
-            {/* Applications */}
+            {/* Applications Section */}
             <h3 className="text-xl md:text-2xl font-semibold ml-2">Applications</h3>
-            <input
-              type="text"
-              placeholder="Search applications..."
-              className="border p-2 rounded my-2 w-full"
-              value={searchApp}
-              onChange={(e) => {
-                setSearchApp(e.target.value);
-                setAppPage(1);
-              }}
-            />
+            {/* Search and Date Filters for Applications */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-4">
+              <TextField
+                label="Search Applications"
+                variant="outlined"
+                fullWidth
+                value={searchApp}
+                onChange={(e) => {
+                  setSearchApp(e.target.value);
+                  setAppPage(1); // Reset to first page on new search
+                }}
+                className="w-full sm:w-1/3"
+              />
+              <TextField
+                label="Start Date"
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                variant="outlined"
+                fullWidth
+                value={appStartDateFilter}
+                onChange={(e) => {
+                  setAppStartDateFilter(e.target.value);
+                  setAppPage(1); // Reset to first page on new filter
+                }}
+                className="w-full sm:w-1/3"
+              />
+              <TextField
+                label="End Date"
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                variant="outlined"
+                fullWidth
+                value={appEndDateFilter}
+                onChange={(e) => {
+                  setAppEndDateFilter(e.target.value);
+                  setAppPage(1); // Reset to first page on new filter
+                }}
+                className="w-full sm:w-1/3"
+              />
+              {/* Sort by dropdown for applications */}
+              <select
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-14 px-3 w-full sm:w-1/3"
+                value={appSortOrder}
+                onChange={(e) => {
+                  setAppSortOrder(e.target.value);
+                  setAppPage(1); // Reset to first page on new sort
+                }}
+              >
+                <option value="latest">Sort by: Latest</option>
+                <option value="oldest">Sort by: Oldest</option>
+              </select>
+            </div>
+
+
             <div className="rounded-lg border bg-card shadow-sm overflow-hidden">
               <table className="min-w-full text-sm">
                 <thead className="bg-gray-100">
@@ -152,8 +267,8 @@ const Recruitment = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {paginatedApplications.length > 0 ? paginatedApplications.map((item, index) => (
-                    <tr key={index} className="border-b hover:bg-gray-50">
+                  {paginatedApplications.length > 0 ? paginatedApplications.map((item) => (
+                    <tr key={item._id} className="border-b hover:bg-gray-50">
                       <td className="p-4">{item.name}</td>
                       <td className="p-4">{new Date(item.updatedAt).toLocaleDateString()}</td>
                       <td className="p-4">{item.phone}</td>
@@ -173,25 +288,74 @@ const Recruitment = () => {
                   )}
                 </tbody>
               </table>
-              <div className="flex justify-center items-center gap-2 p-3">
-                <button disabled={appPage === 1} onClick={() => setAppPage(appPage - 1)}>Previous</button>
-                <span>Page {appPage}</span>
-                <button disabled={appPage * itemsPerPage >= filteredApplications.length} onClick={() => setAppPage(appPage + 1)}>Next</button>
-              </div>
+              {/* Pagination for Applications */}
+              {totalAppPages > 1 && (
+                <div className="flex justify-center mt-4">
+                  <Pagination
+                    count={totalAppPages}
+                    page={appPage}
+                    onChange={handleAppPageChange}
+                    color="primary"
+                  />
+                </div>
+              )}
             </div>
 
-            {/* Job Listings */}
+            {/* Job Listings Section */}
             <h3 className="text-xl md:text-2xl font-semibold mt-6 ml-2">Job Listings</h3>
-            <input
-              type="text"
-              placeholder="Search job listings..."
-              className="border p-2 rounded my-2 w-full"
-              value={searchJob}
-              onChange={(e) => {
-                setSearchJob(e.target.value);
-                setJobPage(1);
-              }}
-            />
+            {/* Search and Date Filters for Job Listings */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-4">
+              <TextField
+                label="Search Job Listings"
+                variant="outlined"
+                fullWidth
+                value={searchJob}
+                onChange={(e) => {
+                  setSearchJob(e.target.value);
+                  setJobPage(1); // Reset to first page on new search
+                }}
+                className="w-full sm:w-1/3"
+              />
+              <TextField
+                label="Start Date"
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                variant="outlined"
+                fullWidth
+                value={jobStartDateFilter}
+                onChange={(e) => {
+                  setJobStartDateFilter(e.target.value);
+                  setJobPage(1); // Reset to first page on new filter
+                }}
+                className="w-full sm:w-1/3"
+              />
+              <TextField
+                label="End Date"
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                variant="outlined"
+                fullWidth
+                value={jobEndDateFilter}
+                onChange={(e) => {
+                  setJobEndDateFilter(e.target.value);
+                  setJobPage(1); // Reset to first page on new filter
+                }}
+                className="w-full sm:w-1/3"
+              />
+              {/* Sort by dropdown for job listings */}
+              <select
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-14 px-3 w-full sm:w-1/3"
+                value={jobSortOrder}
+                onChange={(e) => {
+                  setJobSortOrder(e.target.value);
+                  setJobPage(1); // Reset to first page on new sort
+                }}
+              >
+                <option value="latest">Sort by: Latest</option>
+                <option value="oldest">Sort by: Oldest</option>
+              </select>
+            </div>
+
             <div className="rounded-lg border bg-card shadow-sm overflow-hidden">
               <table className="min-w-full text-sm">
                 <thead className="bg-gray-100">
@@ -205,8 +369,8 @@ const Recruitment = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {paginatedJobs.length > 0 ? paginatedJobs.map((job, index) => (
-                    <tr key={index} className="border-b hover:bg-gray-50">
+                  {paginatedJobs.length > 0 ? paginatedJobs.map((job) => (
+                    <tr key={job._id} className="border-b hover:bg-gray-50">
                       <td className="p-4">{job.jobTitle}</td>
                       <td className="p-4">{job.department}</td>
                       <td className="p-4">{job.location}</td>
@@ -223,11 +387,17 @@ const Recruitment = () => {
                   )}
                 </tbody>
               </table>
-              <div className="flex justify-center items-center gap-2 p-3">
-                <button disabled={jobPage === 1} onClick={() => setJobPage(jobPage - 1)}>Previous</button>
-                <span>Page {jobPage}</span>
-                <button disabled={jobPage * itemsPerPage >= filteredJobs.length} onClick={() => setJobPage(jobPage + 1)}>Next</button>
-              </div>
+              {/* Pagination for Job Listings */}
+              {totalJobPages > 1 && (
+                <div className="flex justify-center mt-4">
+                  <Pagination
+                    count={totalJobPages}
+                    page={jobPage}
+                    onChange={handleJobPageChange}
+                    color="primary"
+                  />
+                </div>
+              )}
             </div>
           </main>
         </div>

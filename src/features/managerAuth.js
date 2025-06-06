@@ -36,13 +36,11 @@ const managerAuthSlice = createSlice({
     },
     reducers:{
         logout: (state) => {
-            // Clear the localStorage token
-            // localStorage.removeItem('token');
-            // Reset the state to initial values
-            state.manager = null;
-            state.isAuthenticated = false;
-            state.error = null;
-            state.loading = false;
+            localStorage.removeItem('token'); // Un-comment this!
+    state.manager = null;
+    state.isAuthenticated = false;
+    state.error = null;
+    state.loading = false;
           }
     },
     extraReducers:(builder)=>{

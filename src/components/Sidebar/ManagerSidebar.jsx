@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/Screenshot 2024-08-04 184513.png';
 import { persistor } from "../../app/store";
-import { logout } from "../../features/adminAuthSlice";
+import { logout } from "../../features/managerAuth";
 import { useDispatch } from "react-redux";
 
 export default function ManagerSidebar() {
@@ -31,13 +31,11 @@ export default function ManagerSidebar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleLogOut = () =>{
-   
-    persistor.purge();
-    dispatch(logout())
-    navigate('/manager/login')
-
-  }
+const handleLogOut = async () => {
+    await persistor.purge();  // Wait for purge
+    dispatch(logout());
+    navigate('/manager/login');
+};
 
   return (
     <>

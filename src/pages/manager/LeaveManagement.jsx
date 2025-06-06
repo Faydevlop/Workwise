@@ -7,7 +7,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { TextField } from '@mui/material';
+import { TextField, Pagination } from '@mui/material'; // Import Pagination
 import { useSelector } from 'react-redux';
 import ManagerSidebar from '../../components/Sidebar/ManagerSidebar';
 import { Link } from 'react-router-dom';
@@ -28,6 +28,18 @@ const LeaveManagement = () => {
   const [searchLeaveHistory, setSearchLeaveHistory] = useState('');
   const [searchLeaveRequests, setSearchLeaveRequests] = useState('');
 
+  // Pagination states for Leave History
+  const [historyPage, setHistoryPage] = useState(1);
+  const [historyRowsPerPage] = useState(5); // 5 listings per page
+  const [historyStartDateFilter, setHistoryStartDateFilter] = useState('');
+  const [historyEndDateFilter, setHistoryEndDateFilter] = useState('');
+
+  // Pagination states for Leave Requests
+  const [requestsPage, setRequestsPage] = useState(1);
+  const [requestsRowsPerPage] = useState(5); // 5 listings per page
+  const [requestsStartDateFilter, setRequestsStartDateFilter] = useState('');
+  const [requestsEndDateFilter, setRequestsEndDateFilter] = useState('');
+
   useEffect(() => {
     setLoading(true);
 
@@ -45,8 +57,8 @@ const LeaveManagement = () => {
       try {
         const response = await axiosInstance.get(`/leave/managerleaveget/${userId}`);
         setData(response.data.leaves);
-        console.log(response.data.leaves);
       } catch (error) {
+        console.log(error);
       } finally {
         setLoading(false);
       }
@@ -59,7 +71,7 @@ const LeaveManagement = () => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [userId]); // Add userId to dependency array
 
   const handleClickOpen = (leaveId) => {
     setLeaveId(leaveId);
@@ -86,12 +98,79 @@ const LeaveManagement = () => {
       toast.success('Status updated successfully!', {
         autoClose: 1500,
       });
+      // Refresh data after status update
+      const responseLeaves = await axiosInstance.get(`/leave/getleaves/${userId}`);
+      setLeaves(responseLeaves.data.leaves);
+      const responseRequests = await axiosInstance.get(`/leave/managerleaveget/${userId}`);
+      setData(responseRequests.data.leaves);
     } catch (error) {
       toast.error('Error updating status');
     }
 
     setOpen(false);
     setComment('');
+  };
+
+  // Filtering and Pagination Logic for Leave History
+  const filteredHistoryLeaves = leaves.filter((leave) => {
+    const matchesSearch =
+      leave.leaveType.toLowerCase().includes(searchLeaveHistory) ||
+      leave.status.toLowerCase().includes(searchLeaveHistory);
+
+    const leaveStartDate = new Date(leave.startDate);
+    const leaveEndDate = new Date(leave.endDate);
+
+    const matchesStartDate = historyStartDateFilter
+      ? leaveStartDate >= new Date(historyStartDateFilter)
+      : true;
+    const matchesEndDate = historyEndDateFilter
+      ? leaveEndDate <= new Date(historyEndDateFilter)
+      : true;
+
+    return matchesSearch && matchesStartDate && matchesEndDate;
+  });
+
+  const historyTotalPages = Math.ceil(filteredHistoryLeaves.length / historyRowsPerPage);
+  const paginatedHistoryLeaves = filteredHistoryLeaves.slice(
+    (historyPage - 1) * historyRowsPerPage,
+    historyPage * historyRowsPerPage
+  );
+
+  const handleHistoryPageChange = (event, value) => {
+    setHistoryPage(value);
+  };
+
+  // Filtering and Pagination Logic for Leave Requests
+  const filteredRequests = data.filter((leave) => {
+    const name = leave.userId
+      ? `${leave.userId.firstName}${leave.userId.lastName}`.toLowerCase()
+      : '';
+    const matchesSearch =
+      name.includes(searchLeaveRequests) ||
+      leave.leaveType.toLowerCase().includes(searchLeaveRequests) ||
+      leave.status.toLowerCase().includes(searchLeaveRequests);
+
+    const leaveStartDate = new Date(leave.startDate);
+    const leaveEndDate = new Date(leave.endDate);
+
+    const matchesStartDate = requestsStartDateFilter
+      ? leaveStartDate >= new Date(requestsStartDateFilter)
+      : true;
+    const matchesEndDate = requestsEndDateFilter
+      ? leaveEndDate <= new Date(requestsEndDateFilter)
+      : true;
+
+    return matchesSearch && matchesStartDate && matchesEndDate;
+  });
+
+  const requestsTotalPages = Math.ceil(filteredRequests.length / requestsRowsPerPage);
+  const paginatedRequests = filteredRequests.slice(
+    (requestsPage - 1) * requestsRowsPerPage,
+    requestsPage * requestsRowsPerPage
+  );
+
+  const handleRequestsPageChange = (event, value) => {
+    setRequestsPage(value);
   };
 
   return (
@@ -136,10 +215,28 @@ const LeaveManagement = () => {
               <input
                 type="text"
                 placeholder="Search Leave History..."
-                className="border px-3 py-1 rounded w-full"
+                className="border px-3 py-1 rounded w-full mb-2"
                 value={searchLeaveHistory}
                 onChange={(e) => setSearchLeaveHistory(e.target.value.toLowerCase())}
               />
+              <div className="flex gap-4">
+                <TextField
+                  label="Start Date"
+                  type="date"
+                  InputLabelProps={{ shrink: true }}
+                  value={historyStartDateFilter}
+                  onChange={(e) => setHistoryStartDateFilter(e.target.value)}
+                  className="w-1/2"
+                />
+                <TextField
+                  label="End Date"
+                  type="date"
+                  InputLabelProps={{ shrink: true }}
+                  value={historyEndDateFilter}
+                  onChange={(e) => setHistoryEndDateFilter(e.target.value)}
+                  className="w-1/2"
+                />
+              </div>
             </div>
             <div className="p-6">
               <div className="relative w-full overflow-auto">
@@ -154,13 +251,8 @@ const LeaveManagement = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {leaves
-                      .filter(
-                        (leave) =>
-                          leave.leaveType.toLowerCase().includes(searchLeaveHistory) ||
-                          leave.status.toLowerCase().includes(searchLeaveHistory)
-                      )
-                      .map((leave, index) => (
+                    {paginatedHistoryLeaves.length > 0 ? (
+                      paginatedHistoryLeaves.map((leave, index) => (
                         <tr key={index} className="border-b hover:bg-muted/50">
                           <td className="p-4">{leave.leaveType}</td>
                           <td className="p-4">{new Date(leave.startDate).toLocaleDateString()}</td>
@@ -189,9 +281,24 @@ const LeaveManagement = () => {
                             </svg>
                           </td>
                         </tr>
-                      ))}
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="5" className="p-4 text-center">
+                          No leave history found.
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
+              </div>
+              <div className="flex justify-center mt-4">
+                <Pagination
+                  count={historyTotalPages}
+                  page={historyPage}
+                  onChange={handleHistoryPageChange}
+                  color="primary"
+                />
               </div>
             </div>
           </div>
@@ -219,10 +326,28 @@ const LeaveManagement = () => {
             <input
               type="text"
               placeholder="Search Leave Requests..."
-              className="border px-3 py-1 rounded w-full"
+              className="border px-3 py-1 rounded w-full mb-2"
               value={searchLeaveRequests}
               onChange={(e) => setSearchLeaveRequests(e.target.value.toLowerCase())}
             />
+            <div className="flex gap-4">
+              <TextField
+                label="Start Date"
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                value={requestsStartDateFilter}
+                onChange={(e) => setRequestsStartDateFilter(e.target.value)}
+                className="w-1/2"
+              />
+              <TextField
+                label="End Date"
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                value={requestsEndDateFilter}
+                onChange={(e) => setRequestsEndDateFilter(e.target.value)}
+                className="w-1/2"
+              />
+            </div>
           </div>
           <div className="p-6">
             <div className="relative w-full overflow-auto">
@@ -239,25 +364,15 @@ const LeaveManagement = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {data
-                    .filter((leave) => {
-                      const name = leave.userId
-                        ? `${leave.userId.firstName}${leave.userId.lastName}`.toLowerCase()
-                        : '';
-                      return (
-                        name.includes(searchLeaveRequests) ||
-                        leave.leaveType.toLowerCase().includes(searchLeaveRequests) ||
-                        leave.status.toLowerCase().includes(searchLeaveRequests)
-                      );
-                    })
-                    .map((leave, index) => (
+                  {paginatedRequests.length > 0 ? (
+                    paginatedRequests.map((leave, index) => (
                       <tr key={index} className="border-b hover:bg-muted/50">
                         <td className="p-4">
                           {leave.userId
-                            ? `${leave.userId.firstName}${leave.userId.lastName}`
+                            ? `${leave.userId.firstName} ${leave.userId.lastName}`
                             : 'Not available'}
                         </td>
-                        <td className="p-4">{leave.leaveType}</td>
+                        <td className="p-4">{leave.userId?.department || 'N/A'}</td> {/* Assuming department is nested under userId */}
                         <td className="p-4">{leave.leaveType}</td>
                         <td className="p-4">{new Date(leave.startDate).toLocaleDateString()}</td>
                         <td className="p-4">{new Date(leave.endDate).toLocaleDateString()}</td>
@@ -279,9 +394,25 @@ const LeaveManagement = () => {
                           </button>
                         </td>
                       </tr>
-                    ))}
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="7" className="p-4 text-center">
+                        No leave requests found.
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
+            </div>
+
+            <div className="flex justify-center mt-4">
+              <Pagination
+                count={requestsTotalPages}
+                page={requestsPage}
+                onChange={handleRequestsPageChange}
+                color="primary"
+              />
             </div>
 
             <Dialog open={open} onClose={() => handleClose('cancel')}>
