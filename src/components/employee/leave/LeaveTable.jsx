@@ -3,7 +3,9 @@ import { useState } from 'react';
 
 const LeaveTable = ({ leaves }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [dateFilter, setDateFilter] = useState('');
+  // Changed from single dateFilter to startDateFilter and endDateFilter
+  const [startDateFilter, setStartDateFilter] = useState('');
+  const [endDateFilter, setEndDateFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -15,9 +17,24 @@ const LeaveTable = ({ leaves }) => {
         leave.leaveType.toLowerCase().includes(searchTerm.toLowerCase()) ||
         leave.status.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const dateMatch = dateFilter
-        ? new Date(leave.startDate).toDateString() === new Date(dateFilter).toDateString()
-        : true;
+      // Date range filtering logic
+      const leaveStartDate = new Date(leave.startDate);
+      const leaveEndDate = new Date(leave.endDate);
+      let dateMatch = true;
+
+      if (startDateFilter) {
+        const start = new Date(startDateFilter);
+        start.setHours(0, 0, 0, 0); // Normalize to start of the day
+        // Check if the leave's start date is on or after the filter start date
+        dateMatch = dateMatch && leaveEndDate >= start;
+      }
+
+      if (endDateFilter) {
+        const end = new Date(endDateFilter);
+        end.setHours(23, 59, 59, 999); // Normalize to end of the day
+        // Check if the leave's end date is on or before the filter end date
+        dateMatch = dateMatch && leaveStartDate <= end;
+      }
 
       return searchMatch && dateMatch;
     });
@@ -42,11 +59,25 @@ const LeaveTable = ({ leaves }) => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+        {/* Start Date Filter Input */}
         <input
           type="date"
           className="border p-2 rounded"
-          value={dateFilter}
-          onChange={(e) => setDateFilter(e.target.value)}
+          value={startDateFilter}
+          onChange={(e) => {
+            setStartDateFilter(e.target.value);
+            setCurrentPage(1); // Reset to first page on filter change
+          }}
+        />
+        {/* End Date Filter Input */}
+        <input
+          type="date"
+          className="border p-2 rounded"
+          value={endDateFilter}
+          onChange={(e) => {
+            setEndDateFilter(e.target.value);
+            setCurrentPage(1); // Reset to first page on filter change
+          }}
         />
       </div>
 

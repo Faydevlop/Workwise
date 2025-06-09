@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 
 const MeetingListTable = ({ listData }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [dateFilter, setDateFilter] = useState('');
+  const [startDateFilter, setStartDateFilter] = useState('');
+  const [endDateFilter, setEndDateFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -13,9 +14,21 @@ const MeetingListTable = ({ listData }) => {
       list.meetingName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       list.topic.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const dateMatch = dateFilter
-      ? new Date(list.date).toDateString() === new Date(dateFilter).toDateString()
-      : true;
+    // Date range filtering logic
+    const listDate = new Date(list.date);
+    let dateMatch = true;
+
+    if (startDateFilter) {
+      const start = new Date(startDateFilter);
+      start.setHours(0, 0, 0, 0); // Normalize to start of the day
+      dateMatch = dateMatch && listDate >= start;
+    }
+
+    if (endDateFilter) {
+      const end = new Date(endDateFilter);
+      end.setHours(23, 59, 59, 999); // Normalize to end of the day
+      dateMatch = dateMatch && listDate <= end;
+    }
 
     return searchMatch && dateMatch;
   });
@@ -34,11 +47,24 @@ const MeetingListTable = ({ listData }) => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+        {/* Date Range Inputs */}
         <input
           type="date"
           className="border p-2 rounded"
-          value={dateFilter}
-          onChange={(e) => setDateFilter(e.target.value)}
+          value={startDateFilter}
+          onChange={(e) => {
+            setStartDateFilter(e.target.value);
+            setCurrentPage(1); // Reset to first page on filter change
+          }}
+        />
+        <input
+          type="date"
+          className="border p-2 rounded"
+          value={endDateFilter}
+          onChange={(e) => {
+            setEndDateFilter(e.target.value);
+            setCurrentPage(1); // Reset to first page on filter change
+          }}
         />
       </div>
 
