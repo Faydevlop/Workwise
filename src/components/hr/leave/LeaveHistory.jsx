@@ -10,7 +10,7 @@ const LeaveHistory = ({ leaves }) => {
             <th className="p-2 border-b-2">Start Date</th>
             <th className="p-2 border-b-2">End Date</th>
             <th className="p-2 border-b-2">Status</th>
-            <th className="p-2 border-b-2">Info</th>
+            {/* <th className="p-2 border-b-2">Info</th> */}
           </tr>
         </thead>
         <tbody>
@@ -28,7 +28,7 @@ const LeaveHistory = ({ leaves }) => {
                   {leave.status}
                 </span>
               </td>
-              <td className="p-2 border-b text-center">
+              {/* <td className="p-2 border-b text-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5 text-gray-600 cursor-pointer"
@@ -41,7 +41,7 @@ const LeaveHistory = ({ leaves }) => {
                     clipRule="evenodd"
                   />
                 </svg>
-              </td>
+              </td> */}
             </tr>
           ))}
         </tbody>
