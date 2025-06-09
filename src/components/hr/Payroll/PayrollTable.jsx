@@ -17,10 +17,27 @@ const PayrollTable = ({ data }) => {
 
     // 1. Filter data based on search query
     if (searchQuery) {
-      currentData = currentData.filter((user) => {
-        const fullName = user.employee ? `${user.employee.firstName} ${user.employee.lastName}`.toLowerCase() : '';
-        const email = user.employee ? user.employee.email.toLowerCase() : '';
-        return fullName.includes(searchQuery.toLowerCase()) || email.includes(searchQuery.toLowerCase());
+      currentData = currentData.filter((payrollItem) => {
+        const query = searchQuery.toLowerCase();
+
+        // Employee details
+        const fullName = payrollItem.employee ? `${payrollItem.employee.firstName} ${payrollItem.employee.lastName}`.toLowerCase() : '';
+        const email = payrollItem.employee ? payrollItem.employee.email.toLowerCase() : '';
+
+        // Payroll details (convert to string for flexible search)
+        const bonuses = payrollItem.bonuses !== undefined ? String(payrollItem.bonuses).toLowerCase() : '';
+        const deductions = payrollItem.deductions !== undefined ? String(payrollItem.deductions).toLowerCase() : '';
+        const baseSalary = payrollItem.baseSalary !== undefined ? String(payrollItem.baseSalary).toLowerCase() : '';
+        const totalAmount = payrollItem.totalAmount !== undefined ? String(payrollItem.totalAmount).toLowerCase() : '';
+
+        return (
+          fullName.includes(query) ||
+          email.includes(query) ||
+          bonuses.includes(query) ||
+          deductions.includes(query) ||
+          baseSalary.includes(query) ||
+          totalAmount.includes(query)
+        );
       });
     }
 
@@ -66,7 +83,7 @@ const PayrollTable = ({ data }) => {
       <div className="flex flex-col sm:flex-row items-center justify-between mb-4 gap-4">
         {/* Search Input */}
         <TextField
-          label="Search Employee"
+          label="Search All Fields" // Updated label for clarity
           variant="outlined"
           fullWidth
           value={searchQuery}
@@ -103,21 +120,21 @@ const PayrollTable = ({ data }) => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {paginatedData.length > 0 ? (
-                paginatedData.map((user) => (
-                  <tr key={user._id}>
+                paginatedData.map((payrollItem) => (
+                  <tr key={payrollItem._id}>
                     <td className="px-6 py-4 text-sm text-gray-900">
-                      {user.employee ? `${user.employee.firstName} ${user.employee.lastName}` : 'N/A'}
+                      {payrollItem.employee ? `${payrollItem.employee.firstName} ${payrollItem.employee.lastName}` : 'N/A'}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500">
-                      {user.employee ? `${user.employee.email}` : 'N/A'}
+                      {payrollItem.employee ? `${payrollItem.employee.email}` : 'N/A'}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">₹{user.bonuses || 0}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">₹{user.deductions || 0}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">₹{user.baseSalary || 0}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">₹{user.totalAmount || 0}</td>
-                    {user.employee ? (
+                    <td className="px-6 py-4 text-sm text-gray-500">₹{payrollItem.bonuses || 0}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">₹{payrollItem.deductions || 0}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">₹{payrollItem.baseSalary || 0}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">₹{payrollItem.totalAmount || 0}</td>
+                    {payrollItem.employee ? (
                       <td className="p-4 align-middle text-right">
-                        <Link to={`/hr/payrollmanagement/edit/${user.employee._id}`}>
+                        <Link to={`/hr/payrollmanagement/edit/${payrollItem.employee._id}`}>
                           <button className="inline-flex items-center justify-center text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground h-10 w-10">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
                               <path d="M12 22h6a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v10"></path>
@@ -129,7 +146,7 @@ const PayrollTable = ({ data }) => {
                         </Link>
                       </td>
                     ) : (
-                      <td className="p-4 align-middle text-right"></td> // Render an empty cell if no employee data
+                      <td className="p-4 align-middle text-right"></td>
                     )}
                   </tr>
                 ))
