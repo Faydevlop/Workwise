@@ -52,9 +52,28 @@ const Payrollmanagement = () => {
 
   // Filter data based on search query
   const filteredData = data.filter((user) => {
+    const query = searchQuery.toLowerCase();
+
     const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
     const email = user.email.toLowerCase();
-    return fullName.includes(searchQuery.toLowerCase()) || email.includes(searchQuery.toLowerCase());
+
+    // Check if payroll data exists before accessing properties
+    const payroll = user.payroll;
+    // Safely access payroll properties and convert to string for searching
+    const baseSalary = payroll && payroll.baseSalary !== undefined ? payroll.baseSalary.toString() : '';
+    const bonuses = payroll && payroll.bonuses !== undefined ? payroll.bonuses.toString() : '';
+    const deductions = payroll && payroll.deductions !== undefined ? payroll.deductions.toString() : '';
+    const totalAmount = payroll && payroll.totalAmount !== undefined ? payroll.totalAmount.toString() : '';
+
+
+    return (
+      fullName.includes(query) ||
+      email.includes(query) ||
+      baseSalary.includes(query) ||
+      bonuses.includes(query) ||
+      deductions.includes(query) ||
+      totalAmount.includes(query)
+    );
   });
 
   // Pagination calculations
@@ -103,25 +122,7 @@ const Payrollmanagement = () => {
               <div className="flex flex-col sm:flex-row items-center justify-between mb-6">
                 <h1 className="font-semibold text-lg md:text-xl mb-4 sm:mb-0">Payroll</h1>
                 <div className="flex flex-wrap justify-center sm:justify-end gap-2">
-                  <button className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="mr-2 h-4 w-4"
-                    >
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                      <polyline points="7 10 12 15 17 10"></polyline>
-                      <line x1="12" x2="12" y1="15" y2="3"></line>
-                    </svg>
-                    Export
-                  </button>
+                 
                 </div>
               </div>
 
@@ -149,7 +150,7 @@ const Payrollmanagement = () => {
               {/* Search Input */}
               <div className="mb-4">
                 <TextField
-                  label="Search Employee"
+                  label="Search by Name, Email, or Salary"
                   variant="outlined"
                   fullWidth
                   value={searchQuery}
@@ -200,32 +201,32 @@ const Payrollmanagement = () => {
                                 {user.payroll ? `₹${user.payroll.totalAmount}` : 'Not available'}
                               </td>
                               {user.payroll ? (
-                                <td className="p-4 align-middle text-right">
-                                  <Link to={`/manager/payrollmanagement/edit/${user._id}`}>
-                                    <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        className="h-4 w-4"
-                                      >
-                                        <path d="M12 22h6a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v10"></path>
-                                        <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
-                                        <path d="M10.4 12.6a2 2 0 1 1 3 3L8 21l-4 1 1-4Z"></path>
-                                      </svg>
-                                      <span className="sr-only">Edit</span>
-                                    </button>
-                                  </Link>
-                                </td>
-                              ) : (
-                                <td className="p-4 align-middle text-right"></td> // Empty cell if no payroll
-                              )}
+  <td className="p-4 align-middle text-right">
+    <Link to={`/manager/payrollmanagement/edit/${user._id}`}>
+      <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="h-4 w-4"
+        >
+          <path d="M12 22h6a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v10"></path>
+          <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+          <path d="M10.4 12.6a2 2 0 1 1 3 3L8 21l-4 1 1-4Z"></path>
+        </svg>
+        <span className="sr-only">Edit</span>
+      </button>
+    </Link>
+  </td>
+) : (
+  <td className="p-4 align-middle text-right"></td>
+)}
                             </tr>
                           ))
                         ) : (
