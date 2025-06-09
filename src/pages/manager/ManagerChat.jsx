@@ -157,19 +157,11 @@ const ManagerChat = () => {
 
   useEffect(() => {
   socket.on('messages-seen', ({ senderId: messageOriginalSenderId, receiverId: messageSeenByUserId }) => {
-    // This event signifies that messages sent by 'messageOriginalSenderId'
-    // have been seen by 'messageSeenByUserId'.
 
-    // We only want to update messages if:
-    // 1. The logged-in manager ('sender') is the original sender of the messages.
-    // 2. The user who saw the messages ('messageSeenByUserId') is the 'currentUser'
-    //    (the person the manager is currently chatting with).
     if (currentUser && messageOriginalSenderId === sender && messageSeenByUserId === currentUser._id) {
       setMessages(prevMessages =>
         prevMessages.map(msg =>
-          // Update messages only if the logged-in manager sent them (msg.sender === sender)
-          // AND they were sent to the current chat user (msg.receiver === currentUser._id)
-          // AND their status isn't already 'seen'.
+       
           msg.sender === sender && msg.receiver === currentUser._id && msg.messageStatus !== 'seen'
             ? { ...msg, messageStatus: 'seen' }
             : msg

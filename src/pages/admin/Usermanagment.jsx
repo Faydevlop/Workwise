@@ -281,11 +281,7 @@ const Usermanagment = () => {
                               className="absolute right-0 mt-2 z-20 w-44 bg-white rounded divide-y divide-gray-100 shadow "
                             >
                               <ul className="py-1 text-sm text-dark dark:text-dark" aria-labelledby={`dropdown-button-${user._id}`}>
-                                <Link to={`/admin/showuser/${user._id}`}>
-                                  <li>
-                                    <a className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
-                                  </li>
-                                </Link>
+                               
                                 <Link to={`/admin/edituser/${user._id}`}>
                                   <li>
                                     <a className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
