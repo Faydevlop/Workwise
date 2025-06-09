@@ -5,8 +5,8 @@ import Backdrop from '@mui/material/Backdrop';
 import { ScaleLoader } from 'react-spinners';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axiosInstance from '../../config/axiosConfig'; // Ensure this is correctly imported
-import { TextField, Pagination } from '@mui/material'; // Import TextField and Pagination
+import axiosInstance from '../../config/axiosConfig';
+import { TextField, Pagination } from '@mui/material';
 
 const Usermanagment = () => {
   const [users, setUsers] = useState([]);
@@ -18,6 +18,8 @@ const Usermanagment = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRole, setSelectedRole] = useState('All'); // 'All', 'Employee', 'Manager', 'HR', 'Admin'
   const [selectedStatus, setSelectedStatus] = useState('All'); // 'All', 'Active', 'Inactive'
+  const [fromDate, setFromDate] = useState(''); // New state for 'From Date'
+  const [toDate, setToDate] = useState('');     // New state for 'To Date'
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Number of users to display per page
 
@@ -51,7 +53,16 @@ const Usermanagment = () => {
       const matchesStatus =
         selectedStatus === 'All' || (user.employeeStatus && user.employeeStatus === selectedStatus);
 
-      return matchesSearch && matchesRole && matchesStatus;
+      // Date range filter
+      const userJoinedDate = user.dateOfJoining ? new Date(user.dateOfJoining) : null;
+      const from = fromDate ? new Date(fromDate) : null;
+      const to = toDate ? new Date(toDate) : null;
+
+      const matchesDateRange =
+        (!from || (userJoinedDate && userJoinedDate >= from)) &&
+        (!to || (userJoinedDate && userJoinedDate <= to));
+
+      return matchesSearch && matchesRole && matchesStatus && matchesDateRange;
     });
 
     // Sort by dateOfJoining (latest first) for consistency, if not explicitly sorted otherwise
@@ -61,7 +72,7 @@ const Usermanagment = () => {
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     return currentUsers.slice(start, end);
-  }, [users, searchQuery, selectedRole, selectedStatus, currentPage, itemsPerPage]);
+  }, [users, searchQuery, selectedRole, selectedStatus, fromDate, toDate, currentPage, itemsPerPage]); // Added fromDate, toDate to dependencies
 
   const totalPages = useMemo(() => {
     const filteredCount = users.filter(user => {
@@ -78,11 +89,19 @@ const Usermanagment = () => {
       const matchesStatus =
         selectedStatus === 'All' || (user.employeeStatus && user.employeeStatus === selectedStatus);
 
-      return matchesSearch && matchesRole && matchesStatus;
+      // Date range filter
+      const userJoinedDate = user.dateOfJoining ? new Date(user.dateOfJoining) : null;
+      const from = fromDate ? new Date(fromDate) : null;
+      const to = toDate ? new Date(toDate) : null;
+
+      const matchesDateRange =
+        (!from || (userJoinedDate && userJoinedDate >= from)) &&
+        (!to || (userJoinedDate && userJoinedDate <= to));
+
+      return matchesSearch && matchesRole && matchesStatus && matchesDateRange;
     }).length;
     return Math.ceil(filteredCount / itemsPerPage);
-  }, [users, searchQuery, selectedRole, selectedStatus, itemsPerPage]);
-
+  }, [users, searchQuery, selectedRole, selectedStatus, fromDate, toDate, itemsPerPage]); // Added fromDate, toDate to dependencies
 
   const toggleDropdown = (userId) => {
     setOpenDropdownId(openDropdownId === userId ? null : userId);
@@ -187,7 +206,7 @@ const Usermanagment = () => {
           <div className="bg-white dark:bg-white relative shadow-lg sm:rounded-lg overflow-hidden">
             <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
               {/* Search Input */}
-              <div className="w-full md:w-1/2">
+              <div className="w-full md:w-1/3">
                 <TextField
                   label="Search Employee"
                   variant="outlined"
@@ -229,6 +248,35 @@ const Usermanagment = () => {
                 </select>
               </div>
             </div>
+
+            {/* Date Filters */}
+            <div className="flex flex-col md:flex-row items-center justify-start space-y-3 md:space-y-0 md:space-x-4 p-4 pt-0">
+              <TextField
+                label="From Date"
+                type="date"
+                variant="outlined"
+                InputLabelProps={{ shrink: true }} // Ensures label is always visible for date input
+                value={fromDate}
+                onChange={(e) => {
+                  setFromDate(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="w-full md:w-1/4"
+              />
+              <TextField
+                label="To Date"
+                type="date"
+                variant="outlined"
+                InputLabelProps={{ shrink: true }} // Ensures label is always visible for date input
+                value={toDate}
+                onChange={(e) => {
+                  setToDate(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="w-full md:w-1/4"
+              />
+            </div>
+
 
             <div className="overflow-x-auto">
               <hr />
@@ -281,7 +329,6 @@ const Usermanagment = () => {
                               className="absolute right-0 mt-2 z-20 w-44 bg-white rounded divide-y divide-gray-100 shadow "
                             >
                               <ul className="py-1 text-sm text-dark dark:text-dark" aria-labelledby={`dropdown-button-${user._id}`}>
-                               
                                 <Link to={`/admin/edituser/${user._id}`}>
                                   <li>
                                     <a className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>

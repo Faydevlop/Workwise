@@ -25,14 +25,26 @@ const Payrollmanagment = () => {
 
     // 1. Apply Search Filter
     if (searchQuery) {
+      const searchLower = searchQuery.toLowerCase();
       currentUsers = currentUsers.filter(user => {
         const fullName = user.firstName ? `${user.firstName} ${user.lastName}`.toLowerCase() : '';
         const email = user.email ? user.email.toLowerCase() : '';
-        const paymentStatus = user.payroll?.paymentStatus ? user.payroll.paymentStatus.toLowerCase() : '';
+
+        // Check if payroll data exists before accessing its properties
+        const payrollData = user.payroll;
+        
+        const matchesPayrollFields = payrollData ? (
+          (payrollData.paymentStatus && payrollData.paymentStatus.toLowerCase().includes(searchLower)) ||
+          (payrollData.permonthsalary !== undefined && String(payrollData.permonthsalary).toLowerCase().includes(searchLower)) ||
+          (payrollData.baseSalary !== undefined && String(payrollData.baseSalary).toLowerCase().includes(searchLower)) ||
+          (payrollData.month && String(payrollData.month).toLowerCase().includes(searchLower)) || // Assuming month can be string or number
+          (payrollData.year && String(payrollData.year).toLowerCase().includes(searchLower)) // Assuming year can be string or number
+        ) : false;
+
         return (
-          fullName.includes(searchQuery.toLowerCase()) ||
-          email.includes(searchQuery.toLowerCase()) ||
-          paymentStatus.includes(searchQuery.toLowerCase())
+          fullName.includes(searchLower) ||
+          email.includes(searchLower) ||
+          matchesPayrollFields
         );
       });
     }
@@ -44,7 +56,7 @@ const Payrollmanagment = () => {
       );
     }
 
-    // 3. Sort by employee name for consistent display, if needed (optional, but good for UX)
+    // 3. Sort by employee name for consistent display
     currentUsers.sort((a, b) => {
       const nameA = a.firstName ? `${a.firstName} ${a.lastName}` : '';
       const nameB = b.firstName ? `${b.firstName} ${b.lastName}` : '';
@@ -60,10 +72,20 @@ const Payrollmanagment = () => {
   // Calculate total pages for the Pagination component
   const totalPages = useMemo(() => {
     let count = users.filter(user => {
-      const matchesSearch =
-        user.firstName && user.lastName && `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.email && user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (user.payroll?.paymentStatus && user.payroll.paymentStatus.toLowerCase().includes(searchQuery.toLowerCase()));
+      const searchLower = searchQuery.toLowerCase();
+      const fullName = user.firstName ? `${user.firstName} ${user.lastName}`.toLowerCase() : '';
+      const email = user.email ? user.email.toLowerCase() : '';
+      
+      const payrollData = user.payroll;
+      const matchesPayrollFields = payrollData ? (
+        (payrollData.paymentStatus && payrollData.paymentStatus.toLowerCase().includes(searchLower)) ||
+        (payrollData.permonthsalary !== undefined && String(payrollData.permonthsalary).toLowerCase().includes(searchLower)) ||
+        (payrollData.baseSalary !== undefined && String(payrollData.baseSalary).toLowerCase().includes(searchLower)) ||
+        (payrollData.month && String(payrollData.month).toLowerCase().includes(searchLower)) ||
+        (payrollData.year && String(payrollData.year).toLowerCase().includes(searchLower))
+      ) : false;
+
+      const matchesSearch = fullName.includes(searchLower) || email.includes(searchLower) || matchesPayrollFields;
 
       const matchesStatus = filterStatus === 'All' || user.payroll?.paymentStatus === filterStatus;
 
@@ -205,7 +227,7 @@ const Payrollmanagment = () => {
             {/* Search and Filter Controls */}
             <div className="flex flex-col sm:flex-row gap-4 px-6 pb-4">
               <TextField
-                label="Search Employee"
+                label="Search All Fields" // Changed label for clarity
                 variant="outlined"
                 fullWidth
                 value={searchQuery}
@@ -279,19 +301,6 @@ const Payrollmanagment = () => {
                               </svg>
                               <span className="sr-only">Toggle menu</span>
                             </button>
-                            {/* Original dropdown was simple, removed extra state, if dropdown is needed, uncomment and re-add logic */}
-                            {/* {openDropdown === index && (
-                              <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
-                                <div className="py-1">
-                                  <Link to={`/admin/Payrollmanagment/details/${employee.payroll ? employee.payroll._id : 'not'}`}>
-                                    <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">view</a>
-                                  </Link>
-                                  <Link to={`/admin/Payrollmanagment/edit/${employee.payroll ? employee.payroll._id : 'not'}`}>
-                                    <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</a>
-                                  </Link>
-                                </div>
-                              </div>
-                            )} */}
                           </div>
                         </td>
                       </tr>
