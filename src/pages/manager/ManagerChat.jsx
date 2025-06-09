@@ -523,9 +523,11 @@ const ManagerChat = () => {
                             }`}
                           >
                             <p className="font-bold">{msg.content}</p>
-                            {msg.sender === sender && msg.messageStatus && (
-                              <span className="text-blue-500 text-xs">{msg.messageStatus}</span>
-                            )}
+                             {msg.sender === sender && msg.messageStatus && (
+  <span className={`text-xs ml-1 ${msg.messageStatus === 'seen' ? 'text-green-500' : 'text-gray-500'}`}>
+    {msg.messageStatus === 'seen' ? 'Seen' : 'Delivered'}
+  </span>
+)}  
                             <p className="text-xs ">{displayTime}</p>
                           </div>
                           {msg.sender === sender && (
