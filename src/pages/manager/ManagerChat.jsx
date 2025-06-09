@@ -156,22 +156,32 @@ const ManagerChat = () => {
   }, [messages, currentUser, sender, socket]); // Added sender and socket to dependency array
 
   useEffect(() => {
-    // Listen for the 'messages-seen' event and update the local message state
-    socket.on('messages-seen', ({ senderId, receiverId }) => {
-      // Only update messages if the event is for the current conversation
-      if (currentUser && senderId === currentUser._id && receiverId === sender) {
-        setMessages(prevMessages =>
-          prevMessages.map(msg =>
-            msg.sender === senderId ? { ...msg, messageStatus: 'seen' } : msg
-          )
-        );
-      }
-    });
+  socket.on('messages-seen', ({ senderId: messageOriginalSenderId, receiverId: messageSeenByUserId }) => {
+    // This event signifies that messages sent by 'messageOriginalSenderId'
+    // have been seen by 'messageSeenByUserId'.
 
-    return () => {
-      socket.off('messages-seen');
-    };
-  }, [currentUser, sender, socket]); // Added currentUser, sender, socket to dependency array
+    // We only want to update messages if:
+    // 1. The logged-in manager ('sender') is the original sender of the messages.
+    // 2. The user who saw the messages ('messageSeenByUserId') is the 'currentUser'
+    //    (the person the manager is currently chatting with).
+    if (currentUser && messageOriginalSenderId === sender && messageSeenByUserId === currentUser._id) {
+      setMessages(prevMessages =>
+        prevMessages.map(msg =>
+          // Update messages only if the logged-in manager sent them (msg.sender === sender)
+          // AND they were sent to the current chat user (msg.receiver === currentUser._id)
+          // AND their status isn't already 'seen'.
+          msg.sender === sender && msg.receiver === currentUser._id && msg.messageStatus !== 'seen'
+            ? { ...msg, messageStatus: 'seen' }
+            : msg
+        )
+      );
+    }
+  });
+
+  return () => {
+    socket.off('messages-seen');
+  };
+}, [currentUser, sender, socket]); // Ensure all dependencies are included // Added currentUser, sender, socket to dependency array
 
 
   useEffect(() => {
