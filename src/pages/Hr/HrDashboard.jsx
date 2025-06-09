@@ -68,21 +68,28 @@ const HrDashboard = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {jobs.length > 0 ? (
-                          jobs.slice(0,5).reverse().map((job) => (
-                            <tr key={job._id} className="border-b transition-colors hover:bg-muted/50">
-                              <td className="p-4 align-middle font-medium">{job.name}</td>
-                              <td className="p-4 align-middle">{job.email}</td>
-                              <td className="p-4 align-middle">
-                                <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold text-foreground">
-                                  {job.status}
-                                </div>
-                              </td>
-                            </tr>
-                          ))
-                        ) : (
-                          <tr><td colSpan="3" className="text-center">No Requests Here</td></tr>
-                        )}
+                      {jobs.length > 0 ? (
+  jobs
+    .slice()          // copy array
+    .reverse()        // latest first
+    .slice(0, 5)      // take first 5 (latest 5)
+    .map((job) => (
+      <tr key={job._id} className="border-b transition-colors hover:bg-muted/50">
+        <td className="p-4 align-middle font-medium">{job.name}</td>
+        <td className="p-4 align-middle">{job.email}</td>
+        <td className="p-4 align-middle">
+          <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold text-foreground">
+            {job.status}
+          </div>
+        </td>
+      </tr>
+    ))
+) : (
+  <tr>
+    <td colSpan="3" className="text-center">No Requests Here</td>
+  </tr>
+)}
+
                       </tbody>
                     </table>
                   </div>
