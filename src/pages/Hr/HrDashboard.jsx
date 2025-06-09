@@ -69,7 +69,7 @@ const HrDashboard = () => {
                       </thead>
                       <tbody>
                         {jobs.length > 0 ? (
-                          jobs.slice().reverse().map((job) => (
+                          jobs.slice(0,5).reverse().map((job) => (
                             <tr key={job._id} className="border-b transition-colors hover:bg-muted/50">
                               <td className="p-4 align-middle font-medium">{job.name}</td>
                               <td className="p-4 align-middle">{job.email}</td>
