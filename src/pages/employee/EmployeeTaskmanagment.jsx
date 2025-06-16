@@ -7,6 +7,7 @@ import { ScaleLoader } from 'react-spinners';
 import useTaskData from '../../hooks/employee/useTaskData';  // Import the custom hook
 import TaskCard from '../../components/employee/task/TaskCard';  // Import the TaskCard component
 import { useSelector } from 'react-redux';
+import axiosInstance from '../../config/axiosConfig';
 
 const EmployeeTaskmanagment = () => {
   const { employee } = useSelector((state) => state.employeeAuth);
